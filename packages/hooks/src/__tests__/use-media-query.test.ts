@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, act } from '@testing-library/react'
 import { useMediaQuery } from '../use-media-query'
 
 describe('useMediaQuery', () => {
@@ -24,7 +24,7 @@ describe('useMediaQuery', () => {
     expect(result.current).toBe(false)
   })
 
-  it('returns true when the media query matches', () => {
+  it('returns true when the media query matches after mount', () => {
     window.matchMedia = vi.fn().mockImplementation((query: string) => ({
       matches: true,
       media: query,
@@ -37,6 +37,8 @@ describe('useMediaQuery', () => {
     }))
 
     const { result } = renderHook(() => useMediaQuery('(min-width: 768px)'))
+    // The value is read in a useEffect after mount, so after renderHook
+    // flushes effects it should reflect the real matchMedia result.
     expect(result.current).toBe(true)
   })
 })

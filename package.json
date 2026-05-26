@@ -8,8 +8,6 @@
     "lint": "pnpm -r run lint",
     "typecheck": "pnpm -r run typecheck",
     "test": "pnpm -r run test",
-    "test:visual": "playwright test --config=.storybook/playwright.config.ts",
-    "test:a11y": "axe-storybook-testing",
     "clean": "pnpm -r run clean",
     "size": "pnpm -r run size",
     "storybook": "storybook dev -p 6006",

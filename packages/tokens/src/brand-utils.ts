@@ -21,7 +21,21 @@ export const BRAND_COLORS: BrandColorOption[] = [
 ]
 
 export function normalizeBrandColor(hex?: string | null): string {
-  return /^#[0-9a-f]{6}$/i.test(hex ?? '') ? (hex as string) : DEFAULT_BRAND_COLOR
+  if (!hex) return DEFAULT_BRAND_COLOR
+  const trimmed = hex.trim()
+
+  // 3-char shorthand → expand
+  const match3 = trimmed.match(/^#([0-9a-f])([0-9a-f])([0-9a-f])$/i)
+  if (match3) return `#${match3[1]}${match3[1]}${match3[2]}${match3[2]}${match3[3]}${match3[3]}`
+
+  // 6-char standard
+  if (/^#[0-9a-f]{6}$/i.test(trimmed)) return trimmed
+
+  // 8-char with alpha → strip alpha
+  const match8 = trimmed.match(/^#([0-9a-f]{6})[0-9a-f]{2}$/i)
+  if (match8) return `#${match8[1]}`
+
+  return DEFAULT_BRAND_COLOR
 }
 
 export function hexToHSL(hex: string): { h: number; s: number; l: number } {

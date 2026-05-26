@@ -1,6 +1,7 @@
 import { readdir, readFile, writeFile, mkdir } from 'node:fs/promises'
 import { join, basename, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { transform } from '@svgr/core'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
@@ -16,12 +17,44 @@ function toPascalCase(str) {
     .join('')
 }
 
-function buildComponentCode(componentName, svgChildren, viewBox, variant) {
+/**
+ * Use @svgr/core to convert SVG markup into JSX children (properly handling
+ * all SVG attribute-to-JSX-prop conversions). We then extract the inner
+ * children and viewBox from the generated component code and wrap them in
+ * our own component template that uses IconProps, forwardRef, etc.
+ */
+async function svgToJsxChildren(svgContent) {
+  // Let SVGR do the heavy lifting of SVG → JSX conversion
+  const raw = await transform(svgContent, {
+    plugins: ['@svgr/plugin-jsx'],
+    icon: true,
+    typescript: true,
+    // Disable features we handle ourselves
+    ref: false,
+    titleProp: false,
+    memo: false,
+    expandProps: false,
+    dimensions: false,
+    jsxRuntime: 'classic',
+  })
+
+  // Extract the viewBox from the generated <svg> tag
+  const viewBoxMatch = raw.match(/viewBox="([^"]*)"/)
+  const viewBox = viewBoxMatch ? viewBoxMatch[1] : '0 0 24 24'
+
+  // Extract the children from inside the generated <svg>...</svg>
+  const childrenMatch = raw.match(/<svg[^>]*>([\s\S]*)<\/svg>/)
+  const children = childrenMatch ? childrenMatch[1].trim() : ''
+
+  return { viewBox, children }
+}
+
+function buildComponentCode(componentName, jsxChildren, viewBox, variant) {
   const isOutline = variant === 'outline'
 
   const extraProps = isOutline
-    ? `stroke={color} strokeWidth={strokeWidth} fill="none"`
-    : `fill={color}`
+    ? 'stroke={color} fill="none" strokeWidth={strokeWidth}'
+    : 'fill={color}'
 
   const strokeDefault = isOutline ? ', strokeWidth = 1.5' : ''
 
@@ -44,7 +77,7 @@ const ${componentName} = React.forwardRef<SVGSVGElement, IconProps>(
       {...rest}
     >
       {title && <title>{title}</title>}
-      ${svgChildren}
+      ${jsxChildren}
     </svg>
   ),
 )
@@ -53,39 +86,6 @@ ${componentName}.displayName = '${componentName}'
 
 export default ${componentName}
 `
-}
-
-function extractSvgChildren(svgString) {
-  const match = svgString.match(/<svg[^>]*>([\s\S]*)<\/svg>/)
-  return match ? match[1].trim() : ''
-}
-
-function extractViewBox(svgString) {
-  const match = svgString.match(/viewBox="([^"]*)"/)
-  return match ? match[1] : '0 0 24 24'
-}
-
-function convertSvgChildrenToJsx(children) {
-  return children
-    .replace(/stroke-width=/g, 'strokeWidth=')
-    .replace(/stroke-linecap=/g, 'strokeLinecap=')
-    .replace(/stroke-linejoin=/g, 'strokeLinejoin=')
-    .replace(/fill-rule=/g, 'fillRule=')
-    .replace(/clip-rule=/g, 'clipRule=')
-    .replace(/stroke-dasharray=/g, 'strokeDasharray=')
-    .replace(/stroke-dashoffset=/g, 'strokeDashoffset=')
-    .replace(/stroke-miterlimit=/g, 'strokeMiterlimit=')
-    .replace(/stroke-opacity=/g, 'strokeOpacity=')
-    .replace(/fill-opacity=/g, 'fillOpacity=')
-    .replace(/stop-color=/g, 'stopColor=')
-    .replace(/stop-opacity=/g, 'stopOpacity=')
-    .replace(/class=/g, 'className=')
-    // Remove hardcoded stroke/fill attributes from child elements since they come from props
-    .replace(/ stroke="currentColor"/g, '')
-    .replace(/ fill="currentColor"/g, '')
-    .replace(/ fill="none"/g, '')
-    .replace(/ strokeWidth="[^"]*"/g, '')
-    .replace(/ stroke-width="[^"]*"/g, '')
 }
 
 async function processVariant(variant) {
@@ -108,11 +108,17 @@ async function processVariant(variant) {
     const name = basename(file, '.svg')
     const componentName = toPascalCase(name) + (variant === 'outline' ? 'Outline' : 'Solid')
 
-    const viewBox = extractViewBox(svgContent)
-    const rawChildren = extractSvgChildren(svgContent)
-    const jsxChildren = convertSvgChildrenToJsx(rawChildren)
+    const { viewBox, children } = await svgToJsxChildren(svgContent)
 
-    const code = buildComponentCode(componentName, jsxChildren, viewBox, variant)
+    // Strip SVGR-generated stroke/fill/strokeWidth from children since we
+    // set them on the outer <svg> via props
+    const cleanedChildren = children
+      .replace(/ stroke="currentColor"/g, '')
+      .replace(/ fill="currentColor"/g, '')
+      .replace(/ fill="none"/g, '')
+      .replace(/ strokeWidth={[^}]*}/g, '')
+
+    const code = buildComponentCode(componentName, cleanedChildren, viewBox, variant)
     const outFile = join(outDir, `${name}.tsx`)
     await writeFile(outFile, code, 'utf-8')
 

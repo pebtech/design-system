@@ -41,7 +41,7 @@ Build ordering is automatic — pnpm resolves `workspace:*` dependencies topolog
 pnpm -r run test
 ```
 
-65 unit tests across tokens, hooks, and ui-web packages using Vitest + Testing Library.
+68 unit tests across tokens, hooks, and ui-web packages using Vitest + Testing Library.
 
 ### Storybook
 

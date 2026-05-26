@@ -1,25 +1,23 @@
 import { useCallback, useEffect, useState } from "react";
 
-function getStoredValue<T>(key: string, initialValue: T): T {
-  if (typeof window === "undefined") {
-    return initialValue;
-  }
-
-  try {
-    const item = window.localStorage.getItem(key);
-    return item !== null ? (JSON.parse(item) as T) : initialValue;
-  } catch {
-    return initialValue;
-  }
-}
-
 export function useLocalStorage<T>(
   key: string,
   initialValue: T,
 ): [T, (value: T | ((prev: T) => T)) => void] {
-  const [storedValue, setStoredValue] = useState<T>(() =>
-    getStoredValue(key, initialValue),
-  );
+  // Always initialize with initialValue to avoid SSR hydration mismatch.
+  const [storedValue, setStoredValue] = useState<T>(initialValue);
+
+  // After mount, read the real value from localStorage.
+  useEffect(() => {
+    try {
+      const item = window.localStorage.getItem(key);
+      if (item !== null) {
+        setStoredValue(JSON.parse(item) as T);
+      }
+    } catch {
+      // localStorage unavailable or JSON parse error; keep initialValue.
+    }
+  }, [key]);
 
   const setValue = useCallback(
     (value: T | ((prev: T) => T)) => {

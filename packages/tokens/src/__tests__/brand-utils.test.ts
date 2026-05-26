@@ -33,6 +33,24 @@ describe('normalizeBrandColor', () => {
   it('is case-insensitive', () => {
     expect(normalizeBrandColor('#AABBCC')).toBe('#AABBCC')
   })
+
+  it('expands 3-char shorthand hex', () => {
+    expect(normalizeBrandColor('#abc')).toBe('#aabbcc')
+    expect(normalizeBrandColor('#fff')).toBe('#ffffff')
+    expect(normalizeBrandColor('#000')).toBe('#000000')
+    expect(normalizeBrandColor('#ABC')).toBe('#AABBCC')
+  })
+
+  it('strips alpha from 8-char hex', () => {
+    expect(normalizeBrandColor('#aabbccdd')).toBe('#aabbcc')
+    expect(normalizeBrandColor('#ff000080')).toBe('#ff0000')
+    expect(normalizeBrandColor('#AABBCCFF')).toBe('#AABBCC')
+  })
+
+  it('trims whitespace', () => {
+    expect(normalizeBrandColor('  #abcdef  ')).toBe('#abcdef')
+    expect(normalizeBrandColor(' #abc ')).toBe('#aabbcc')
+  })
 })
 
 describe('hexToHSL', () => {
