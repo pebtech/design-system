@@ -13,7 +13,7 @@ export { Link } from './typography/link'
 
 // Primitives
 export { Button } from './primitives/button'
-export { ButtonGroup } from './primitives/button-group'
+export { ButtonGroup, useButtonGroup, getButtonGroupClasses } from './primitives/button-group'
 export { Badge, BadgeButton } from './primitives/badge'
 export { Avatar, AvatarButton } from './primitives/avatar'
 export { Input, InputGroup } from './primitives/input'

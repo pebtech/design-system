@@ -1,6 +1,6 @@
 import * as Headless from '@headlessui/react'
 import clsx from 'clsx'
-import type React from 'react'
+import React, { forwardRef } from 'react'
 import { Button } from './button'
 import { Link } from '../typography/link'
 
@@ -8,13 +8,17 @@ export function Dropdown(props: Headless.MenuProps) {
   return <Headless.Menu {...props} />
 }
 
-export function DropdownButton<T extends React.ElementType = typeof Button>({
-  as = Button,
-  className,
-  ...props
-}: { className?: string } & Omit<Headless.MenuButtonProps<T>, 'className'>) {
-  return <Headless.MenuButton as={as} className={clsx('font-normal', className)} {...(as === Button ? { preset: 'outline' } : {})} {...props} />
-}
+export const DropdownButton = forwardRef(function DropdownButton(
+  {
+    as = Button,
+    className,
+    ...props
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  }: { as?: React.ElementType; className?: string; [key: string]: any },
+  ref: React.ForwardedRef<HTMLButtonElement>
+) {
+  return <Headless.MenuButton ref={ref} as={as} className={clsx('font-normal', className)} {...(as === Button ? { preset: 'outline' } : {})} {...props} />
+})
 
 export function DropdownMenu({
   anchor = 'bottom',
@@ -54,13 +58,16 @@ export function DropdownMenu({
   )
 }
 
-export function DropdownItem({
-  className,
-  ...props
-}: { className?: string } & (
-  | ({ href?: never } & Omit<Headless.MenuItemProps<'button'>, 'as' | 'className'>)
-  | ({ href: string } & Omit<Headless.MenuItemProps<typeof Link>, 'as' | 'className'>)
-)) {
+export const DropdownItem = forwardRef(function DropdownItem(
+  {
+    className,
+    ...props
+  }: { className?: string } & (
+    | ({ href?: never } & Omit<Headless.MenuItemProps<'button'>, 'as' | 'className'>)
+    | ({ href: string } & Omit<Headless.MenuItemProps<typeof Link>, 'as' | 'className'>)
+  ),
+  ref: React.ForwardedRef<HTMLElement>
+) {
   const classes = clsx(
     className,
     // Base styles
@@ -83,11 +90,11 @@ export function DropdownItem({
   )
 
   return typeof props.href === 'string' ? (
-    <Headless.MenuItem as={Link} {...props} className={classes} />
+    <Headless.MenuItem ref={ref as React.ForwardedRef<HTMLAnchorElement>} as={Link} {...props} className={classes} />
   ) : (
-    <Headless.MenuItem as="button" type="button" {...props} className={classes} />
+    <Headless.MenuItem ref={ref as React.ForwardedRef<HTMLButtonElement>} as="button" type="button" {...props} className={classes} />
   )
-}
+})
 
 export function DropdownHeader({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   return <div {...props} className={clsx(className, 'col-span-5 px-3.5 pt-2.5 pb-1 sm:px-3')} />

@@ -9,7 +9,7 @@ export function PageTopWrapper({ children, className, ...props }: PageTopWrapper
   return (
     <div
       className={cn(
-        "flex flex-col sm:flex-row sm:items-center justify-between gap-4 pl-4 pr-2 py-2 absolute rounded-t-2xl top-0 right-0 left-0 z-10 bg-surface border-b border-border",
+        "flex flex-col sm:flex-row sm:items-center justify-between gap-4 pl-4 pr-2 py-2 sticky top-0 z-10 rounded-t-2xl bg-surface border-b border-border",
         className
       )}
       {...props}

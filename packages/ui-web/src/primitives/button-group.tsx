@@ -1,59 +1,69 @@
-import React, { forwardRef } from 'react'
+import React, { createContext, forwardRef, useContext } from 'react'
 import { cn } from '../utils/cn'
 
 type SizeVariant = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+type ButtonGroupPosition = 'first' | 'middle' | 'last' | 'only'
 
 type ButtonGroupProps = React.ComponentPropsWithoutRef<'div'> & {
   size?: SizeVariant
 }
 
-const styles = {
-  base: 'inline-flex isolate -space-x-px whitespace-nowrap pointer-fine:cursor-pointer pointer-fine:touch-none',
-  radius: {
-    xs: {
-      start:
-        '[&>*:first-child]:!rounded-s-md [&>*:first-child]:before:!rounded-s-[calc(var(--radius-md)-1px)] [&>*:first-child]:after:!rounded-s-[calc(var(--radius-md)-1px)] [&>div:first-child>button]:!rounded-s-md [&>div:first-child>button]:before:!rounded-s-[calc(var(--radius-md)-1px)] [&>div:first-child>button]:after:!rounded-s-[calc(var(--radius-md)-1px)]',
-      end: '[&>*:last-child]:!rounded-e-md [&>*:last-child]:before:!rounded-e-[calc(var(--radius-md)-1px)] [&>*:last-child]:after:!rounded-e-[calc(var(--radius-md)-1px)] [&>div:last-child>button]:!rounded-e-md [&>div:last-child>button]:before:!rounded-e-[calc(var(--radius-md)-1px)] [&>div:last-child>button]:after:!rounded-e-[calc(var(--radius-md)-1px)]',
-    },
-    sm: {
-      start:
-        '[&>*:first-child]:!rounded-s-md [&>*:first-child]:before:!rounded-s-[calc(var(--radius-md)-1px)] [&>*:first-child]:after:!rounded-s-[calc(var(--radius-md)-1px)] [&>div:first-child>button]:!rounded-s-md [&>div:first-child>button]:before:!rounded-s-[calc(var(--radius-md)-1px)] [&>div:first-child>button]:after:!rounded-s-[calc(var(--radius-md)-1px)]',
-      end: '[&>*:last-child]:!rounded-e-md [&>*:last-child]:before:!rounded-e-[calc(var(--radius-md)-1px)] [&>*:last-child]:after:!rounded-e-[calc(var(--radius-md)-1px)] [&>div:last-child>button]:!rounded-e-md [&>div:last-child>button]:before:!rounded-e-[calc(var(--radius-md)-1px)] [&>div:last-child>button]:after:!rounded-e-[calc(var(--radius-md)-1px)]',
-    },
-    md: {
-      start:
-        '[&>*:first-child]:!rounded-s-lg [&>*:first-child]:before:!rounded-s-[calc(var(--radius-lg)-1px)] [&>*:first-child]:after:!rounded-s-[calc(var(--radius-lg)-1px)] [&>div:first-child>button]:!rounded-s-lg [&>div:first-child>button]:before:!rounded-s-[calc(var(--radius-lg)-1px)] [&>div:first-child>button]:after:!rounded-s-[calc(var(--radius-lg)-1px)]',
-      end: '[&>*:last-child]:!rounded-e-lg [&>*:last-child]:before:!rounded-e-[calc(var(--radius-lg)-1px)] [&>*:last-child]:after:!rounded-e-[calc(var(--radius-lg)-1px)] [&>div:last-child>button]:!rounded-e-lg [&>div:last-child>button]:before:!rounded-e-[calc(var(--radius-lg)-1px)] [&>div:last-child>button]:after:!rounded-e-[calc(var(--radius-lg)-1px)]',
-    },
-    lg: {
-      start:
-        '[&>*:first-child]:!rounded-s-lg [&>*:first-child]:before:!rounded-s-[calc(var(--radius-lg)-1px)] [&>*:first-child]:after:!rounded-s-[calc(var(--radius-lg)-1px)] [&>div:first-child>button]:!rounded-s-lg [&>div:first-child>button]:before:!rounded-s-[calc(var(--radius-lg)-1px)] [&>div:first-child>button]:after:!rounded-s-[calc(var(--radius-lg)-1px)]',
-      end: '[&>*:last-child]:!rounded-e-lg [&>*:last-child]:before:!rounded-e-[calc(var(--radius-lg)-1px)] [&>*:last-child]:after:!rounded-e-[calc(var(--radius-lg)-1px)] [&>div:last-child>button]:!rounded-e-lg [&>div:last-child>button]:before:!rounded-e-[calc(var(--radius-lg)-1px)] [&>div:last-child>button]:after:!rounded-e-[calc(var(--radius-lg)-1px)]',
-    },
-    xl: {
-      start:
-        '[&>*:first-child]:!rounded-s-xl [&>*:first-child]:before:!rounded-s-[calc(var(--radius-xl)-1px)] [&>*:first-child]:after:!rounded-s-[calc(var(--radius-xl)-1px)] [&>div:first-child>button]:!rounded-s-xl [&>div:first-child>button]:before:!rounded-s-[calc(var(--radius-xl)-1px)] [&>div:first-child>button]:after:!rounded-s-[calc(var(--radius-xl)-1px)]',
-      end: '[&>*:last-child]:!rounded-e-xl [&>*:last-child]:before:!rounded-e-[calc(var(--radius-xl)-1px)] [&>*:last-child]:after:!rounded-e-[calc(var(--radius-xl)-1px)] [&>div:last-child>button]:!rounded-e-xl [&>div:last-child>button]:before:!rounded-e-[calc(var(--radius-xl)-1px)] [&>div:last-child>button]:after:!rounded-e-[calc(var(--radius-xl)-1px)]',
-    },
-  },
-  reset: [
-    '[&>*]:!rounded-none [&>*]:before:!rounded-none [&>*]:after:!rounded-none',
-    '[&>div>button]:!rounded-none [&>div>button]:before:!rounded-none [&>div>button]:after:!rounded-none',
-  ].join(' '),
-  focus: ['[&>*:focus]:z-10', '[&>div>button:focus]:z-10'].join(' '),
+const ButtonGroupContext = createContext<{
+  position: ButtonGroupPosition
+  size: SizeVariant
+} | null>(null)
+
+export function useButtonGroup() {
+  return useContext(ButtonGroupContext)
+}
+
+const radiusMap: Record<SizeVariant, { start: string; end: string }> = {
+  xs: { start: '!rounded-s-md before:!rounded-s-[calc(var(--radius-md)-1px)] after:!rounded-s-[calc(var(--radius-md)-1px)]', end: '!rounded-e-md before:!rounded-e-[calc(var(--radius-md)-1px)] after:!rounded-e-[calc(var(--radius-md)-1px)]' },
+  sm: { start: '!rounded-s-md before:!rounded-s-[calc(var(--radius-md)-1px)] after:!rounded-s-[calc(var(--radius-md)-1px)]', end: '!rounded-e-md before:!rounded-e-[calc(var(--radius-md)-1px)] after:!rounded-e-[calc(var(--radius-md)-1px)]' },
+  md: { start: '!rounded-s-lg before:!rounded-s-[calc(var(--radius-lg)-1px)] after:!rounded-s-[calc(var(--radius-lg)-1px)]', end: '!rounded-e-lg before:!rounded-e-[calc(var(--radius-lg)-1px)] after:!rounded-e-[calc(var(--radius-lg)-1px)]' },
+  lg: { start: '!rounded-s-lg before:!rounded-s-[calc(var(--radius-lg)-1px)] after:!rounded-s-[calc(var(--radius-lg)-1px)]', end: '!rounded-e-lg before:!rounded-e-[calc(var(--radius-lg)-1px)] after:!rounded-e-[calc(var(--radius-lg)-1px)]' },
+  xl: { start: '!rounded-s-xl before:!rounded-s-[calc(var(--radius-xl)-1px)] after:!rounded-s-[calc(var(--radius-xl)-1px)]', end: '!rounded-e-xl before:!rounded-e-[calc(var(--radius-xl)-1px)] after:!rounded-e-[calc(var(--radius-xl)-1px)]' },
+}
+
+export function getButtonGroupClasses(position: ButtonGroupPosition, size: SizeVariant): string {
+  const radius = radiusMap[size]
+  const base = '!rounded-none before:!rounded-none after:!rounded-none focus:z-10'
+
+  if (position === 'only') return ''
+  if (position === 'first') return cn(base, radius.start)
+  if (position === 'last') return cn(base, radius.end)
+  return base
 }
 
 export const ButtonGroup = forwardRef(function ButtonGroup(
   { className, size = 'md', children, ...props }: ButtonGroupProps,
   ref: React.ForwardedRef<HTMLDivElement>
 ) {
-  const radius = styles.radius[size]
-
-  const classes = cn(styles.base, styles.reset, styles.focus, radius.start, radius.end, className)
+  const childArray = React.Children.toArray(children)
+  const count = childArray.length
 
   return (
-    <div {...props} className={classes} ref={ref}>
-      {children}
+    <div
+      {...props}
+      className={cn(
+        'inline-flex isolate -space-x-px whitespace-nowrap',
+        className
+      )}
+      ref={ref}
+    >
+      {childArray.map((child, index) => {
+        const position: ButtonGroupPosition =
+          count === 1 ? 'only' :
+          index === 0 ? 'first' :
+          index === count - 1 ? 'last' :
+          'middle'
+
+        return (
+          <ButtonGroupContext.Provider key={index} value={{ position, size }}>
+            {child}
+          </ButtonGroupContext.Provider>
+        )
+      })}
     </div>
   )
 })

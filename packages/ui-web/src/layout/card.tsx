@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import clsx from 'clsx'
+import { cn } from '../utils/cn'
 
 // Define variant types for type safety
 type SpacingVariant = 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'chart'
@@ -124,20 +124,14 @@ export function Card({
   return (
     <div
       {...props}
-      className={clsx(
-        // Base styles (can be overridden by className)
+      className={cn(
         'relative',
-        // Apply variant styles (can be overridden by className)
-        !className?.includes('p-') && spacingVariants[finalSpacing],
-        !className?.includes('bg-') && backgroundVariants[finalBackground],
-        !className?.includes('rounded') && borderRadiusVariants[finalBorderRadius],
-        // Conditional styles (can be overridden by className)
-        finalShadow && !className?.includes('shadow') && clsx(
-          'shadow-sm',
-          finalHover && 'hover:shadow-md transition-shadow duration-200'
-        ),
-        finalBorder && !className?.includes('border') && 'border border-border',
-        // Custom className takes highest precedence
+        spacingVariants[finalSpacing],
+        backgroundVariants[finalBackground],
+        borderRadiusVariants[finalBorderRadius],
+        finalShadow && 'shadow-sm',
+        finalShadow && finalHover && 'hover:shadow-md transition-shadow duration-200',
+        finalBorder && 'border border-border',
         className
       )}
     >
