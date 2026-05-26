@@ -28,7 +28,10 @@
       "@swc/core",
       "sharp",
       "@playwright/browser-chromium"
-    ]
+    ],
+    "overrides": {
+      "serialize-javascript": ">=7.0.3"
+    }
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.0",

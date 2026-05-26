@@ -26,16 +26,31 @@ function toPascalCase(str) {
 async function svgToJsxChildren(svgContent) {
   // Let SVGR do the heavy lifting of SVG → JSX conversion
   const raw = await transform(svgContent, {
-    plugins: ['@svgr/plugin-jsx'],
+    plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx'],
     icon: true,
     typescript: true,
-    // Disable features we handle ourselves
     ref: false,
     titleProp: false,
     memo: false,
     expandProps: false,
     dimensions: false,
     jsxRuntime: 'classic',
+    svgoConfig: {
+      plugins: [
+        { name: 'preset-default' },
+        { name: 'removeScriptElement' },
+        {
+          name: 'removeAttrs',
+          params: {
+            attrs: ['onload', 'onerror', 'onclick', 'onmouseover', 'onfocus', 'onblur'],
+          },
+        },
+        {
+          name: 'removeElementsByAttr',
+          params: { id: 'script' },
+        },
+      ],
+    },
   })
 
   // Extract the viewBox from the generated <svg> tag
