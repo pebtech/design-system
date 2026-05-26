@@ -25,7 +25,7 @@
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/",
-    "test": "echo 'no tests yet'",
+    "test": "vitest run",
     "size": "echo 'no size check yet'"
   },
   "peerDependencies": {

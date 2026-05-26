@@ -90,6 +90,15 @@ export const DropdownButton = forwardRef(function DropdownButton(
     }
   }
 
+  // If the rendered component is neither our Button nor a native <button>,
+  // we still need to expose it as a focusable trigger to keyboard users and
+  // assistive tech. Spread the fallback role/tabIndex BEFORE ...props so
+  // consumers can override.
+  const isNativeButton = Component === Button || Component === 'button'
+  const fallbackButtonProps: { role?: string; tabIndex?: number } = isNativeButton
+    ? {}
+    : { role: 'button', tabIndex: 0 }
+
   return (
     <Component
       ref={handleRef}
@@ -101,6 +110,7 @@ export const DropdownButton = forwardRef(function DropdownButton(
       onKeyDown={handleKeyDown}
       className={cn('font-normal', className)}
       {...(Component === Button ? { preset: 'outline' } : {})}
+      {...fallbackButtonProps}
       {...props}
     />
   )
@@ -190,6 +200,9 @@ function DropdownMenuContent({
     'aria-labelledby'?: string
   }
 
+  // Menu remounts each time it opens (we return null when closed), so this
+  // mount-only effect correctly focuses the first item on every open.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const items = menuRef.current?.querySelectorAll<HTMLElement>(
       '[role="menuitem"]:not([aria-disabled="true"])'

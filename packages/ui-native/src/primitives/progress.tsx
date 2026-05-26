@@ -35,7 +35,7 @@ export function Progress({
 
   const barColor =
     color === 'brand'
-      ? tokens.bg.brand || '#4f46e5'
+      ? tokens.bg.brand ?? '#4f46e5'
       : colorMap[color] || '#4f46e5'
 
   return (
@@ -46,7 +46,7 @@ export function Progress({
           height: 8,
           width: '100%',
           borderRadius: 9999,
-          backgroundColor: tokens.bg.secondary || '#f4f4f5',
+          backgroundColor: tokens.bg.secondary ?? '#f4f4f5',
           overflow: 'hidden',
         },
         style,

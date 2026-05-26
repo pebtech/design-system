@@ -1,65 +1,59 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
+
+function subscribe(key: string, callback: () => void) {
+  if (typeof window === "undefined") return () => {};
+  const handler = (e: StorageEvent) => {
+    if (e.key === key) callback();
+  };
+  window.addEventListener("storage", handler);
+  return () => window.removeEventListener("storage", handler);
+}
 
 export function useLocalStorage<T>(
   key: string,
   initialValue: T,
 ): [T, (value: T | ((prev: T) => T)) => void] {
-  // Always initialize with initialValue to avoid SSR hydration mismatch.
-  const [storedValue, setStoredValue] = useState<T>(initialValue);
+  const serializedInitial = JSON.stringify(initialValue);
 
-  // After mount, read the real value from localStorage.
-  useEffect(() => {
-    try {
-      const item = window.localStorage.getItem(key);
-      if (item !== null) {
-        setStoredValue(JSON.parse(item) as T);
-      }
-    } catch {
-      // localStorage unavailable or JSON parse error; keep initialValue.
-    }
-  }, [key]);
+  const getSnapshot = () => {
+    if (typeof window === "undefined") return serializedInitial;
+    return window.localStorage.getItem(key) ?? serializedInitial;
+  };
+
+  const getServerSnapshot = () => serializedInitial;
+
+  const rawStored = useSyncExternalStore(
+    useCallback((cb) => subscribe(key, cb), [key]),
+    getSnapshot,
+    getServerSnapshot,
+  );
+
+  let storedValue: T;
+  try {
+    storedValue = JSON.parse(rawStored) as T;
+  } catch {
+    storedValue = initialValue;
+  }
 
   const setValue = useCallback(
     (value: T | ((prev: T) => T)) => {
-      setStoredValue((prev) => {
-        const nextValue =
-          value instanceof Function ? value(prev) : value;
-
-        try {
-          if (typeof window !== "undefined") {
-            window.localStorage.setItem(key, JSON.stringify(nextValue));
-          }
-        } catch {
-          // Storage full or blocked; state still updates in memory.
-        }
-
-        return nextValue;
-      });
-    },
-    [key],
-  );
-
-  // Sync across tabs via the storage event.
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const handleStorage = (e: StorageEvent) => {
-      if (e.key !== key) return;
-
+      const nextValue =
+        value instanceof Function ? value(storedValue) : value;
       try {
-        setStoredValue(
-          e.newValue !== null
-            ? (JSON.parse(e.newValue) as T)
-            : initialValue,
-        );
+        if (typeof window !== "undefined") {
+          const serialized = JSON.stringify(nextValue);
+          window.localStorage.setItem(key, serialized);
+          window.dispatchEvent(
+            new StorageEvent("storage", { key, newValue: serialized }),
+          );
+        }
       } catch {
-        setStoredValue(initialValue);
+        // Storage full or blocked; in-memory state still reflects nextValue
+        // on the next snapshot read where possible.
       }
-    };
-
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, [key, initialValue]);
+    },
+    [key, storedValue],
+  );
 
   return [storedValue, setValue];
 }

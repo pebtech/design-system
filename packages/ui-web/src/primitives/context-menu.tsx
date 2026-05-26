@@ -120,13 +120,24 @@ export function ContextMenuContent({ children, className }: ContextMenuContentPr
       close()
     }
 
+    // Block native right-click outside the menu while the menu is open so a
+    // second context-menu gesture doesn't open the browser's menu underneath.
+    const handleContextMenu = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        e.preventDefault()
+        close()
+      }
+    }
+
     document.addEventListener('mousedown', handleClickOutside)
     document.addEventListener('keydown', handleEscape)
+    document.addEventListener('contextmenu', handleContextMenu)
     window.addEventListener('scroll', handleScroll, true)
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
       document.removeEventListener('keydown', handleEscape)
+      document.removeEventListener('contextmenu', handleContextMenu)
       window.removeEventListener('scroll', handleScroll, true)
     }
   }, [isOpen, close])
@@ -189,8 +200,6 @@ export function ContextMenuContent({ children, className }: ContextMenuContentPr
 
   return createPortal(
     <>
-      {/* Invisible underlay to catch context menu on the overlay itself */}
-      <div className="fixed inset-0 z-50" onContextMenu={(e) => e.preventDefault()} />
       <div
         ref={menuRef}
         id={menuId}

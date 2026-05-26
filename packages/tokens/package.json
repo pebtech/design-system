@@ -21,12 +21,13 @@
     "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
-    "build": "tsup && node scripts/generate-css.mjs",
+    "build": "tsup && node scripts/generate-css.mjs && node scripts/check-parity.mjs",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/",
     "test": "vitest run",
+    "check-parity": "node scripts/check-parity.mjs",
     "size": "size-limit"
   },
   "size-limit": [

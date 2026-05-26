@@ -40,7 +40,7 @@ export function Tabs({
             flexDirection: 'row',
             padding: 4,
             borderRadius: 12,
-            backgroundColor: tokens.bg.secondary || '#f4f4f5',
+            backgroundColor: tokens.bg.secondary ?? '#f4f4f5',
           },
           style,
         ])}
@@ -62,7 +62,7 @@ export function Tabs({
                 alignItems: 'center',
                 justifyContent: 'center',
                 backgroundColor: isActive
-                  ? tokens.bg.surface || '#ffffff'
+                  ? tokens.bg.surface ?? '#ffffff'
                   : 'transparent',
                 ...(isActive && {
                   shadowColor: '#000',
@@ -104,7 +104,7 @@ export function Tabs({
       style={StyleSheet.flatten([
         {
           borderBottomWidth: 1,
-          borderBottomColor: tokens.border.primary || '#e4e4e7',
+          borderBottomColor: tokens.border.primary ?? '#e4e4e7',
         },
         style,
       ])}
@@ -128,7 +128,7 @@ export function Tabs({
                 paddingHorizontal: 4,
                 borderBottomWidth: 2,
                 borderBottomColor: isActive
-                  ? tokens.text.brand || '#4f46e5'
+                  ? tokens.text.brand ?? '#4f46e5'
                   : 'transparent',
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -149,8 +149,8 @@ export function Tabs({
                     paddingVertical: 2,
                     borderRadius: 9999,
                     backgroundColor: isActive
-                      ? (tokens.text.brand || '#4f46e5') + '1A'
-                      : tokens.bg.secondary || '#f4f4f5',
+                      ? (tokens.text.brand ?? '#4f46e5') + '1A'
+                      : tokens.bg.secondary ?? '#f4f4f5',
                   }}
                 >
                   <Text

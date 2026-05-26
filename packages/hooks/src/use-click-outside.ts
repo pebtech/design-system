@@ -1,4 +1,4 @@
-import { useEffect, useRef, type RefObject } from "react";
+import { useEffect, useLayoutEffect, useRef, type RefObject } from "react";
 
 export function useClickOutside<T extends HTMLElement>(
   ref: RefObject<T | null>,
@@ -7,7 +7,9 @@ export function useClickOutside<T extends HTMLElement>(
   // Store callback in a ref so the effect never re-runs due to
   // a new callback reference (inline handlers change every render).
   const callbackRef = useRef(callback);
-  callbackRef.current = callback;
+  useLayoutEffect(() => {
+    callbackRef.current = callback;
+  });
 
   useEffect(() => {
     const handler = (event: MouseEvent | TouchEvent) => {

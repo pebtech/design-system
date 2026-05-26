@@ -139,7 +139,7 @@ export function ButtonText({
   const { size, variant } = context
 
   let fontSize = 16
-  let fontWeight: TextStyle['fontWeight'] = '600'
+  const fontWeight: TextStyle['fontWeight'] = '600'
 
   if (size === 'xs') fontSize = 12
   else if (size === 'sm') fontSize = 14

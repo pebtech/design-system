@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState } from 'react'
 import { View, StyleSheet, ViewStyle } from 'react-native'
 import { Toggle } from './toggle'
 import { useTheme } from '../providers/theme-provider'
@@ -38,17 +38,11 @@ export function ToggleGroup({
   ...props
 }: ToggleGroupProps) {
   const { tokens } = useTheme()
-  const [value, setValue] = useState<string | string[]>(() => {
-    if (controlledValue !== undefined) return controlledValue
+  const [internalValue, setInternalValue] = useState<string | string[]>(() => {
     if (defaultValue !== undefined) return defaultValue
     return type === 'multiple' ? [] : ''
   })
-
-  useEffect(() => {
-    if (controlledValue !== undefined) {
-      setValue(controlledValue)
-    }
-  }, [controlledValue])
+  const value = controlledValue !== undefined ? controlledValue : internalValue
 
   const handleItemChange = (itemValue: string) => {
     if (isDisabled) return
@@ -66,7 +60,7 @@ export function ToggleGroup({
     }
 
     if (controlledValue === undefined) {
-      setValue(newValue)
+      setInternalValue(newValue)
     }
     onChange?.(newValue)
   }
@@ -77,7 +71,7 @@ export function ToggleGroup({
         className={cn('flex-row items-center gap-1 rounded-md border p-1', className)}
         style={StyleSheet.flatten([
           {
-            borderColor: tokens.border.primary || '#e4e4e7',
+            borderColor: tokens.border.primary ?? '#e4e4e7',
             alignSelf: 'flex-start',
           },
           style,

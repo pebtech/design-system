@@ -6,7 +6,12 @@ import { cn } from '../utils/cn'
 
 type PopoverPlacement = NonNullable<AriaPopoverProps['placement']>
 
-const PopoverContext = createContext<any>(null)
+interface PopoverContextValue {
+  state: ReturnType<typeof useOverlayTriggerState>
+  triggerRef: React.RefObject<HTMLButtonElement | null>
+}
+
+const PopoverContext = createContext<PopoverContextValue | null>(null)
 
 export interface PopoverProps {
   children: React.ReactNode
@@ -36,10 +41,12 @@ export function PopoverTrigger({ children }: { children: React.ReactElement }) {
 
   // useOverlayTrigger only returns ARIA attributes; we still need to wire up
   // the toggle behavior on click and Enter/Space ourselves.
-  const child = children as React.ReactElement<any>
-  const existingOnClick = child.props?.onClick as
-    | ((e: React.MouseEvent) => void)
-    | undefined
+  type TriggerChildProps = {
+    onClick?: (e: React.MouseEvent) => void
+    ref?: React.Ref<HTMLButtonElement>
+  }
+  const child = children as React.ReactElement<TriggerChildProps>
+  const existingOnClick = child.props?.onClick
 
   return React.cloneElement(child, {
     ...triggerProps,
@@ -48,7 +55,7 @@ export function PopoverTrigger({ children }: { children: React.ReactElement }) {
       existingOnClick?.(e)
       state.toggle()
     },
-  })
+  } as Partial<TriggerChildProps>)
 }
 
 export interface PopoverContentProps {
@@ -84,7 +91,7 @@ export function PopoverContent({ children, className, placement = 'bottom start'
         ref={popoverRef}
         {...popoverProps}
         className={cn(
-          'z-50 w-72 rounded-xl bg-white p-4 shadow-lg ring-1 ring-zinc-950/10 dark:bg-zinc-900 dark:ring-white/10 focus:outline-hidden',
+          'z-50 w-72 rounded-xl bg-surface p-4 shadow-lg ring-1 ring-border focus:outline-hidden',
           className
         )}
       >

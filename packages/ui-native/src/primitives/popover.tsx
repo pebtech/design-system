@@ -67,11 +67,11 @@ export function PopoverContent({ children, className, style }: PopoverContentPro
           style={StyleSheet.flatten([
             {
               width: '90%',
-              backgroundColor: tokens.bg.surface || '#ffffff',
+              backgroundColor: tokens.bg.surface ?? '#ffffff',
               borderRadius: 12,
               padding: 16,
               borderWidth: 1,
-              borderColor: tokens.border.primary || '#e4e4e7',
+              borderColor: tokens.border.primary ?? '#e4e4e7',
             },
             style,
           ])}

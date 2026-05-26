@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState } from 'react'
 import { Pressable, View, StyleSheet, ViewStyle } from 'react-native'
 import { useTheme } from '../providers/theme-provider'
 import { Text } from './text'
@@ -35,18 +35,13 @@ export function RadioGroup({
   children,
   ...props
 }: RadioGroupProps) {
-  const [value, setValue] = useState<string>(controlledValue || defaultValue || '')
-
-  useEffect(() => {
-    if (controlledValue !== undefined) {
-      setValue(controlledValue)
-    }
-  }, [controlledValue])
+  const [internalValue, setInternalValue] = useState<string>(defaultValue ?? '')
+  const value = controlledValue !== undefined ? controlledValue : internalValue
 
   const selectValue = (val: string) => {
     if (isDisabled) return
     if (controlledValue === undefined) {
-      setValue(val)
+      setInternalValue(val)
     }
     onChange?.(val)
   }
@@ -113,10 +108,10 @@ export function Radio({
     groupState.selectValue(value)
   }
 
-  const checkedBg = tokens.bg.brand || '#09090b'
+  const checkedBg = tokens.bg.brand ?? '#09090b'
   const uncheckedBg = 'transparent'
-  const checkedBorder = tokens.border.brand || tokens.bg.brand || '#09090b'
-  const uncheckedBorder = tokens.border.primary || '#e4e4e7'
+  const checkedBorder = tokens.border.brand ?? tokens.bg.brand ?? '#09090b'
+  const uncheckedBorder = tokens.border.primary ?? '#e4e4e7'
 
   return (
     <TypedPressable

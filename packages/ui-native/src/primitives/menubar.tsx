@@ -62,10 +62,10 @@ export function Menubar({ children, className, style }: MenubarProps) {
       <TypedView
         style={StyleSheet.flatten([
           {
-            backgroundColor: tokens.bg.surface || '#ffffff',
+            backgroundColor: tokens.bg.surface ?? '#ffffff',
             borderRadius: 10,
             borderWidth: 1,
-            borderColor: tokens.border.primary || '#e4e4e7',
+            borderColor: tokens.border.primary ?? '#e4e4e7',
             overflow: 'hidden',
           },
           style,
@@ -153,7 +153,7 @@ export function MenubarTrigger({ children, className, style }: MenubarTriggerPro
           paddingVertical: 8,
           borderRadius: 6,
           backgroundColor: isOpen
-            ? (tokens.hover.primary || '#f4f4f5')
+            ? (tokens.hover.primary ?? '#f4f4f5')
             : 'transparent',
         },
         style,
@@ -164,7 +164,7 @@ export function MenubarTrigger({ children, className, style }: MenubarTriggerPro
         <Text
           size="sm"
           weight="medium"
-          style={{ color: tokens.text.primary || '#18181b' }}
+          style={{ color: tokens.text.primary ?? '#18181b' }}
         >
           {children}
         </Text>
@@ -210,11 +210,11 @@ export function MenubarContent({ children, className, style }: MenubarContentPro
               top: triggerLayout.y + triggerLayout.height + 4,
               left: triggerLayout.x,
               minWidth: 180,
-              backgroundColor: tokens.bg.surface || '#ffffff',
+              backgroundColor: tokens.bg.surface ?? '#ffffff',
               borderRadius: 12,
               paddingVertical: 4,
               borderWidth: 1,
-              borderColor: tokens.border.primary || '#e4e4e7',
+              borderColor: tokens.border.primary ?? '#e4e4e7',
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 4 },
               shadowOpacity: 0.15,
@@ -289,8 +289,8 @@ export function MenubarItem({
           size="sm"
           style={{
             color: disabled
-              ? (tokens.text.secondary || '#a1a1aa')
-              : (tokens.text.primary || '#18181b'),
+              ? (tokens.text.secondary ?? '#a1a1aa')
+              : (tokens.text.primary ?? '#18181b'),
           }}
         >
           {children}

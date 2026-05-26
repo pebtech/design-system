@@ -35,12 +35,12 @@ export const Textarea = React.forwardRef<any, TextareaProps>(function Textarea(
   const { tokens, theme } = useTheme()
 
   const borderColor = invalid
-    ? (tokens.text.error || '#ef4444')
-    : (tokens.border.primary || '#e4e4e7')
+    ? (tokens.text.error ?? '#ef4444')
+    : (tokens.border.primary ?? '#e4e4e7')
 
-  const bgColor = tokens.bg.surface || '#ffffff'
-  const textColor = tokens.text.primary || '#18181b'
-  const placeholderColor = tokens.text.muted || '#a1a1aa'
+  const bgColor = tokens.bg.surface ?? '#ffffff'
+  const textColor = tokens.text.primary ?? '#18181b'
+  const placeholderColor = tokens.text.muted ?? '#a1a1aa'
 
   return (
     <TypedTextInput
@@ -58,7 +58,7 @@ export const Textarea = React.forwardRef<any, TextareaProps>(function Textarea(
         {
           borderColor,
           backgroundColor: disabled ? (theme === 'dark' ? '#27272a' : '#f4f4f5') : bgColor,
-          color: disabled ? tokens.text.disabled || '#a1a1aa' : textColor,
+          color: disabled ? tokens.text.disabled ?? '#a1a1aa' : textColor,
           opacity: disabled ? 0.6 : 1,
           height: numberOfLines * 24 + 16, // approximate height
           textAlignVertical: 'top',

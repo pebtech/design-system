@@ -103,6 +103,8 @@ export { PageTopWrapper } from './layout/page-top-wrapper'
 // Data Display
 export { Stat, Stat2, Stat3, Stat4 } from './data-display/stat'
 export { EmptyState } from './data-display/empty-state'
+export { DataTable } from './data-display/data-table'
+export type { DataTableColumn, DataTableProps } from './data-display/data-table'
 
 // Forms
 export { Combobox } from './forms/combobox'
@@ -113,7 +115,7 @@ export { ChipSelector } from './forms/chip-selector'
 export { FormField } from './forms/form-field'
 
 // Navigation
-export { Pagination } from './navigation/pagination'
+export { Pagination, TablePagination } from './navigation/pagination'
 export { Breadcrumb } from './navigation/breadcrumb'
 export { WizardStepper } from './navigation/wizard-stepper'
 

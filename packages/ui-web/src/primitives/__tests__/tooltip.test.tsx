@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, fireEvent, act } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { Tooltip } from '../tooltip'
 
 describe('Tooltip', () => {
@@ -37,7 +37,7 @@ describe('Tooltip', () => {
       </Tooltip>
     )
 
-    fireEvent.mouseEnter(screen.getByText('Hover').parentElement!)
+    fireEvent.mouseEnter(screen.getByText('Hover'))
     expect(screen.getByText('Visible tip')).toBeInTheDocument()
   })
 
@@ -48,11 +48,11 @@ describe('Tooltip', () => {
       </Tooltip>
     )
 
-    const wrapper = screen.getByText('Hover').parentElement!
-    fireEvent.mouseEnter(wrapper)
+    const trigger = screen.getByText('Hover')
+    fireEvent.mouseEnter(trigger)
     expect(screen.getByText('Disappearing tip')).toBeInTheDocument()
 
-    fireEvent.mouseLeave(wrapper)
+    fireEvent.mouseLeave(trigger)
     expect(screen.queryByText('Disappearing tip')).not.toBeInTheDocument()
   })
 
@@ -63,7 +63,7 @@ describe('Tooltip', () => {
       </Tooltip>
     )
 
-    fireEvent.focus(screen.getByText('Focus me').parentElement!)
+    fireEvent.focus(screen.getByText('Focus me'))
     expect(screen.getByText('Focus tip')).toBeInTheDocument()
   })
 
@@ -74,11 +74,11 @@ describe('Tooltip', () => {
       </Tooltip>
     )
 
-    const wrapper = screen.getByText('Focus me').parentElement!
-    fireEvent.focus(wrapper)
+    const trigger = screen.getByText('Focus me')
+    fireEvent.focus(trigger)
     expect(screen.getByText('Blur tip')).toBeInTheDocument()
 
-    fireEvent.blur(wrapper)
+    fireEvent.blur(trigger)
     expect(screen.queryByText('Blur tip')).not.toBeInTheDocument()
   })
 
@@ -89,7 +89,7 @@ describe('Tooltip', () => {
       </Tooltip>
     )
 
-    fireEvent.mouseEnter(screen.getByText('Trigger').parentElement!)
+    fireEvent.mouseEnter(screen.getByText('Trigger'))
     expect(screen.getByRole('tooltip')).toBeInTheDocument()
   })
 
@@ -100,7 +100,7 @@ describe('Tooltip', () => {
       </Tooltip>
     )
 
-    fireEvent.mouseEnter(screen.getByText('No tip').parentElement!)
+    fireEvent.mouseEnter(screen.getByText('No tip'))
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
 
@@ -111,10 +111,19 @@ describe('Tooltip', () => {
       </Tooltip>
     )
 
-    const wrapper = screen.getByText('Trigger').parentElement!
-    expect(wrapper).not.toHaveAttribute('aria-describedby')
+    const trigger = screen.getByText('Trigger')
+    expect(trigger).not.toHaveAttribute('aria-describedby')
 
-    fireEvent.mouseEnter(wrapper)
-    expect(wrapper).toHaveAttribute('aria-describedby')
+    fireEvent.mouseEnter(trigger)
+    expect(trigger).toHaveAttribute('aria-describedby')
+  })
+
+  it('falls back to span wrapper for non-element children', () => {
+    render(<Tooltip text="String tip">Just text</Tooltip>)
+    const trigger = screen.getByText('Just text')
+    expect(trigger.tagName).toBe('SPAN')
+
+    fireEvent.mouseEnter(trigger)
+    expect(screen.getByText('String tip')).toBeInTheDocument()
   })
 })

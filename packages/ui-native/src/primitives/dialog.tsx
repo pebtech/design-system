@@ -49,11 +49,11 @@ export function Dialog({
           style={StyleSheet.flatten([
             {
               width: '100%',
-              backgroundColor: tokens.bg.surface || '#ffffff',
+              backgroundColor: tokens.bg.surface ?? '#ffffff',
               borderRadius: 16,
               padding: 24,
               borderWidth: 1,
-              borderColor: tokens.border.primary || '#e4e4e7',
+              borderColor: tokens.border.primary ?? '#e4e4e7',
             },
             style,
           ])}
@@ -74,7 +74,7 @@ export function DialogTitle({ children, className, style, ...props }: any) {
     <Text
       weight="semibold"
       size="lg"
-      style={StyleSheet.flatten([{ color: tokens.text.primary || '#18181b', marginBottom: 8 }, style])}
+      style={StyleSheet.flatten([{ color: tokens.text.primary ?? '#18181b', marginBottom: 8 }, style])}
       className={className}
       {...props}
     >
@@ -89,7 +89,7 @@ export function DialogDescription({ children, className, style, ...props }: any)
     <Text
       weight="normal"
       size="sm"
-      style={StyleSheet.flatten([{ color: tokens.text.secondary || '#71717a', marginBottom: 16 }, style])}
+      style={StyleSheet.flatten([{ color: tokens.text.secondary ?? '#71717a', marginBottom: 16 }, style])}
       className={className}
       {...props}
     >

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import {
   Animated,
   LayoutAnimation,
@@ -66,7 +66,10 @@ export function AccordionSection({
   style,
 }: AccordionSectionProps) {
   const { tokens } = useTheme()
-  const rotation = useRef(new Animated.Value(isOpen ? 1 : 0)).current
+  // `isOpen` is intentionally only used as the initial value; subsequent
+  // changes are driven by the useEffect below, so the dep array stays empty
+  // to keep the Animated.Value identity stable across renders.
+  const rotation = useMemo(() => new Animated.Value(isOpen ? 1 : 0), [])
 
   useEffect(() => {
     Animated.timing(rotation, {
@@ -87,10 +90,10 @@ export function AccordionSection({
       style={StyleSheet.flatten([
         {
           overflow: 'hidden',
-          backgroundColor: tokens.bg.surface || '#ffffff',
+          backgroundColor: tokens.bg.surface ?? '#ffffff',
           borderRadius: 12,
           borderWidth: 1,
-          borderColor: tokens.border.primary || '#e4e4e7',
+          borderColor: tokens.border.primary ?? '#e4e4e7',
         },
         style,
       ])}
@@ -124,8 +127,8 @@ export function AccordionSection({
                 alignItems: 'center',
                 justifyContent: 'center',
                 backgroundColor: isOpen
-                  ? (tokens.bg.brand || '#4f46e5') + '1A'
-                  : tokens.hover.primary || '#f4f4f5',
+                  ? (tokens.bg.brand ?? '#4f46e5') + '1A'
+                  : tokens.hover.primary ?? '#f4f4f5',
               }}
             >
               {icon}
@@ -139,7 +142,7 @@ export function AccordionSection({
             {title}
           </Text>
           <ChevronDown
-            color={tokens.text.muted || '#a1a1aa'}
+            color={tokens.text.muted ?? '#a1a1aa'}
             rotation={rotation}
           />
         </TypedPressable>
@@ -155,7 +158,7 @@ export function AccordionSection({
         <TypedView
           style={{
             borderTopWidth: 1,
-            borderTopColor: tokens.border.primary || '#e4e4e7',
+            borderTopColor: tokens.border.primary ?? '#e4e4e7',
             padding: 24,
             paddingTop: 8,
           }}

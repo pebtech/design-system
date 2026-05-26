@@ -286,7 +286,6 @@ export function MenubarContent({ children, className, align = 'start' }: Menubar
 
   return createPortal(
     <>
-      <div className="fixed inset-0 z-40" />
       <div
         ref={contentRef}
         id={menuId}

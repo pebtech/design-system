@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState } from 'react'
 import { Pressable, View, StyleSheet, ViewStyle } from 'react-native'
 import { useTheme } from '../providers/theme-provider'
 import { Text } from './text'
@@ -36,19 +36,14 @@ export function CheckboxGroup({
   children,
   ...props
 }: CheckboxGroupProps) {
-  const [value, setValue] = useState<string[]>(() => controlledValue || defaultValue || [])
-
-  useEffect(() => {
-    if (controlledValue !== undefined) {
-      setValue(controlledValue)
-    }
-  }, [controlledValue])
+  const [internalValue, setInternalValue] = useState<string[]>(() => defaultValue ?? [])
+  const value = controlledValue !== undefined ? controlledValue : internalValue
 
   const addValue = (val: string) => {
     if (isDisabled) return
     const newValue = [...value, val]
     if (controlledValue === undefined) {
-      setValue(newValue)
+      setInternalValue(newValue)
     }
     onChange?.(newValue)
   }
@@ -57,7 +52,7 @@ export function CheckboxGroup({
     if (isDisabled) return
     const newValue = value.filter((v) => v !== val)
     if (controlledValue === undefined) {
-      setValue(newValue)
+      setInternalValue(newValue)
     }
     onChange?.(newValue)
   }
@@ -140,10 +135,10 @@ export function Checkbox({
     }
   }
 
-  const checkedBg = tokens.bg.brand || '#09090b'
+  const checkedBg = tokens.bg.brand ?? '#09090b'
   const uncheckedBg = 'transparent'
-  const checkedBorder = tokens.border.brand || tokens.bg.brand || '#09090b'
-  const uncheckedBorder = tokens.border.primary || '#e4e4e7'
+  const checkedBorder = tokens.border.brand ?? tokens.bg.brand ?? '#09090b'
+  const uncheckedBorder = tokens.border.primary ?? '#e4e4e7'
 
   return (
     <TypedPressable

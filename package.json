@@ -12,6 +12,7 @@
     "size": "pnpm -r run size",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "axe-storybook": "axe-storybook --build-dir=storybook-static",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "pnpm -r run build && changeset publish"
@@ -30,7 +31,8 @@
       "@playwright/browser-chromium"
     ],
     "overrides": {
-      "serialize-javascript": ">=7.0.3"
+      "serialize-javascript": ">=7.0.3",
+      "uuid": ">=11.1.1"
     }
   },
   "devDependencies": {
@@ -42,6 +44,7 @@
     "@storybook/react": "^10.2.10",
     "@storybook/react-vite": "^10.2.10",
     "@tailwindcss/vite": "^4.1.18",
+    "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.6.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",

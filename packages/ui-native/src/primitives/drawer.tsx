@@ -1,4 +1,4 @@
-import React, { createContext, useRef, useEffect } from 'react'
+import React, { createContext, useMemo, useEffect } from 'react'
 import {
   Modal,
   Pressable,
@@ -52,36 +52,35 @@ export function Drawer({
   ...props
 }: DrawerProps) {
   const { tokens } = useTheme()
-  const slideAnim = useRef(new Animated.Value(SCREEN_WIDTH)).current
-  const backdropAnim = useRef(new Animated.Value(0)).current
-
-  const drawerWidth = SCREEN_WIDTH * (sizeWidths[size] || 0.75)
+  const drawerWidth = SCREEN_WIDTH * (sizeWidths[size] ?? 0.75)
+  const slideAnim = useMemo(() => new Animated.Value(drawerWidth), [drawerWidth])
+  const backdropAnim = useMemo(() => new Animated.Value(0), [])
 
   useEffect(() => {
     if (open) {
       Animated.parallel([
         Animated.timing(slideAnim, {
-          toValue: SCREEN_WIDTH - drawerWidth,
+          toValue: 0,
           duration: 300,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(backdropAnim, {
           toValue: 1,
           duration: 300,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
       ]).start()
     } else {
       Animated.parallel([
         Animated.timing(slideAnim, {
-          toValue: SCREEN_WIDTH,
+          toValue: drawerWidth,
           duration: 250,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(backdropAnim, {
           toValue: 0,
           duration: 250,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
       ]).start()
     }
@@ -119,12 +118,13 @@ export function Drawer({
             position: 'absolute',
             top: 12,
             bottom: 12,
-            left: slideAnim,
+            right: 12,
             width: drawerWidth,
-            backgroundColor: tokens.bg.surface || '#ffffff',
+            transform: [{ translateX: slideAnim }],
+            backgroundColor: tokens.bg.surface ?? '#ffffff',
             borderRadius: 16,
             borderWidth: 1,
-            borderColor: tokens.border.primary || '#e4e4e7',
+            borderColor: tokens.border.primary ?? '#e4e4e7',
             shadowColor: '#000',
             shadowOffset: { width: -2, height: 0 },
             shadowOpacity: 0.25,
@@ -157,7 +157,7 @@ export function DrawerTitle({ children, className, style, ...props }: any) {
       weight="semibold"
       size="lg"
       style={StyleSheet.flatten([
-        { color: tokens.text.primary || '#18181b', marginBottom: 4 },
+        { color: tokens.text.primary ?? '#18181b', marginBottom: 4 },
         style,
       ])}
       className={className}
@@ -175,7 +175,7 @@ export function DrawerDescription({ children, className, style, ...props }: any)
       weight="normal"
       size="sm"
       style={StyleSheet.flatten([
-        { color: tokens.text.secondary || '#71717a', marginBottom: 16 },
+        { color: tokens.text.secondary ?? '#71717a', marginBottom: 16 },
         style,
       ])}
       className={className}

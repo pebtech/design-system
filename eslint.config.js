@@ -16,6 +16,13 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ['**/dist/**', '**/node_modules/**', '**/*.stories.tsx', '**/generated/**'],
+    ignores: [
+      '**/dist/**',
+      '**/node_modules/**',
+      // TODO: enable linting for stories files (issue 26 in audit) — will surface
+      // a backlog of existing lint errors; tackle as a focused cleanup pass.
+      '**/*.stories.tsx',
+      '**/generated/**',
+    ],
   }
 )

@@ -16,6 +16,12 @@ describe('Divider', () => {
   it('soft variant applies correct class', () => {
     render(<Divider soft />)
     const hr = screen.getByRole('presentation')
-    expect(hr.className).toContain('border-zinc-950/5')
+    expect(hr.className).toContain('border-border-secondary')
+  })
+
+  it('non-soft variant applies the default border token', () => {
+    render(<Divider />)
+    const hr = screen.getByRole('presentation')
+    expect(hr.className).toContain('border-border')
   })
 })

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 export interface UseIntersectionObserverOptions {
   threshold?: number | number[];
@@ -25,7 +25,9 @@ export function useIntersectionObserver<T extends HTMLElement = HTMLElement>(
   // Store threshold in a ref so the observer always gets the latest value
   // without the array identity issue.
   const thresholdRef = useRef(threshold);
-  thresholdRef.current = threshold;
+  useLayoutEffect(() => {
+    thresholdRef.current = threshold;
+  });
 
   useEffect(() => {
     if (!node) return;
@@ -42,7 +44,6 @@ export function useIntersectionObserver<T extends HTMLElement = HTMLElement>(
 
     observer.observe(node);
     return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [node, thresholdKey, root, rootMargin]);
 
   // Callback ref: React calls this with the DOM node on mount and null on unmount.

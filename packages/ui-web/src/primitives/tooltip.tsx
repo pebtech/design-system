@@ -1,6 +1,49 @@
-import React, { useState, useRef, useCallback, useEffect, useId } from 'react'
+import React, {
+  cloneElement,
+  isValidElement,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from 'react'
 import { createPortal } from 'react-dom'
+import { useTooltipTriggerState } from 'react-stately'
+import { useTooltip, useTooltipTrigger } from 'react-aria'
 import { cn } from '../utils/cn'
+
+export interface TooltipProps {
+  children: React.ReactNode
+  text?: string
+  className?: string
+  tooltipClassName?: string
+  maxWidth?: number | string
+  placement?: 'top' | 'right' | 'bottom' | 'left'
+  style?: React.CSSProperties
+}
+
+interface TriggerChildProps {
+  onMouseEnter?: React.MouseEventHandler
+  onMouseLeave?: React.MouseEventHandler
+  onPointerEnter?: React.PointerEventHandler
+  onPointerLeave?: React.PointerEventHandler
+  onFocus?: React.FocusEventHandler
+  onBlur?: React.FocusEventHandler
+  onKeyDown?: React.KeyboardEventHandler
+  className?: string
+  style?: React.CSSProperties
+  'aria-describedby'?: string
+}
+
+function chain<T extends unknown[]>(
+  ...callbacks: Array<((...args: T) => void) | undefined>
+) {
+  return (...args: T) => {
+    for (const cb of callbacks) {
+      cb?.(...args)
+    }
+  }
+}
 
 export function Tooltip({
   children,
@@ -10,27 +53,25 @@ export function Tooltip({
   maxWidth,
   placement = 'right',
   style,
-}: {
-  children: React.ReactNode
-  text?: string
-  className?: string
-  tooltipClassName?: string
-  maxWidth?: number | string
-  placement?: 'top' | 'right' | 'bottom' | 'left'
-  style?: React.CSSProperties
-}) {
-  const [isVisible, setIsVisible] = useState(false)
-  const [position, setPosition] = useState({ top: 0, left: 0, transform: '' })
-  const triggerRef = useRef<HTMLDivElement>(null)
+}: TooltipProps) {
+  // delay: 0 makes tests deterministic; react-aria's escape handling is still wired.
+  const state = useTooltipTriggerState({ delay: 0, closeDelay: 0 })
+  const triggerRef = useRef<HTMLElement | null>(null)
+  const { triggerProps, tooltipProps } = useTooltipTrigger({}, state, triggerRef)
+  const { tooltipProps: ariaTooltipProps } = useTooltip(tooltipProps, state)
   const tooltipId = useId()
 
-  const updatePosition = useCallback(() => {
-    const rect = triggerRef.current?.getBoundingClientRect()
-    if (!rect) return
+  const [position, setPosition] = useState<{
+    top: number
+    left: number
+    transform: string
+  }>({ top: 0, left: 0, transform: '' })
 
-    let top = 0
-    let left = 0
-    let transform = ''
+  const updatePosition = useCallback(() => {
+    const node = triggerRef.current
+    if (!node) return
+    const rect = node.getBoundingClientRect()
+    let top: number, left: number, transform: string
 
     if (placement === 'top') {
       top = rect.top - 8
@@ -53,6 +94,8 @@ export function Tooltip({
     setPosition({ top, left, transform })
   }, [placement])
 
+  const isVisible = state.isOpen && !!text
+
   useEffect(() => {
     if (!isVisible) return
     updatePosition()
@@ -64,34 +107,86 @@ export function Tooltip({
     }
   }, [isVisible, updatePosition])
 
-  const show = useCallback(() => {
-    if (!text) return
-    setIsVisible(true)
-  }, [text])
+  const open = useCallback(() => {
+    if (text) state.open(true)
+  }, [state, text])
 
-  const hide = useCallback(() => {
-    setIsVisible(false)
+  const close = useCallback(() => {
+    state.close(true)
+  }, [state])
+
+  // Bridge legacy mouse/focus events to the state machine so that
+  // fireEvent.mouseEnter / focus continues to work in tests. The react-aria
+  // pointer/keyboard handlers (in triggerProps) are preserved for Escape
+  // dismissal and pointer device support.
+  // react-aria types its handlers against `FocusableElement` which is a
+  // narrower interface than React's default. Cast to plain handlers so we
+  // can chain them with our own.
+  const ariaOnPointerEnter = triggerProps.onPointerEnter as
+    | ((e: React.MouseEvent) => void)
+    | undefined
+  const ariaOnPointerLeave = triggerProps.onPointerLeave as
+    | ((e: React.MouseEvent) => void)
+    | undefined
+  const ariaOnFocus = triggerProps.onFocus as
+    | ((e: React.FocusEvent) => void)
+    | undefined
+  const ariaOnBlur = triggerProps.onBlur as
+    | ((e: React.FocusEvent) => void)
+    | undefined
+  const ariaOnKeyDown = triggerProps.onKeyDown as
+    | ((e: React.KeyboardEvent) => void)
+    | undefined
+
+  const handlers = {
+    onMouseEnter: chain<[React.MouseEvent]>(ariaOnPointerEnter, open),
+    onMouseLeave: chain<[React.MouseEvent]>(ariaOnPointerLeave, close),
+    onFocus: chain<[React.FocusEvent]>(ariaOnFocus, open),
+    onBlur: chain<[React.FocusEvent]>(ariaOnBlur, close),
+    onKeyDown: ariaOnKeyDown,
+    'aria-describedby': isVisible ? tooltipId : undefined,
+  }
+
+  // Stable callback ref so we don't recreate it each render. The body runs
+  // at commit time, not during render.
+  const setTriggerNode = useCallback((node: HTMLElement | null) => {
+    triggerRef.current = node
   }, [])
+
+  let trigger: React.ReactNode
+  if (isValidElement(children)) {
+    const child = children as React.ReactElement<TriggerChildProps>
+    // setTriggerNode is a stable callback ref; the body runs at commit time,
+    // not during render. The lint rule can't tell the difference, so we
+    // explicitly disable it here.
+    // eslint-disable-next-line react-hooks/refs
+    trigger = cloneElement(child, {
+      ...handlers,
+      ref: setTriggerNode,
+      className: cn(child.props.className, className),
+      style: { ...child.props.style, ...style },
+    } as Partial<TriggerChildProps> & { ref: React.Ref<HTMLElement> })
+  } else {
+    trigger = (
+      <span
+        ref={triggerRef as React.Ref<HTMLSpanElement>}
+        {...handlers}
+        style={{ display: 'inline-block', ...style }}
+        className={className}
+      >
+        {children}
+      </span>
+    )
+  }
 
   return (
     <>
-      <div
-        ref={triggerRef}
-        onMouseEnter={show}
-        onMouseLeave={hide}
-        onFocus={show}
-        onBlur={hide}
-        tabIndex={0}
-        className={className}
-        style={style}
-        aria-describedby={isVisible ? tooltipId : undefined}
-      >
-        {children}
-      </div>
+      {trigger}
       {isVisible &&
         typeof document !== 'undefined' &&
         createPortal(
           <div
+            {...ariaTooltipProps}
             id={tooltipId}
             role="tooltip"
             className={cn(

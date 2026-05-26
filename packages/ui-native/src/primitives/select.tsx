@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Pressable, View, Modal, FlatList, StyleSheet, ViewStyle } from 'react-native'
 import { useTheme } from '../providers/theme-provider'
 import { Text } from './text'
@@ -37,27 +37,22 @@ export function Select({
 }: SelectProps) {
   const { tokens, theme } = useTheme()
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedValue, setSelectedValue] = useState(controlledValue || defaultValue || '')
-
-  React.useEffect(() => {
-    if (controlledValue !== undefined) {
-      setSelectedValue(controlledValue)
-    }
-  }, [controlledValue])
+  const [internalValue, setInternalValue] = useState(defaultValue ?? '')
+  const selectedValue = controlledValue !== undefined ? controlledValue : internalValue
 
   const selectedOption = options.find((o) => o.value === selectedValue)
 
   const handleSelect = (val: string) => {
     if (controlledValue === undefined) {
-      setSelectedValue(val)
+      setInternalValue(val)
     }
     onValueChange?.(val)
     setIsOpen(false)
   }
 
   const borderColor = invalid
-    ? (tokens.text.error || '#ef4444')
-    : (tokens.border.primary || '#e4e4e7')
+    ? (tokens.text.error ?? '#ef4444')
+    : (tokens.border.primary ?? '#e4e4e7')
 
   return (
     <>
@@ -76,7 +71,7 @@ export function Select({
       >
         <Text
           style={{
-            color: selectedOption ? (tokens.text.primary || '#18181b') : (tokens.text.muted || '#a1a1aa'),
+            color: selectedOption ? (tokens.text.primary ?? '#18181b') : (tokens.text.muted ?? '#a1a1aa'),
           }}
         >
           {selectedOption ? selectedOption.label : placeholder}
@@ -88,7 +83,7 @@ export function Select({
             height: 8,
             borderRightWidth: 1.5,
             borderBottomWidth: 1.5,
-            borderColor: tokens.text.secondary || '#71717a',
+            borderColor: tokens.text.secondary ?? '#71717a',
             transform: [{ rotate: '45deg' }],
             marginRight: 4,
             marginTop: -2,
@@ -115,7 +110,7 @@ export function Select({
               borderRadius: 12,
               padding: 16,
               borderWidth: 1,
-              borderColor: tokens.border.primary || '#e4e4e7',
+              borderColor: tokens.border.primary ?? '#e4e4e7',
             }}
           >
             <FlatList
@@ -130,7 +125,7 @@ export function Select({
                       paddingVertical: 12,
                       paddingHorizontal: 16,
                       borderRadius: 8,
-                      backgroundColor: isItemSel ? (tokens.bg.brand || '#09090b') : 'transparent',
+                      backgroundColor: isItemSel ? (tokens.bg.brand ?? '#09090b') : 'transparent',
                       flexDirection: 'row',
                       justifyContent: 'space-between',
                       alignItems: 'center',
@@ -138,7 +133,7 @@ export function Select({
                   >
                     <Text
                       style={{
-                        color: isItemSel ? '#ffffff' : (tokens.text.primary || '#18181b'),
+                        color: isItemSel ? '#ffffff' : (tokens.text.primary ?? '#18181b'),
                         fontWeight: isItemSel ? '600' : '400',
                       }}
                     >

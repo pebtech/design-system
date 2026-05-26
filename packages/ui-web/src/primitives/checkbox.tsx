@@ -141,7 +141,7 @@ export function Checkbox({
 
   const isDisabled = customDisabled || groupState?.isDisabled || fieldContext?.disabled || false
 
-  let stateProps = {
+  const stateProps = {
     isSelected,
     defaultSelected,
     onChange,

@@ -1,3 +1,10 @@
+/**
+ * Edit semantic token values in this file. Run
+ * `pnpm --filter @eniolayo/tokens run build` to regenerate
+ * `packages/tokens/dist/css/tokens.css` AND the consumed copy at
+ * `packages/ui-web/src/styles/tailwind.css`. Do not hand-edit the generated
+ * CSS files — they are overwritten on every build.
+ */
 import type { SemanticTokens } from './types'
 import { neutral, brand, status, statusBg, statusBorder } from './colors'
 
@@ -9,6 +16,8 @@ export const lightTokens: SemanticTokens = {
     brandAlt: brand.alt,
     primary: neutral[900],
     secondary: neutral[600],
+    tertiary: neutral[500],
+    quaternary: neutral[400],
     muted: neutral[500],
     disabled: neutral[400],
     inverse: '#ffffff',
@@ -85,11 +94,11 @@ export const lightTokens: SemanticTokens = {
     hover: neutral[100],
     active: neutral[100],
     focus: neutral[100],
-    error: neutral[100],
-    success: neutral[100],
-    warning: neutral[100],
-    info: neutral[100],
-    pending: neutral[100],
+    error: statusBg.error.light,
+    success: statusBg.success.light,
+    warning: statusBg.warning.light,
+    info: statusBg.info.light,
+    pending: statusBg.pending.light,
     disabled: neutral[100],
   },
 }
@@ -102,6 +111,8 @@ export const darkTokens: SemanticTokens = {
     brandAlt: brand.default,
     primary: neutral[50],
     secondary: neutral[400],
+    tertiary: neutral[500],
+    quaternary: neutral[600],
     muted: neutral[500],
     disabled: neutral[600],
     inverse: neutral[900],
@@ -133,6 +144,7 @@ export const darkTokens: SemanticTokens = {
     info: statusBg.info.dark,
     pending: statusBg.pending.dark,
     sidebar: neutral[900],
+    sidebarSecondary: neutral[800],
     tableHeader: neutral[800],
   },
   border: {

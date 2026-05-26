@@ -1,5 +1,12 @@
-import React, { useRef, createContext, useContext, useEffect, useState } from 'react'
-import { useDialog, useModalOverlay, OverlayContainer } from 'react-aria'
+import React, { useRef, createContext, useContext, useState } from 'react'
+import {
+    useDialog,
+    useModalOverlay,
+    OverlayContainer,
+    FocusScope,
+    DismissButton,
+} from 'react-aria'
+import { useOverlayTriggerState } from 'react-stately'
 import { cn } from '../utils/cn'
 import { Text } from '../typography/text'
 
@@ -17,7 +24,11 @@ const sizes = {
     '7xl': 'max-w-7xl',
 }
 
-const DrawerContext = createContext<{ titleProps?: any }>({})
+interface DrawerContextValue {
+    titleProps?: React.HTMLAttributes<HTMLElement>
+}
+
+const DrawerContext = createContext<DrawerContextValue>({})
 
 export interface DrawerProps {
     open: boolean
@@ -35,81 +46,84 @@ export function Drawer({
     className,
     contentClassName,
     children,
-    ...props
 }: DrawerProps) {
     const ref = useRef<HTMLDivElement>(null)
-    // Track whether the panel has been mounted long enough to animate in
-    const [visible, setVisible] = useState(false)
+    // Keep the panel mounted while the closing animation plays.
+    const [shouldRender, setShouldRender] = useState(open)
+
+    if (open && !shouldRender) {
+        // Mount immediately when opening; the data-state will animate in.
+        setShouldRender(true)
+    }
 
     const handleClose = () => onClose(false)
 
-    const state = {
+    const state = useOverlayTriggerState({
         isOpen: open,
-        setOpen: (isOpen: boolean) => {
+        onOpenChange: (isOpen) => {
             if (!isOpen) handleClose()
         },
-        close: handleClose,
-    }
+    })
 
     const { modalProps, underlayProps } = useModalOverlay(
         {
             isDismissable: true,
         },
-        state as any,
+        state,
         ref
     )
 
-    const { dialogProps, titleProps } = useDialog(props as any, ref)
+    const { dialogProps, titleProps } = useDialog({}, ref)
 
-    // Animate in after mount
-    useEffect(() => {
-        if (open) {
-            // Delay to allow the initial render with translate-x-full, then transition in
-            const frame = requestAnimationFrame(() => {
-                setVisible(true)
-            })
-            return () => cancelAnimationFrame(frame)
-        } else {
-            setVisible(false)
-        }
-    }, [open])
+    if (!open && !shouldRender) return null
 
-    if (!open) return null
+    const dataState = open ? 'open' : 'closed'
+
+    const handleTransitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+        if (e.propertyName !== 'transform') return
+        if (!open) setShouldRender(false)
+    }
 
     return (
         <OverlayContainer>
-            <div className="relative z-50">
+            <div className="relative z-50" data-state={dataState}>
                 {/* Backdrop */}
                 <div
                     {...underlayProps}
+                    data-state={dataState}
                     className={cn(
-                        'fixed inset-0 bg-primary/60 transition duration-500 ease-in-out',
-                        visible ? 'opacity-100' : 'opacity-0'
+                        'fixed inset-0 bg-primary/60 transition-opacity duration-300 ease-in-out',
+                        'data-[state=open]:opacity-100 data-[state=closed]:opacity-0'
                     )}
-                    onClick={handleClose}
                 />
 
                 {/* Drawer slide-in panel */}
                 <div className="fixed inset-0 overflow-hidden">
                     <div className="absolute inset-0 overflow-hidden">
                         <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-6 sm:pl-10 m-3 rounded-2xl">
-                            <div
-                                ref={ref}
-                                {...modalProps}
-                                {...dialogProps}
-                                className={cn(
-                                    className,
-                                    sizes[size],
-                                    'pointer-events-auto w-screen transform transition duration-500 ease-in-out sm:duration-700 bg-surface shadow-xl rounded-2xl ring-2 ring-body',
-                                    visible ? 'translate-x-0' : 'translate-x-full'
-                                )}
-                            >
-                                <div className={cn("flex h-full flex-col shadow-xs overflow-y-scroll scrollbar", contentClassName ?? 'py-6')}>
-                                    <DrawerContext.Provider value={{ titleProps }}>
-                                        {children}
-                                    </DrawerContext.Provider>
+                            <FocusScope contain restoreFocus autoFocus>
+                                <div
+                                    ref={ref}
+                                    {...modalProps}
+                                    {...dialogProps}
+                                    data-state={dataState}
+                                    onTransitionEnd={handleTransitionEnd}
+                                    className={cn(
+                                        className,
+                                        sizes[size],
+                                        'pointer-events-auto w-screen transform transition-transform duration-300 ease-in-out sm:duration-500 bg-surface shadow-xl rounded-2xl ring-2 ring-body',
+                                        'data-[state=open]:translate-x-0 data-[state=closed]:translate-x-full'
+                                    )}
+                                >
+                                    <DismissButton onDismiss={handleClose} />
+                                    <div className={cn("flex h-full flex-col shadow-xs overflow-y-scroll scrollbar", contentClassName ?? 'py-6')}>
+                                        <DrawerContext.Provider value={{ titleProps }}>
+                                            {children}
+                                        </DrawerContext.Provider>
+                                    </div>
+                                    <DismissButton onDismiss={handleClose} />
                                 </div>
-                            </div>
+                            </FocusScope>
                         </div>
                     </div>
                 </div>

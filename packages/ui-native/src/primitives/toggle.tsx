@@ -34,10 +34,10 @@ export function Toggle({
     onChange,
   })
 
-  const activeBg = tokens.bg.brand || '#09090b'
+  const activeBg = tokens.bg.brand ?? '#09090b'
   const inactiveBg = 'transparent'
-  const activeBorder = tokens.border.brand || tokens.bg.brand || '#09090b'
-  const inactiveBorder = tokens.border.primary || '#e4e4e7'
+  const activeBorder = tokens.border.brand ?? tokens.bg.brand ?? '#09090b'
+  const inactiveBorder = tokens.border.primary ?? '#e4e4e7'
 
   return (
     <TypedPressable

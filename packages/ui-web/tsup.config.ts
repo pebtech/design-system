@@ -7,5 +7,13 @@ export default defineConfig({
   clean: true,
   treeshake: true,
   splitting: true,
-  external: ['react', 'react-dom', '@headlessui/react', 'tailwindcss', 'date-fns'],
+  external: [
+    'react',
+    'react-dom',
+    '@headlessui/react',
+    'tailwindcss',
+    'date-fns',
+    'react-aria',
+    'react-stately',
+  ],
 })

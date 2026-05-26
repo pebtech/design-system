@@ -20,7 +20,7 @@ export function Tabs({ tabs, activeTab, onChange, className, variant = 'underlin
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      let nextIndex = activeIndex
+      let nextIndex: number
       if (e.key === 'ArrowRight') {
         nextIndex = (activeIndex + 1) % tabs.length
       } else if (e.key === 'ArrowLeft') {

@@ -42,7 +42,7 @@ export function Avatar({
           width: 40,
           height: 40,
           borderRadius,
-          backgroundColor: tokens.bg.bodySecondary || '#e5e5e5',
+          backgroundColor: tokens.bg.bodySecondary ?? '#e5e5e5',
         },
         style,
       ])}

@@ -7,6 +7,8 @@ export type TextTokens = {
   brandAlt: string
   primary: string
   secondary: string
+  tertiary: string
+  quaternary: string
   muted: string
   disabled: string
   inverse: string
@@ -39,7 +41,7 @@ export type BgTokens = {
   info: string
   pending: string
   sidebar: string
-  sidebarSecondary?: string
+  sidebarSecondary: string
   tableHeader: string
 }
 

@@ -111,7 +111,7 @@ export function ContextMenuContent({
         <TypedPressable
           style={StyleSheet.flatten([
             {
-              backgroundColor: tokens.bg.surface || '#ffffff',
+              backgroundColor: tokens.bg.surface ?? '#ffffff',
               borderTopLeftRadius: 20,
               borderTopRightRadius: 20,
               paddingTop: 12,
@@ -119,7 +119,7 @@ export function ContextMenuContent({
               paddingHorizontal: 16,
               borderWidth: 1,
               borderBottomWidth: 0,
-              borderColor: tokens.border.primary || '#e4e4e7',
+              borderColor: tokens.border.primary ?? '#e4e4e7',
             },
             style,
           ])}
@@ -131,7 +131,7 @@ export function ContextMenuContent({
               width: 36,
               height: 4,
               borderRadius: 2,
-              backgroundColor: tokens.border.primary || '#d4d4d8',
+              backgroundColor: tokens.border.primary ?? '#d4d4d8',
               alignSelf: 'center',
               marginBottom: 16,
             }}
@@ -142,7 +142,7 @@ export function ContextMenuContent({
               weight="semibold"
               size="sm"
               style={{
-                color: tokens.text.secondary || '#71717a',
+                color: tokens.text.secondary ?? '#71717a',
                 textAlign: 'center',
                 marginBottom: 12,
               }}
@@ -191,8 +191,8 @@ export function ContextMenuItem({
   const textColor = destructive
     ? '#ef4444'
     : disabled
-    ? tokens.text.secondary || '#a1a1aa'
-    : tokens.text.primary || '#18181b'
+    ? tokens.text.secondary ?? '#a1a1aa'
+    : tokens.text.primary ?? '#18181b'
 
   return (
     <TypedPressable

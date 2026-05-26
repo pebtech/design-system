@@ -17,6 +17,12 @@ jobs:
           node-version: 22
           cache: pnpm
 
+      - name: Configure GitHub Packages auth
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=$GITHUB_TOKEN" >> $HOME/.npmrc
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -34,6 +40,12 @@ jobs:
 
       - name: Unit tests
         run: pnpm -r run test
+
+      - name: Build Storybook
+        run: pnpm build-storybook
+
+      - name: Storybook a11y tests
+        run: pnpm axe-storybook
 
       - name: Bundle size check
         run: pnpm -r run size

@@ -64,8 +64,8 @@ export function DropdownButton({
           paddingVertical: 10,
           borderRadius: 8,
           borderWidth: 1,
-          borderColor: tokens.border.primary || '#e4e4e7',
-          backgroundColor: tokens.bg.surface || '#ffffff',
+          borderColor: tokens.border.primary ?? '#e4e4e7',
+          backgroundColor: tokens.bg.surface ?? '#ffffff',
         },
         style,
       ])}
@@ -118,10 +118,10 @@ export function DropdownMenu({
               minWidth: 200,
               maxWidth: 300,
               maxHeight: 400,
-              backgroundColor: tokens.bg.surface || '#ffffff',
+              backgroundColor: tokens.bg.surface ?? '#ffffff',
               borderRadius: 12,
               borderWidth: 1,
-              borderColor: tokens.border.primary || '#e4e4e7',
+              borderColor: tokens.border.primary ?? '#e4e4e7',
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 4 },
               shadowOpacity: 0.15,
@@ -183,7 +183,7 @@ export function DropdownItem({
             borderRadius: 8,
             opacity: disabled ? 0.5 : 1,
             backgroundColor: pressed
-              ? tokens.bg.secondary || '#f4f4f5'
+              ? tokens.bg.secondary ?? '#f4f4f5'
               : 'transparent',
           },
           style,
@@ -221,7 +221,7 @@ export function DropdownDivider({
       style={StyleSheet.flatten([
         {
           height: 1,
-          backgroundColor: tokens.border.primary || '#e4e4e7',
+          backgroundColor: tokens.border.primary ?? '#e4e4e7',
           marginHorizontal: 14,
           marginVertical: 4,
         },

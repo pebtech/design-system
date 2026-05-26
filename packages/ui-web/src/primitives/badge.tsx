@@ -4,6 +4,13 @@ import { TouchTarget } from '../utils/touch-target'
 import { Link } from '../typography/link'
 import { cn } from '../utils/cn'
 
+/**
+ * Status/category badge palette. These are intentionally literal Tailwind
+ * palette colors (red, blue, green, etc.) and do NOT follow `BrandProvider`
+ * — they're chosen by consumers for semantic meaning (success, warning,
+ * etc.) rather than the active brand. Don't replace them with semantic
+ * tokens; downstream code depends on this palette.
+ */
 const colors = {
   white: 'bg-surface text-primary group-data-hover:bg-surface/25',
   red: 'bg-red-500/15 text-red-700 group-data-hover:bg-red-500/25 dark:bg-red-500/10 dark:text-red-400 dark:group-data-hover:bg-red-500/20',

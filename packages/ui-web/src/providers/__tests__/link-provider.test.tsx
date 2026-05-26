@@ -4,6 +4,10 @@ import { LinkProvider, useLink } from '../link-provider'
 
 function LinkConsumer({ href }: { href: string }) {
   const LinkComponent = useLink()
+  // useLink() returns a stable component reference from context, so it is
+  // safe to render here even though the lint rule flags it. A useMemo wrapper
+  // doesn't suppress the rule, so we explicitly disable it.
+  // eslint-disable-next-line react-hooks/static-components
   return <LinkComponent href={href}>Test Link</LinkComponent>
 }
 

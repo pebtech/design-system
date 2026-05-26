@@ -130,12 +130,12 @@ export function TooltipContent({
               top: tooltipTop,
               left: tooltipLeft,
               transform: [{ translateX: -50 }],
-              backgroundColor: tokens.bg.surface || '#18181b',
+              backgroundColor: tokens.bg.surface ?? '#18181b',
               paddingHorizontal: 12,
               paddingVertical: 8,
               borderRadius: 8,
               borderWidth: 1,
-              borderColor: tokens.border.primary || '#3f3f46',
+              borderColor: tokens.border.primary ?? '#3f3f46',
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.15,
@@ -150,7 +150,7 @@ export function TooltipContent({
           {typeof children === 'string' ? (
             <Text
               size="xs"
-              style={{ color: tokens.text.primary || '#fafafa', textAlign: 'center' }}
+              style={{ color: tokens.text.primary ?? '#fafafa', textAlign: 'center' }}
             >
               {children}
             </Text>

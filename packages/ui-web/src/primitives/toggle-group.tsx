@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState } from 'react'
 import { Toggle } from './toggle'
 import { cn } from '../utils/cn'
 
@@ -31,17 +31,12 @@ export function ToggleGroup({
   children,
   ...props
 }: ToggleGroupProps) {
-  const [value, setValue] = useState<string | string[]>(() => {
-    if (controlledValue !== undefined) return controlledValue
+  const [internalValue, setInternalValue] = useState<string | string[]>(() => {
     if (defaultValue !== undefined) return defaultValue
     return type === 'multiple' ? [] : ''
   })
 
-  useEffect(() => {
-    if (controlledValue !== undefined) {
-      setValue(controlledValue)
-    }
-  }, [controlledValue])
+  const value = controlledValue !== undefined ? controlledValue : internalValue
 
   const handleItemChange = (itemValue: string) => {
     if (isDisabled) return
@@ -59,7 +54,7 @@ export function ToggleGroup({
     }
 
     if (controlledValue === undefined) {
-      setValue(newValue)
+      setInternalValue(newValue)
     }
     onChange?.(newValue)
   }
