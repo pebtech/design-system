@@ -8,9 +8,9 @@ const sizes = {
   1: 'text-2xl/8 sm:text-xl/8',
   2: 'text-xl/8 sm:text-lg/6',
   3: 'text-lg/8 sm:text-base/7',
-  4: 'text-base/7 sm:text-sm/4',
-  5: 'text-sm/6 sm:text-xs/2',
-  6: 'text-xs/2',
+  4: 'text-base/7 sm:text-sm/6',
+  5: 'text-sm/6 sm:text-xs/5',
+  6: 'text-xs/5',
 }
 
 export function Heading({ className, level = 1, ...props }: HeadingProps) {

@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import clsx from 'clsx';
+import { ReactNode } from 'react'
+import { cn } from '../utils/cn'
 
 // Define variant types for type safety
 type PageSpacingVariant = 'none' | 'sm' | 'md' | 'lg';
@@ -118,28 +118,21 @@ export function PageCard({
   return (
     <div
       {...props}
-      className={clsx(
-        // Base styles (can be overridden by className)
+      className={cn(
         'relative h-full',
-        // Apply variant styles (can be overridden by className)
-        !className?.includes('bg-') && backgroundVariants[finalBackground],
-        !className?.includes('rounded') && borderRadiusVariants[finalBorderRadius],
-        // Conditional styles (can be overridden by className)
-        finalShadow && !className?.includes('shadow') && 'shadow-sm',
-        finalBorder && !className?.includes('border-') && 'border border-border',
-        // Custom className takes highest precedence
+        backgroundVariants[finalBackground],
+        borderRadiusVariants[finalBorderRadius],
+        finalShadow && 'shadow-sm',
+        finalBorder && 'border border-border',
         className
       )}
     >
       <div className="h-full overflow-auto scrollbar">
         <div
-          className={clsx(
-            // Inner base styles
+          className={cn(
             'mx-auto',
-            // Apply inner variant styles
-            !bodyClassName?.includes('p-') && spacingVariants[finalSpacing],
-            !bodyClassName?.includes('max-w-') && maxWidthVariants[finalMaxWidth],
-            // Custom bodyClassName takes highest precedence
+            spacingVariants[finalSpacing],
+            maxWidthVariants[finalMaxWidth],
             bodyClassName
           )}
         >
