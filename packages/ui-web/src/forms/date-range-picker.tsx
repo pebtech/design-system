@@ -123,7 +123,7 @@ export function DateRangePicker({
                                                 </svg>
                                             </div>
                                         </DropdownButton>
-                                        <DropdownMenu className="min-w-[8rem] max-h-60 overflow-y-auto z-50" anchor="bottom">
+                                        <DropdownMenu className="min-w-32 max-h-60 overflow-y-auto z-50" anchor="bottom">
                                             {Array.from({ length: 12 }, (_, i) => (
                                                 <DropdownItem
                                                     key={i}
@@ -148,7 +148,7 @@ export function DateRangePicker({
                                                 </svg>
                                             </div>
                                         </DropdownButton>
-                                        <DropdownMenu className="min-w-[6rem] !max-h-60 overflow-y-auto scrollbar z-50" anchor="bottom">
+                                        <DropdownMenu className="min-w-24 max-h-60! overflow-y-auto scrollbar z-50" anchor="bottom">
                                             {(() => {
                                                 const currentYear = getYear(new Date())
                                                 const years = Array.from({ length: 21 }, (_, i) => currentYear - 10 + i)
@@ -212,7 +212,7 @@ export function DateRangePicker({
                                                     'h-8 w-full rounded-lg text-sm transition-colors',
                                                     !isSameMonth(day, currentMonth) && 'text-zinc-300 dark:text-zinc-600',
                                                     isSameMonth(day, currentMonth) && 'text-zinc-900 dark:text-white',
-                                                    (isSelected || isEndDate) && 'bg-brandBg !text-white',
+                                                    (isSelected || isEndDate) && 'bg-brandBg text-white!',
                                                     isInRange && !isSelected && !isEndDate && 'bg-brandBg/50 dark:bg-brandBg/20',
                                                     !isSelected && !isEndDate && !isInRange && 'hover:bg-zinc-100 dark:hover:bg-zinc-700'
                                                 )}

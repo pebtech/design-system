@@ -100,7 +100,7 @@ export function DatePicker({
                                                 </svg>
                                             </div>
                                         </DropdownButton>
-                                        <DropdownMenu className="min-w-[8rem] max-h-60 overflow-y-auto z-50" anchor="bottom">
+                                        <DropdownMenu className="min-w-32 max-h-60 overflow-y-auto z-50" anchor="bottom">
                                             {Array.from({ length: 12 }, (_, i) => (
                                                 <DropdownItem
                                                     key={i}
@@ -125,7 +125,7 @@ export function DatePicker({
                                                 </svg>
                                             </div>
                                         </DropdownButton>
-                                        <DropdownMenu className="min-w-[6rem] !max-h-60 overflow-y-auto scrollbar z-50" anchor="bottom">
+                                        <DropdownMenu className="min-w-24 max-h-60! overflow-y-auto scrollbar z-50" anchor="bottom">
                                             {(() => {
                                                 const currentYear = getYear(new Date())
                                                 const years = Array.from({ length: 21 }, (_, i) => currentYear - 10 + i)
@@ -186,7 +186,7 @@ export function DatePicker({
                                                     'h-8 w-full rounded-lg text-sm transition-colors',
                                                     !isSameMonth(day, currentMonth) && 'text-zinc-300 dark:text-zinc-600',
                                                     isSameMonth(day, currentMonth) && 'text-zinc-900 dark:text-white',
-                                                    isSelected && 'bg-brandBg !text-white',
+                                                    isSelected && 'bg-brandBg text-white!',
                                                     !isSelected && 'hover:bg-zinc-100 dark:hover:bg-zinc-700'
                                                 )}
                                             >

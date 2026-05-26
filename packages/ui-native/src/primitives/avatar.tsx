@@ -1,11 +1,13 @@
-import { useState } from 'react'
-import { View, Image, Pressable, StyleSheet, ViewStyle, ImageStyle } from 'react-native'
+import { useEffect, useMemo, useState } from 'react'
+import { Animated, View, Image, Pressable, StyleSheet, ViewStyle, ImageStyle } from 'react-native'
 import { useTheme } from '../providers/theme-provider'
 import { Text } from './text'
 import { cn } from '../utils/cn'
 
 const TypedView = View as any
 const TypedPressable = Pressable as any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const TypedAnimatedView = Animated.View as any
 
 export interface AvatarProps {
   src?: string | null
@@ -98,12 +100,24 @@ export function AvatarButton({
   ...props
 }: AvatarButtonProps) {
   const borderRadius = square ? 8 : 9999
+  const scale = useMemo(() => new Animated.Value(1), [])
+  const [pressed, setPressed] = useState(false)
+
+  useEffect(() => {
+    Animated.timing(scale, {
+      toValue: pressed ? 0.95 : 1,
+      duration: 100,
+      useNativeDriver: true,
+    }).start()
+  }, [pressed, scale])
 
   return (
     <TypedPressable
       onPress={onPress}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
       disabled={disabled}
-      className={cn('active:opacity-80 transition-opacity', className)}
+      className={cn(className)}
       style={StyleSheet.flatten([
         {
           borderRadius,
@@ -111,13 +125,15 @@ export function AvatarButton({
         style,
       ])}
     >
-      <Avatar
-        src={src}
-        square={square}
-        initials={initials}
-        alt={alt}
-        {...props}
-      />
+      <TypedAnimatedView style={{ transform: [{ scale }] }}>
+        <Avatar
+          src={src}
+          square={square}
+          initials={initials}
+          alt={alt}
+          {...props}
+        />
+      </TypedAnimatedView>
     </TypedPressable>
   )
 }

@@ -8,7 +8,7 @@ interface WizardStepperProps {
 
 export function WizardStepper({ currentStep, steps, onStepClick }: WizardStepperProps) {
     return (
-        <div className="w-full flex items-center justify-center !py-2 border-b border-border">
+        <div className="w-full flex items-center justify-center py-2! border-b border-border">
             <div className="flex items-center">
                 {steps.map((step, index) => {
                     const isCompleted = index < currentStep
@@ -53,7 +53,7 @@ export function WizardStepper({ currentStep, steps, onStepClick }: WizardStepper
 
                             {!isLast && (
                                 <div className={clsx(
-                                    "h-[1px] w-12 mx-4",
+                                    "h-px w-12 mx-4",
                                     isCompleted ? "bg-blue-600" : "bg-zinc-200"
                                 )} />
                             )}

@@ -1,25 +1,126 @@
 {
   "name": "@eniolayo/icons",
   "version": "0.0.1",
-  "description": "Icon library for the PEB design system",
+  "description": "Icon library for the PEB design system — works in React Web and React Native (Expo)",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "react-native": "./dist/index.native.mjs",
   "exports": {
     ".": {
+      "react-native": {
+        "types": "./dist/index.native.d.ts",
+        "import": "./dist/index.native.mjs",
+        "require": "./dist/index.native.js"
+      },
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
     "./outline": {
+      "react-native": {
+        "types": "./dist/outline.native.d.ts",
+        "import": "./dist/outline.native.mjs",
+        "require": "./dist/outline.native.js"
+      },
       "types": "./dist/outline.d.ts",
       "import": "./dist/outline.mjs",
       "require": "./dist/outline.js"
     },
     "./solid": {
+      "react-native": {
+        "types": "./dist/solid.native.d.ts",
+        "import": "./dist/solid.native.mjs",
+        "require": "./dist/solid.native.js"
+      },
       "types": "./dist/solid.d.ts",
       "import": "./dist/solid.mjs",
       "require": "./dist/solid.js"
+    },
+    "./outline/*": {
+      "react-native": {
+        "types": "./dist/generated/outline-native/*.d.ts",
+        "import": "./dist/generated/outline-native/*.mjs",
+        "require": "./dist/generated/outline-native/*.js"
+      },
+      "types": "./dist/generated/outline/*.d.ts",
+      "import": "./dist/generated/outline/*.mjs",
+      "require": "./dist/generated/outline/*.js"
+    },
+    "./solid/*": {
+      "react-native": {
+        "types": "./dist/generated/solid-native/*.d.ts",
+        "import": "./dist/generated/solid-native/*.mjs",
+        "require": "./dist/generated/solid-native/*.js"
+      },
+      "types": "./dist/generated/solid/*.d.ts",
+      "import": "./dist/generated/solid/*.mjs",
+      "require": "./dist/generated/solid/*.js"
+    },
+    "./solar": {
+      "react-native": {
+        "types": "./dist/solar.native.d.ts",
+        "import": "./dist/solar.native.mjs",
+        "require": "./dist/solar.native.js"
+      },
+      "types": "./dist/solar.d.ts",
+      "import": "./dist/solar.mjs",
+      "require": "./dist/solar.js"
+    },
+    "./solar/linear": {
+      "react-native": {
+        "types": "./dist/solar/linear.native.d.ts",
+        "import": "./dist/solar/linear.native.mjs",
+        "require": "./dist/solar/linear.native.js"
+      },
+      "types": "./dist/solar/linear.d.ts",
+      "import": "./dist/solar/linear.mjs",
+      "require": "./dist/solar/linear.js"
+    },
+    "./solar/outline": {
+      "react-native": {
+        "types": "./dist/solar/outline.native.d.ts",
+        "import": "./dist/solar/outline.native.mjs",
+        "require": "./dist/solar/outline.native.js"
+      },
+      "types": "./dist/solar/outline.d.ts",
+      "import": "./dist/solar/outline.mjs",
+      "require": "./dist/solar/outline.js"
+    },
+    "./solar/bold": {
+      "react-native": {
+        "types": "./dist/solar/bold.native.d.ts",
+        "import": "./dist/solar/bold.native.mjs",
+        "require": "./dist/solar/bold.native.js"
+      },
+      "types": "./dist/solar/bold.d.ts",
+      "import": "./dist/solar/bold.mjs",
+      "require": "./dist/solar/bold.js"
+    },
+    "./solar/broken": {
+      "react-native": {
+        "types": "./dist/solar/broken.native.d.ts",
+        "import": "./dist/solar/broken.native.mjs",
+        "require": "./dist/solar/broken.native.js"
+      },
+      "types": "./dist/solar/broken.d.ts",
+      "import": "./dist/solar/broken.mjs",
+      "require": "./dist/solar/broken.js"
+    },
+    "./solar/duotone": {
+      "react-native": {
+        "types": "./dist/solar/duotone.native.d.ts",
+        "import": "./dist/solar/duotone.native.mjs",
+        "require": "./dist/solar/duotone.native.js"
+      },
+      "types": "./dist/solar/duotone.d.ts",
+      "import": "./dist/solar/duotone.mjs",
+      "require": "./dist/solar/duotone.js"
+    },
+    "./solar/names": {
+      "types": "./dist/solar/names.d.ts",
+      "import": "./dist/solar/names.mjs",
+      "require": "./dist/solar/names.js"
     }
   },
   "files": [
@@ -31,31 +132,115 @@
   },
   "scripts": {
     "generate": "node scripts/generate-icons.mjs",
-    "build": "node scripts/generate-icons.mjs && tsup",
+    "generate:solar": "node scripts/generate-solar.mjs",
+    "build": "node scripts/generate-icons.mjs && node scripts/generate-solar.mjs && tsup",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/",
     "test": "vitest run --passWithNoTests",
-    "size": "size-limit"
+    "size": "size-limit",
+    "export:solar-icons": "node scripts/export-solar-icons.js"
   },
   "size-limit": [
     {
-      "path": "dist/index.mjs",
-      "limit": "10 kB",
-      "gzip": true
+      "name": "web: single icon (tree-shake from barrel)",
+      "path": "dist/outline.mjs",
+      "import": "{ ArrowLeftOutline }",
+      "limit": "700 B",
+      "gzip": true,
+      "ignore": [
+        "react",
+        "react/jsx-runtime"
+      ]
+    },
+    {
+      "name": "web: full outline barrel",
+      "path": "dist/outline.mjs",
+      "limit": "1 kB",
+      "gzip": true,
+      "ignore": [
+        "react",
+        "react/jsx-runtime"
+      ]
+    },
+    {
+      "name": "native: single icon (tree-shake from barrel)",
+      "path": "dist/outline.native.mjs",
+      "import": "{ ArrowLeftOutline }",
+      "limit": "700 B",
+      "gzip": true,
+      "ignore": [
+        "react",
+        "react/jsx-runtime",
+        "react-native-svg",
+        "react-native"
+      ]
+    },
+    {
+      "name": "native: full outline barrel",
+      "path": "dist/outline.native.mjs",
+      "limit": "1 kB",
+      "gzip": true,
+      "ignore": [
+        "react",
+        "react/jsx-runtime",
+        "react-native-svg",
+        "react-native"
+      ]
+    },
+    {
+      "name": "web: single Solar icon (tree-shake from variant)",
+      "path": "dist/solar/linear.mjs",
+      "import": "{ Home2Linear }",
+      "limit": "1 kB",
+      "gzip": true,
+      "ignore": [
+        "react",
+        "react/jsx-runtime"
+      ]
+    },
+    {
+      "name": "web: single Solar icon (tree-shake from top barrel)",
+      "path": "dist/solar.mjs",
+      "import": "{ Home2Linear }",
+      "limit": "1 kB",
+      "gzip": true,
+      "ignore": [
+        "react",
+        "react/jsx-runtime"
+      ]
+    },
+    {
+      "name": "web: 5 Solar icons (tree-shake from variant)",
+      "path": "dist/solar/linear.mjs",
+      "import": "{ Home2Linear, AccessibilityLinear, AccumulatorLinear, AddCircleLinear, AddFolderLinear }",
+      "limit": "1.7 kB",
+      "gzip": true,
+      "ignore": [
+        "react",
+        "react/jsx-runtime"
+      ]
     }
   ],
   "peerDependencies": {
-    "react": "^18.0.0 || ^19.0.0"
+    "react": "^18.0.0 || ^19.0.0",
+    "react-native-svg": ">=15.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react-native-svg": {
+      "optional": true
+    }
   },
   "devDependencies": {
+    "@iconify-json/solar": "^1.2.5",
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
     "@svgr/plugin-svgo": "^8.1.0",
     "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
     "react": "^19.0.0",
+    "react-native-svg": "^15.0.0",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3"
   },

@@ -1,11 +1,13 @@
-import React, { createContext, useContext, useState } from 'react'
-import { Pressable, View, StyleSheet, ViewStyle } from 'react-native'
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { Animated, Pressable, View, StyleSheet, ViewStyle } from 'react-native'
 import { useTheme } from '../providers/theme-provider'
 import { Text } from './text'
 import { cn } from '../utils/cn'
 
 const TypedPressable = Pressable as any
 const TypedView = View as any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const TypedAnimatedView = Animated.View as any
 
 interface CheckboxGroupContextValue {
   value: string[]
@@ -140,6 +142,22 @@ export function Checkbox({
   const checkedBorder = tokens.border.brand ?? tokens.bg.brand ?? '#09090b'
   const uncheckedBorder = tokens.border.primary ?? '#e4e4e7'
 
+  const isVisible = isSelected || isIndeterminate
+  // Initial value is read once; subsequent changes are driven by the effect below.
+  const indicatorAnim = useMemo(
+    () => new Animated.Value(isVisible ? 1 : 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
+
+  useEffect(() => {
+    Animated.timing(indicatorAnim, {
+      toValue: isVisible ? 1 : 0,
+      duration: 150,
+      useNativeDriver: true,
+    }).start()
+  }, [isVisible, indicatorAnim])
+
   return (
     <TypedPressable
       disabled={isDisabled}
@@ -159,29 +177,20 @@ export function Checkbox({
           borderWidth: 1,
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: isSelected ? checkedBg : uncheckedBg,
-          borderColor: isSelected ? checkedBorder : uncheckedBorder,
+          backgroundColor: isSelected || isIndeterminate ? checkedBg : uncheckedBg,
+          borderColor: isSelected || isIndeterminate ? checkedBorder : uncheckedBorder,
         }}
       >
-        {isSelected && !isIndeterminate && (
-          <View
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: 1,
-              backgroundColor: '#ffffff',
-            }}
-          />
-        )}
-        {isIndeterminate && (
-          <View
-            style={{
-              width: 8,
-              height: 2,
-              backgroundColor: '#ffffff',
-            }}
-          />
-        )}
+        <TypedAnimatedView
+          style={{
+            width: isIndeterminate ? 8 : 8,
+            height: isIndeterminate ? 2 : 8,
+            borderRadius: isIndeterminate ? 0 : 1,
+            backgroundColor: '#ffffff',
+            opacity: indicatorAnim,
+            transform: [{ scale: indicatorAnim }],
+          }}
+        />
       </View>
       {typeof children === 'string' ? (
         <Text weight="normal" size="sm" style={{ color: tokens.text.primary }}>

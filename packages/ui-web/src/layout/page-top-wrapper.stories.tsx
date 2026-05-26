@@ -14,7 +14,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   render: () => (
-    <div className="relative min-h-[80px]">
+    <div className="relative min-h-20">
       <PageTopWrapper>
         <Heading level={3}>Orders</Heading>
         <div className="flex gap-2">

@@ -1,8 +1,11 @@
-import { View, StyleSheet, ViewStyle } from 'react-native'
+import { useEffect, useMemo } from 'react'
+import { Animated, View, StyleSheet, ViewStyle } from 'react-native'
 import { useTheme } from '../providers/theme-provider'
 import { cn } from '../utils/cn'
 
 const TypedView = View as any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const TypedAnimatedView = Animated.View as any
 
 interface ProgressProps {
   value?: number
@@ -38,6 +41,24 @@ export function Progress({
       ? tokens.bg.brand ?? '#4f46e5'
       : colorMap[color] || '#4f46e5'
 
+  // Initial value matches the current percentage so the bar does not animate
+  // from 0 on mount.
+  const anim = useMemo(() => new Animated.Value(percentage), [])
+
+  useEffect(() => {
+    // Width cannot be driven by the native driver, so we explicitly opt out.
+    Animated.timing(anim, {
+      toValue: percentage,
+      duration: 300,
+      useNativeDriver: false,
+    }).start()
+  }, [percentage, anim])
+
+  const widthInterpolation = anim.interpolate({
+    inputRange: [0, 100],
+    outputRange: ['0%', '100%'],
+  })
+
   return (
     <TypedView
       className={cn(className)}
@@ -58,10 +79,10 @@ export function Progress({
         now: value,
       }}
     >
-      <TypedView
+      <TypedAnimatedView
         style={{
           height: '100%',
-          width: `${percentage}%`,
+          width: widthInterpolation,
           borderRadius: 9999,
           backgroundColor: barColor,
         }}

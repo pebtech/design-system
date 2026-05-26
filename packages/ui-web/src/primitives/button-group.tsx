@@ -18,16 +18,16 @@ export function useButtonGroup() {
 }
 
 const radiusMap: Record<SizeVariant, { start: string; end: string }> = {
-  xs: { start: '!rounded-s-md before:!rounded-s-[calc(var(--radius-md)-1px)] after:!rounded-s-[calc(var(--radius-md)-1px)]', end: '!rounded-e-md before:!rounded-e-[calc(var(--radius-md)-1px)] after:!rounded-e-[calc(var(--radius-md)-1px)]' },
-  sm: { start: '!rounded-s-md before:!rounded-s-[calc(var(--radius-md)-1px)] after:!rounded-s-[calc(var(--radius-md)-1px)]', end: '!rounded-e-md before:!rounded-e-[calc(var(--radius-md)-1px)] after:!rounded-e-[calc(var(--radius-md)-1px)]' },
-  md: { start: '!rounded-s-lg before:!rounded-s-[calc(var(--radius-lg)-1px)] after:!rounded-s-[calc(var(--radius-lg)-1px)]', end: '!rounded-e-lg before:!rounded-e-[calc(var(--radius-lg)-1px)] after:!rounded-e-[calc(var(--radius-lg)-1px)]' },
-  lg: { start: '!rounded-s-lg before:!rounded-s-[calc(var(--radius-lg)-1px)] after:!rounded-s-[calc(var(--radius-lg)-1px)]', end: '!rounded-e-lg before:!rounded-e-[calc(var(--radius-lg)-1px)] after:!rounded-e-[calc(var(--radius-lg)-1px)]' },
-  xl: { start: '!rounded-s-xl before:!rounded-s-[calc(var(--radius-xl)-1px)] after:!rounded-s-[calc(var(--radius-xl)-1px)]', end: '!rounded-e-xl before:!rounded-e-[calc(var(--radius-xl)-1px)] after:!rounded-e-[calc(var(--radius-xl)-1px)]' },
+  xs: { start: 'rounded-s-md! before:rounded-s-[calc(var(--radius-md)-1px)]! after:rounded-s-[calc(var(--radius-md)-1px)]!', end: 'rounded-e-md! before:rounded-e-[calc(var(--radius-md)-1px)]! after:rounded-e-[calc(var(--radius-md)-1px)]!' },
+  sm: { start: 'rounded-s-md! before:rounded-s-[calc(var(--radius-md)-1px)]! after:rounded-s-[calc(var(--radius-md)-1px)]!', end: 'rounded-e-md! before:rounded-e-[calc(var(--radius-md)-1px)]! after:rounded-e-[calc(var(--radius-md)-1px)]!' },
+  md: { start: 'rounded-s-lg! before:rounded-s-[calc(var(--radius-lg)-1px)]! after:rounded-s-[calc(var(--radius-lg)-1px)]!', end: 'rounded-e-lg! before:rounded-e-[calc(var(--radius-lg)-1px)]! after:rounded-e-[calc(var(--radius-lg)-1px)]!' },
+  lg: { start: 'rounded-s-lg! before:rounded-s-[calc(var(--radius-lg)-1px)]! after:rounded-s-[calc(var(--radius-lg)-1px)]!', end: 'rounded-e-lg! before:rounded-e-[calc(var(--radius-lg)-1px)]! after:rounded-e-[calc(var(--radius-lg)-1px)]!' },
+  xl: { start: 'rounded-s-xl! before:rounded-s-[calc(var(--radius-xl)-1px)]! after:rounded-s-[calc(var(--radius-xl)-1px)]!', end: 'rounded-e-xl! before:rounded-e-[calc(var(--radius-xl)-1px)]! after:rounded-e-[calc(var(--radius-xl)-1px)]!' },
 }
 
 export function getButtonGroupClasses(position: ButtonGroupPosition, size: SizeVariant): string {
   const radius = radiusMap[size]
-  const base = '!rounded-none before:!rounded-none after:!rounded-none focus:z-10'
+  const base = 'rounded-none! before:rounded-none! after:rounded-none! focus:z-10'
 
   if (position === 'only') return ''
   if (position === 'first') return cn(base, radius.start)

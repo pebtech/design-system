@@ -203,14 +203,14 @@ export function Checkbox({
         className="sr-only"
       />
       <span
-        className={cn(base, colors[color])}
+        className={cn(base, colors[color], 'transition-colors duration-150')}
         data-checked={isChecked ? '' : undefined}
         data-disabled={isDisabled ? '' : undefined}
         data-hover={isHovered ? '' : undefined}
         data-focus={isFocusVisible ? '' : undefined}
       >
         <svg
-          className="size-4 stroke-(--checkbox-check) opacity-0 group-data-checked:opacity-100 sm:h-3.5 sm:w-3.5"
+          className="size-4 stroke-(--checkbox-check) opacity-0 group-data-checked:opacity-100 sm:h-3.5 sm:w-3.5 scale-75 group-data-checked:scale-100 transition-all duration-150 ease-out"
           data-checked={isChecked ? '' : undefined}
           viewBox="0 0 14 14"
           fill="none"

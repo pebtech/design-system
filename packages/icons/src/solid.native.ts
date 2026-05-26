@@ -1,0 +1,5 @@
+export { default as ArrowLeftSolid } from './generated/solid-native/arrow-left'
+export { default as CheckSolid } from './generated/solid-native/check'
+export { default as ChevronDownSolid } from './generated/solid-native/chevron-down'
+export { default as CloseSolid } from './generated/solid-native/close'
+export { default as SearchSolid } from './generated/solid-native/search'

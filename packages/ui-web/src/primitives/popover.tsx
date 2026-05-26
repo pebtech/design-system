@@ -92,6 +92,7 @@ export function PopoverContent({ children, className, placement = 'bottom start'
         {...popoverProps}
         className={cn(
           'z-50 w-72 rounded-xl bg-surface p-4 shadow-lg ring-1 ring-border focus:outline-hidden',
+          'animate-in fade-in-0 zoom-in-95 duration-150',
           className
         )}
       >

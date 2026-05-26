@@ -223,14 +223,14 @@ export function TablePagination({
             <div className="flex items-center gap-2">
               <Text color="secondary" size="sm">Rows per Page</Text>
               <Dropdown>
-                <DropdownButton as={Button} preset="outline" className="!py-1 !px-2 text-xs font-normal">
+                <DropdownButton as={Button} preset="outline" className="py-1! px-2! text-xs font-normal">
                   {pageSize}
                   {/* Down arrow icon (inline SVG replacing @iconify/react) */}
                   <svg className="ml-1 size-3 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                     <path d="M6 9l6 6 6-6" />
                   </svg>
                 </DropdownButton>
-                <DropdownMenu className="min-w-[5rem]" anchor="bottom start">
+                <DropdownMenu className="min-w-20" anchor="bottom start">
                   {[10, 20, 50, 100].map((size) => (
                     <DropdownItem key={size} onClick={() => onPageSizeChange(size)}>
                       {size}

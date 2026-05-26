@@ -164,7 +164,7 @@ const colors = {
 }
 
 const sizes = {
-  sm: 'h-5 w-8 p-[2px]',
+  sm: 'h-5 w-8 p-0.5',
   md: 'h-6 w-10 p-[3px]',
   lg: 'h-9 w-16 p-1',
 }

@@ -8,6 +8,10 @@ storybook-static/
 
 # Generated icons
 packages/icons/src/generated/
+packages/icons/src/solar/
+packages/icons/src/solar.ts
+packages/icons/src/solar.native.ts
+packages/icons/assets/
 
 # Environment
 .env

@@ -1,11 +1,13 @@
-import React, { createContext, useContext, useState } from 'react'
-import { Pressable, View, StyleSheet, ViewStyle } from 'react-native'
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { Animated, Pressable, View, StyleSheet, ViewStyle } from 'react-native'
 import { useTheme } from '../providers/theme-provider'
 import { Text } from './text'
 import { cn } from '../utils/cn'
 
 const TypedPressable = Pressable as any
 const TypedView = View as any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const TypedAnimatedView = Animated.View as any
 
 interface RadioGroupContextValue {
   value: string
@@ -113,6 +115,21 @@ export function Radio({
   const checkedBorder = tokens.border.brand ?? tokens.bg.brand ?? '#09090b'
   const uncheckedBorder = tokens.border.primary ?? '#e4e4e7'
 
+  // Initial value is read once; subsequent changes are driven by the effect below.
+  const dotAnim = useMemo(
+    () => new Animated.Value(isSelected ? 1 : 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
+
+  useEffect(() => {
+    Animated.timing(dotAnim, {
+      toValue: isSelected ? 1 : 0,
+      duration: 150,
+      useNativeDriver: true,
+    }).start()
+  }, [isSelected, dotAnim])
+
   return (
     <TypedPressable
       disabled={isDisabled}
@@ -136,16 +153,16 @@ export function Radio({
           borderColor: isSelected ? checkedBorder : uncheckedBorder,
         }}
       >
-        {isSelected && (
-          <View
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: 4,
-              backgroundColor: '#ffffff',
-            }}
-          />
-        )}
+        <TypedAnimatedView
+          style={{
+            width: 8,
+            height: 8,
+            borderRadius: 4,
+            backgroundColor: '#ffffff',
+            opacity: dotAnim,
+            transform: [{ scale: dotAnim }],
+          }}
+        />
       </View>
       {typeof children === 'string' ? (
         <Text weight="normal" size="sm" style={{ color: tokens.text.primary }}>

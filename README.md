@@ -10,7 +10,7 @@ A shared, versioned component library for PEB product applications. Distributed 
 | [`@eniolayo/ui-web`](packages/ui-web/) | 64 React components, Tailwind CSS 4 styling, built on a mix of **React Aria** (Dropdown, Drawer, Dialog, Popover, HoverCard, Tooltip, Button, Switch, Select, Radio, Toggle, Checkbox) and **Headless UI** (Input, Textarea, Combobox, Listbox, DatePicker, DateRangePicker, Badge, Avatar, Fieldset, Alert, Link) | 34 KB |
 | [`@eniolayo/ui-native`](packages/ui-native/) | 30+ React Native primitives (Button, Input, Dialog, Drawer, Dropdown, ContextMenu, Menubar, …) with NativeWind v5 styling and a token-aware ThemeProvider — Phase 2 | 14 KB |
 | [`@eniolayo/hooks`](packages/hooks/) | Shared React hooks — useDebounce, useLocalStorage, useMediaQuery, useClickOutside, useIntersectionObserver | 1.2 KB |
-| [`@eniolayo/icons`](packages/icons/) | SVG icon library — outline + solid variants, tree-shakeable, Heroicons-style API | 0.2 KB (per entry, tree-shakeable) |
+| [`@eniolayo/icons`](packages/icons/) | SVG icon library — outline + solid variants, per-icon tree-shakeable, Heroicons-style API | ~490 B (1 icon) → +~30 B / extra icon, gzipped |
 
 ## Quick Start
 
@@ -191,17 +191,133 @@ Generic utility hooks with zero runtime dependencies:
 
 ### @eniolayo/icons
 
-Self-managed SVG icon library. Drop `.svg` files in `svgs/outline/` or `svgs/solid/`, run `pnpm --filter @eniolayo/icons run build`, and get typed React components.
+Self-managed SVG icon library — **works in both React Web and React Native (Expo)** from the same import path.
+
+Drop `.svg` files in `svgs/outline/` or `svgs/solid/`, run `pnpm --filter @eniolayo/icons run build`, and get typed React components for both platforms.
+
+#### Web usage
 
 ```tsx
-import { ArrowLeft } from '@eniolayo/icons/outline'
-import { Check } from '@eniolayo/icons/solid'
+import { ArrowLeftOutline } from '@eniolayo/icons/outline'
+import { CheckSolid } from '@eniolayo/icons/solid'
 
-<ArrowLeft size={20} color="currentColor" strokeWidth={1.5} />
-<Check size={16} />
+<ArrowLeftOutline size={20} color="currentColor" strokeWidth={1.5} />
+<CheckSolid size={16} />
 ```
 
-**Icon props**: `size`, `color`, `strokeWidth`, `className`, `title` (accessibility), plus all SVG attributes via spread.
+#### React Native / Expo usage
+
+Same imports — Metro resolves the `react-native` export condition automatically:
+
+```tsx
+import { ArrowLeftOutline } from '@eniolayo/icons/outline'
+import { CheckSolid } from '@eniolayo/icons/solid'
+
+<ArrowLeftOutline size={20} color="#171717" strokeWidth={1.5} />
+<CheckSolid size={16} color="#16a34a" />
+```
+
+Add `react-native-svg` once in your Expo / RN project:
+
+```bash
+npx expo install react-native-svg
+# or
+pnpm add react-native-svg
+```
+
+Web consumers get an inline `<svg>` (no extra dependency). Native consumers get a `<Svg>` rendered via `react-native-svg`'s `SvgXml`. The peer dep is marked optional so web-only projects don't get warnings.
+
+**Icon props** (shared across platforms): `size`, `color`, `strokeWidth`, `className` (web only — RN ignores unless you wire NativeWind), `title` (web only, used as accessible label). On web you may also spread any SVG attribute; on RN any `react-native-svg` `<Svg>` prop.
+
+#### Bundle size (measured, gzipped, React externalized)
+
+Per-icon files in `dist/` + wildcard subpath exports make each icon individually tree-shakeable, so consumers pay roughly the shared wrapper once plus a small marginal cost per icon. Measured with esbuild against a real consumer entry:
+
+| Icons imported | Web (gzipped) | Native (gzipped) |
+| ---: | ---: | ---: |
+| 1 | **490 B** | 514 B |
+| 2 | 523 B | 540 B |
+| 5 | 649 B | 632 B |
+| +1 more (marginal) | **~30 B** | ~25 B |
+
+This holds when the catalog scales to thousands of icons (e.g. all Solar). The first icon pulls the shared `createIcon` chunk; each subsequent icon contributes only its viewBox + path data. CI enforces these budgets via `size-limit`.
+
+For guaranteed-minimal imports you can also bypass the barrel and deep-import a single icon:
+
+```tsx
+import ArrowLeft from '@eniolayo/icons/outline/arrow-left'
+import Check from '@eniolayo/icons/solid/check'
+```
+
+This works on both web and React Native — the `exports` map routes each subpath to the correct platform build.
+
+#### Solar icon catalog (7,404 components, typed barrels)
+
+Solar is shipped as a first-class typed barrel — no manual loaders, no string lookups, no path typos. The same `size`/`color`/`strokeWidth` props the curated icons accept, with full IDE autocomplete on every name.
+
+```bash
+# One-time: dump the 7,404 Iconify Solar SVGs and compile them
+pnpm --filter @eniolayo/icons run export:solar-icons
+pnpm --filter @eniolayo/icons run build
+```
+
+Then import from the top-level barrel (autocomplete shows the entire catalog) or a per-variant barrel (faster IDE response when you only need one variant):
+
+```tsx
+// All variants surface from the top-level barrel
+import { Home2Linear, Home2Bold, Home2BoldDuotone } from '@eniolayo/icons/solar'
+
+// Or scope to one variant for narrower autocomplete
+import { Home2Linear, AccessibilityLinear } from '@eniolayo/icons/solar/linear'
+import { Home2Bold } from '@eniolayo/icons/solar/bold'
+
+<Home2Linear size={24} color="currentColor" />
+<Home2Bold size={20} color="#7c3aed" />
+```
+
+Available variant subpaths: `@eniolayo/icons/solar/{linear,outline,bold,broken,duotone}`. Same imports work on React Native via the `react-native` export condition.
+
+Need a string-keyed API? A typed name union ships at `@eniolayo/icons/solar/names`:
+
+```tsx
+import type { SolarIconName, SolarLinearIconName } from '@eniolayo/icons/solar/names'
+
+function pickIcon(name: SolarLinearIconName) { /* typo-proof at compile time */ }
+```
+
+**Bundle cost** (esbuild, minified, gzipped, React externalized):
+
+| Icons imported | Web | Notes |
+| ---: | ---: | --- |
+| 1 Solar icon (any variant) | **742 B** | shared wrapper + this icon's path data |
+| 5 Solar icons | 1.49 kB | marginal ~190 B per additional icon |
+| Mixed (linear + bold + duotone) | 997 B | wrappers deduplicate across variants |
+
+Solar icons are heavier than the curated set (which is ~490 B for 1) because their bodies pack multi-path + `<g>` + opacity layers — that's the design, not the packaging. CI enforces these budgets via `size-limit`.
+
+Naming convention: kebab-case filename → PascalCase + variant suffix. `home-2-linear.svg` becomes `Home2Linear`. The handful of names starting with a digit (`4k-linear`) are prefixed with `Solar` (`Solar4kLinear`) so they're valid JS identifiers.
+
+#### Metro / Expo: keep imports static
+
+Metro tree-shakes the icons package the same way Vite/webpack does — but only if you stick to **static named imports**:
+
+```tsx
+// ✅ Tree-shakes. Metro pulls Home2Linear + the shared wrapper. Nothing else.
+import { Home2Linear } from '@eniolayo/icons/solar/linear'
+
+// ❌ Breaks tree-shaking. Metro can't statically resolve the path,
+//    so it bundles the entire variant (1,234 icons, ~24 kB).
+const Icon = (await import(`@eniolayo/icons/solar/${variant}`))[name]
+```
+
+The icons package enforces this with an ESLint rule (`no-restricted-syntax` on `ImportExpression`) — any future `import()` in `packages/icons/src/` fails CI. If you need name-based selection, use the typed union from `@eniolayo/icons/solar/names` plus a static lookup map.
+
+Measured RN bundle (esbuild with `--conditions=react-native`, externals matching Metro's defaults):
+
+| Imports | Bundle | vs variant file on disk (24 kB) |
+| --- | ---: | --- |
+| 1 Solar icon | 730 B gzipped | tree-shakes 1,233 unused siblings |
+| 5 Solar icons | 1.48 kB gzipped | marginal ~190 B per extra icon |
 
 ### @eniolayo/ui-native
 

@@ -1,5 +1,5 @@
-import React, { useRef } from 'react'
-import { View, Text, Pressable, StyleSheet, ViewStyle } from 'react-native'
+import React, { useEffect, useMemo, useRef } from 'react'
+import { Animated, View, Text, Pressable, StyleSheet, ViewStyle } from 'react-native'
 import { useToggleState } from 'react-stately'
 import { useSwitch } from '@react-native-aria/switch'
 import { FieldProvider, useFieldContext } from '../utils/field-context'
@@ -22,6 +22,8 @@ export interface SharedSwitchProps extends SharedToggleProps {
 
 const TypedView = View as any
 const TypedText = Text as any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const TypedAnimatedView = Animated.View as any
 
 interface SwitchFieldProps {
   children?: React.ReactNode
@@ -196,7 +198,7 @@ export function Switch({
   )
 
   const sizeStyle = sizes[size]
-  
+
   // Get active background color
   let activeBg = tokens.bg.brand
   if (color === 'zinc') activeBg = '#52525b'
@@ -209,6 +211,27 @@ export function Switch({
   else if (color === 'dark') activeBg = '#18181b'
 
   const currentBgColor = state.isSelected ? activeBg : (theme === 'dark' ? '#3f3f46' : '#e4e4e7')
+
+  const maxTranslate =
+    sizeStyle.width - sizeStyle.thumbSize - (sizeStyle.height - sizeStyle.thumbSize)
+
+  // `state.isSelected` is intentionally only read for the initial value;
+  // subsequent changes are driven by the useEffect below so the Animated.Value
+  // identity stays stable across renders.
+  const thumbAnim = useMemo(
+    () => new Animated.Value(state.isSelected ? maxTranslate : 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [maxTranslate]
+  )
+
+  useEffect(() => {
+    Animated.spring(thumbAnim, {
+      toValue: state.isSelected ? maxTranslate : 0,
+      friction: 8,
+      tension: 80,
+      useNativeDriver: true,
+    }).start()
+  }, [state.isSelected, maxTranslate, thumbAnim])
 
   return (
     <Pressable
@@ -232,19 +255,13 @@ export function Switch({
         style,
       ])}
     >
-      <View
+      <TypedAnimatedView
         style={{
           width: sizeStyle.thumbSize,
           height: sizeStyle.thumbSize,
           borderRadius: sizeStyle.thumbSize / 2,
           backgroundColor: '#ffffff',
-          transform: [
-            {
-              translateX: state.isSelected
-                ? sizeStyle.width - sizeStyle.thumbSize - (sizeStyle.height - sizeStyle.thumbSize)
-                : 0,
-            },
-          ],
+          transform: [{ translateX: thumbAnim }],
           shadowColor: '#000000',
           shadowOffset: { width: 0, height: 1 },
           shadowOpacity: 0.2,

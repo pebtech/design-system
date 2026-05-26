@@ -302,7 +302,7 @@ export function MenubarContent({ children, className, align = 'start' }: Menubar
           transform: alignTransform,
         }}
         className={cn(
-          'min-w-[12rem] overflow-hidden rounded-xl p-1',
+          'min-w-48 overflow-hidden rounded-xl p-1',
           'bg-surface/70 backdrop-blur-xl',
           'shadow-xl ring-1 ring-border/50',
           'outline-none focus:outline-none',

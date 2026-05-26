@@ -199,7 +199,7 @@ export function Radio({
         className="sr-only"
       />
       <span
-        className={cn(base, colors[color])}
+        className={cn(base, colors[color], 'transition-colors duration-150')}
         data-checked={isChecked ? '' : undefined}
         data-disabled={isDisabled ? '' : undefined}
         data-hover={isHovered ? '' : undefined}
@@ -208,10 +208,12 @@ export function Radio({
         <span
           className={cn(
             'size-full rounded-full border-[4.5px] border-transparent bg-clip-padding',
+            'transition-all duration-150 ease-out',
             'forced-colors:border-[Canvas] forced-colors:group-data-checked:border-[Highlight]'
           )}
           style={{
-            backgroundColor: isChecked ? 'var(--radio-indicator, #ffffff)' : 'transparent'
+            backgroundColor: isChecked ? 'var(--radio-indicator, #ffffff)' : 'transparent',
+            transform: isChecked ? 'scale(1)' : 'scale(0)',
           }}
         />
       </span>

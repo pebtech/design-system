@@ -1,5 +1,5 @@
-import React from 'react'
-import { Pressable, Text, View, StyleSheet, ViewStyle, TextStyle } from 'react-native'
+import React, { useEffect, useMemo } from 'react'
+import { Animated, Pressable, Text, View, StyleSheet, ViewStyle, TextStyle } from 'react-native'
 import { useButton } from 'react-native-aria'
 import { ButtonContext, useButtonContext } from '../utils/button-context'
 import { useTheme } from '../providers/theme-provider'
@@ -7,6 +7,8 @@ import { cn } from '../utils/cn'
 
 const TypedPressable = Pressable as any
 const TypedText = Text as any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const TypedAnimatedView = Animated.View as any
 
 interface ButtonProps {
   children?: React.ReactNode
@@ -85,8 +87,22 @@ export function Button({
     bg = '#dc2626' // red-600
   }
 
-  // Active press effect
-  const opacity = isPressed ? 0.8 : 1
+  // Animated press feedback: scale + opacity driven by a single Animated.Value.
+  // Both the scale transform and the interpolated opacity run on the native
+  // driver so the spring stays smooth even under JS pressure.
+  const pressAnim = useMemo(() => new Animated.Value(1), [])
+
+  useEffect(() => {
+    Animated.spring(pressAnim, {
+      toValue: isPressed ? 0.96 : 1,
+      useNativeDriver: true,
+    }).start()
+  }, [isPressed, pressAnim])
+
+  const pressOpacity = pressAnim.interpolate({
+    inputRange: [0.96, 1],
+    outputRange: [0.85, 1],
+  })
 
   return (
     <ButtonContext.Provider value={{ size, variant, state: activeState, color }}>
@@ -97,24 +113,28 @@ export function Button({
           'flex-row items-center justify-center border transition-all',
           className
         )}
-        style={StyleSheet.flatten([
-          {
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingVertical,
-            paddingHorizontal,
-            borderRadius,
-            backgroundColor: bg,
-            borderWidth: borderW,
-            borderColor: borderC,
-            gap,
-            opacity: disabled ? 0.5 : opacity,
-          },
-          style,
-        ])}
+        style={style}
       >
-        {children}
+        <TypedAnimatedView
+          style={StyleSheet.flatten([
+            {
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical,
+              paddingHorizontal,
+              borderRadius,
+              backgroundColor: bg,
+              borderWidth: borderW,
+              borderColor: borderC,
+              gap,
+              opacity: disabled ? 0.5 : pressOpacity,
+              transform: [{ scale: pressAnim }],
+            },
+          ])}
+        >
+          {children}
+        </TypedAnimatedView>
       </TypedPressable>
     </ButtonContext.Provider>
   )

@@ -191,6 +191,7 @@ export function Tooltip({
             role="tooltip"
             className={cn(
               'fixed z-50 px-3 py-2 text-xs font-medium leading-5 text-primary bg-surface border border-border rounded-md shadow-sm pointer-events-none whitespace-normal wrap-break-word',
+              'animate-in fade-in-0 zoom-in-95 duration-150',
               tooltipClassName
             )}
             style={{

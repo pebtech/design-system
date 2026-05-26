@@ -30,11 +30,11 @@ export function EmptyState({
   cardVariant,
 }: EmptyStateProps) {
   return (
-    <Card variant={cardVariant} className={clsx('flex flex-col items-center !py-6 text-center', className)}>
+    <Card variant={cardVariant} className={clsx('flex flex-col items-center py-6! text-center', className)}>
       {icon ? <div className={clsx('text-muted', iconWrapperClassName)}>{icon}</div> : null}
 
       {typeof title === 'string' ? (
-        <Subheading level={4} className="!mb-1">
+        <Subheading level={4} className="mb-1!">
           {title}
         </Subheading>
       ) : (
@@ -52,7 +52,7 @@ export function EmptyState({
       {action ? (
         action
       ) : actionLabel ? (
-        <Button variants={{ size: 'xs', variant: 'secondary' }} className="!mt-4" onClick={onAction}>
+        <Button variants={{ size: 'xs', variant: 'secondary' }} className="mt-4!" onClick={onAction}>
           {actionLabel}
         </Button>
       ) : null}

@@ -209,7 +209,7 @@ export function ContextMenuContent({ children, className }: ContextMenuContentPr
         style={style}
         onKeyDown={handleKeyDown}
         className={cn(
-          'z-50 min-w-[8rem] overflow-hidden rounded-xl p-1',
+          'z-50 min-w-32 overflow-hidden rounded-xl p-1',
           'bg-surface/70 backdrop-blur-xl',
           'shadow-xl ring-1 ring-border/50',
           'outline-none focus:outline-none',
