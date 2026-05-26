@@ -1,11 +1,31 @@
-import * as Headless from '@headlessui/react'
 import { cn } from '../utils/cn'
 import React, { forwardRef } from 'react'
+import { useFocusRing } from 'react-aria'
+
+export interface SelectProps extends React.ComponentPropsWithoutRef<'select'> {
+  className?: string
+}
 
 export const Select = forwardRef(function Select(
-  { className, multiple, ...props }: { className?: string } & Omit<Headless.SelectProps, 'as' | 'className'>,
-  ref: React.ForwardedRef<HTMLSelectElement>
+  { className, multiple, ...props }: SelectProps,
+  forwardedRef: React.ForwardedRef<HTMLSelectElement>
 ) {
+  const localRef = React.useRef<HTMLSelectElement>(null)
+  
+  const setRef = React.useCallback((node: HTMLSelectElement | null) => {
+    (localRef as any).current = node
+    if (forwardedRef) {
+      if (typeof forwardedRef === 'function') {
+        forwardedRef(node)
+      } else {
+        (forwardedRef as any).current = node
+      }
+    }
+  }, [forwardedRef])
+
+  const { focusProps, isFocusVisible } = useFocusRing()
+  const isDisabled = props.disabled || false
+
   return (
     <span
       data-slot="control"
@@ -18,13 +38,18 @@ export const Select = forwardRef(function Select(
         // Focus ring
         'after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:ring-transparent after:ring-inset has-data-focus:after:ring-2 has-data-focus:after:ring-focus-primary',
         // Disabled state
-        'has-data-disabled:opacity-50 has-data-disabled:before:bg-input/5 has-data-disabled:before:shadow-none',
+        isDisabled && 'opacity-50 before:bg-input/5 before:shadow-none',
       ])}
+      data-disabled={isDisabled ? '' : undefined}
+      data-focus={isFocusVisible ? '' : undefined}
     >
-      <Headless.Select
-        ref={ref}
+      <select
+        ref={setRef}
         multiple={multiple}
         {...props}
+        {...focusProps}
+        data-disabled={isDisabled ? '' : undefined}
+        data-focus={isFocusVisible ? '' : undefined}
         className={cn([
           // Basic layout
           'relative block w-full appearance-none rounded-lg py-[calc(--spacing(2.5)-1px)] sm:py-[calc(--spacing(1.5)-1px)]',
@@ -37,21 +62,21 @@ export const Select = forwardRef(function Select(
           // Typography
           'text-base/6 text-primary placeholder:text-muted sm:text-sm/6 dark:text-white dark:*:text-white',
           // Border
-          'border border-border data-hover:border-border-secondary',
+          'border border-border hover:border-border-secondary',
           // Background color
           'bg-transparent',
           // Hide default focus styles
           'focus:outline-hidden',
           // Invalid state
-          'data-invalid:border-error data-invalid:data-hover:border-error',
+          props['aria-invalid'] && 'border-error hover:border-error',
           // Disabled state
-          'data-disabled:border-border data-disabled:opacity-100',
+          isDisabled && 'border-border opacity-100',
         ])}
       />
       {!multiple && (
         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
           <svg
-            className="size-5 stroke-secondary group-has-data-disabled:stroke-secondary sm:size-4 forced-colors:stroke-[CanvasText]"
+            className="size-5 stroke-secondary group-data-disabled:stroke-secondary sm:size-4 forced-colors:stroke-[CanvasText]"
             viewBox="0 0 16 16"
             aria-hidden="true"
             fill="none"

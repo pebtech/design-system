@@ -1,6 +1,22 @@
-import * as Headless from '@headlessui/react'
+import React, { useRef } from 'react'
+import { useToggleState } from 'react-stately'
+import { useSwitch, useFocusRing, useHover } from 'react-aria'
 import { cn } from '../utils/cn'
-import type React from 'react'
+import { FieldProvider, useFieldContext } from '../utils/field-context'
+export interface SharedToggleProps {
+  isSelected?: boolean
+  defaultSelected?: boolean
+  onChange?: (isSelected: boolean) => void
+  isDisabled?: boolean
+  isReadOnly?: boolean
+}
+
+export interface SharedSwitchProps extends SharedToggleProps {
+  'aria-label'?: string
+  'aria-labelledby'?: string
+  'aria-describedby'?: string
+  'aria-details'?: string
+}
 
 export function SwitchGroup({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   return (
@@ -18,28 +34,37 @@ export function SwitchGroup({ className, ...props }: React.ComponentPropsWithout
   )
 }
 
+interface SwitchFieldProps extends React.ComponentPropsWithoutRef<'div'> {
+  disabled?: boolean
+  invalid?: boolean
+}
+
 export function SwitchField({
   className,
+  disabled,
+  invalid,
   ...props
-}: { className?: string } & Omit<Headless.FieldProps, 'as' | 'className'>) {
+}: SwitchFieldProps) {
   return (
-    <Headless.Field
-      data-slot="field"
-      {...props}
-      className={cn(
-        className,
-        // Base layout
-        'grid grid-cols-[1fr_auto] gap-x-8 gap-y-1 sm:grid-cols-[1fr_auto]',
-        // Control layout
-        '*:data-[slot=control]:col-start-2 *:data-[slot=control]:self-start sm:*:data-[slot=control]:mt-0.5',
-        // Label layout
-        '*:data-[slot=label]:col-start-1 *:data-[slot=label]:row-start-1',
-        // Description layout
-        '*:data-[slot=description]:col-start-1 *:data-[slot=description]:row-start-2',
-        // With description
-        'has-data-[slot=description]:**:data-[slot=label]:font-medium'
-      )}
-    />
+    <FieldProvider disabled={disabled} invalid={invalid}>
+      <div
+        data-slot="field"
+        {...props}
+        className={cn(
+          className,
+          // Base layout
+          'grid grid-cols-[1fr_auto] gap-x-8 gap-y-1 sm:grid-cols-[1fr_auto]',
+          // Control layout
+          '*:data-[slot=control]:col-start-2 *:data-[slot=control]:self-start sm:*:data-[slot=control]:mt-0.5',
+          // Label layout
+          '*:data-[slot=label]:col-start-1 *:data-[slot=label]:row-start-1',
+          // Description layout
+          '*:data-[slot=description]:col-start-1 *:data-[slot=description]:row-start-2',
+          // With description
+          'has-data-[slot=description]:**:data-[slot=label]:font-medium'
+        )}
+      />
+    </FieldProvider>
   )
 }
 
@@ -152,29 +177,73 @@ const thumbSizes = {
 
 type Color = keyof typeof colors
 
+interface SwitchProps extends SharedSwitchProps {
+  color?: Color
+  size?: keyof typeof sizes
+  className?: string
+  children?: React.ReactNode
+  checked?: boolean
+  defaultChecked?: boolean
+  disabled?: boolean
+}
+
 export function Switch({
   color = 'brand',
   size = 'md',
   className,
   children,
+  checked,
+  defaultChecked,
+  onChange,
+  disabled,
   ...props
-}: {
-  color?: Color
-  size?: keyof typeof sizes
-  className?: string
-  children?: React.ReactNode
-} & Omit<Headless.SwitchProps, 'as' | 'className'>) {
+}: SwitchProps) {
+  const context = useFieldContext()
+
+  // Map backwards-compatible props to react-aria names
+  const isSelected = checked !== undefined ? checked : props.isSelected
+  const defaultSelected = defaultChecked !== undefined ? defaultChecked : props.defaultSelected
+  const isDisabled = (disabled !== undefined ? disabled : props.isDisabled) ?? context?.disabled
+
+  const state = useToggleState({
+    ...props,
+    isSelected,
+    defaultSelected,
+    onChange,
+    isDisabled,
+  })
+
+  const ref = useRef<HTMLInputElement>(null)
+  
+  // Link to contextual IDs if present
+  const ariaLabelledby = props['aria-labelledby'] || context?.labelId
+  const ariaDescribedby = props['aria-describedby'] || context?.descriptionId
+
+  const { inputProps } = useSwitch(
+    {
+      ...props,
+      isSelected,
+      defaultSelected,
+      onChange,
+      isDisabled,
+      'aria-labelledby': ariaLabelledby,
+      'aria-describedby': ariaDescribedby,
+    },
+    state,
+    ref
+  )
+
+  const { isFocusVisible, focusProps } = useFocusRing()
+  const { hoverProps, isHovered } = useHover({ isDisabled })
+
   return (
-    <Headless.Switch
+    <label
       data-slot="control"
-      {...props}
       className={cn(
         className,
         // Base styles
         'group relative isolate inline-flex cursor-pointer rounded-full transition duration-0 ease-in-out data-changing:duration-200',
         sizes[size],
-        // Transitions
-        'transition duration-0 ease-in-out data-changing:duration-200',
         // Outline and background color in forced-colors mode so switch is still visible
         'forced-colors:outline forced-colors:[--switch-bg:Highlight] dark:forced-colors:[--switch-bg:Highlight]',
         // Unchecked
@@ -192,7 +261,13 @@ export function Switch({
         // Color specific styles
         colors[color]
       )}
+      data-checked={state.isSelected ? '' : undefined}
+      data-disabled={isDisabled ? '' : undefined}
+      data-focus={isFocusVisible ? '' : undefined}
+      data-hover={isHovered ? '' : undefined}
+      {...hoverProps}
     >
+      <input {...inputProps} {...focusProps} ref={ref} className="sr-only" />
       <span
         aria-hidden="true"
         className={cn(
@@ -211,6 +286,6 @@ export function Switch({
       >
         {children}
       </span>
-    </Headless.Switch>
+    </label>
   )
 }

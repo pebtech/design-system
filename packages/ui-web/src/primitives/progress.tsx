@@ -5,6 +5,7 @@ interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
   value?: number
   max?: number
   color?: 'indigo' | 'green' | 'red' | 'amber' | 'blue' | 'zinc' | 'cyan' | 'purple' | 'brand'
+  'aria-label'?: string
 }
 
 export function Progress({
@@ -30,6 +31,10 @@ export function Progress({
 
   return (
     <div
+      role="progressbar"
+      aria-valuenow={value}
+      aria-valuemin={0}
+      aria-valuemax={max}
       className={cn('relative h-2 w-full overflow-hidden rounded-full bg-quaternaryBg', className)}
       {...props}
     >

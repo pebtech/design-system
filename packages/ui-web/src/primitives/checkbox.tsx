@@ -1,38 +1,64 @@
-import * as Headless from '@headlessui/react'
+import React, { useRef, createContext, useContext } from 'react'
+import { useCheckbox, useCheckboxGroup, useFocusRing, useHover } from 'react-aria'
+import { useToggleState, useCheckboxGroupState } from 'react-stately'
 import { cn } from '../utils/cn'
-import type React from 'react'
+import { FieldProvider, useFieldContext } from '../utils/field-context'
 
-export function CheckboxGroup({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+const CheckboxGroupContext = createContext<any>(null)
+
+export interface CheckboxGroupProps {
+  value?: string[]
+  defaultValue?: string[]
+  onChange?: (value: string[]) => void
+  isDisabled?: boolean
+  className?: string
+  children: React.ReactNode
+}
+
+export function CheckboxGroup({
+  className,
+  children,
+  isDisabled,
+  ...props
+}: CheckboxGroupProps) {
+  const state = useCheckboxGroupState({ ...props, isDisabled })
+  const { groupProps } = useCheckboxGroup({ ...props, isDisabled }, state)
+
   return (
-    <div
-      data-slot="control"
-      {...props}
-      className={cn(
-        className,
-        'space-y-3',
-        'has-data-[slot=description]:space-y-6 has-data-[slot=description]:**:data-[slot=label]:font-medium'
-      )}
-    />
+    <div {...groupProps} className={cn('space-y-3', className)}>
+      <CheckboxGroupContext.Provider value={state}>
+        {children}
+      </CheckboxGroupContext.Provider>
+    </div>
   )
+}
+
+export interface CheckboxFieldProps extends React.ComponentPropsWithoutRef<'div'> {
+  disabled?: boolean
+  invalid?: boolean
 }
 
 export function CheckboxField({
   className,
+  disabled,
+  invalid,
   ...props
-}: { className?: string } & Omit<Headless.FieldProps, 'as' | 'className'>) {
+}: CheckboxFieldProps) {
   return (
-    <Headless.Field
-      data-slot="field"
-      {...props}
-      className={cn(
-        className,
-        'grid grid-cols-[1.125rem_1fr] gap-x-4 gap-y-1 sm:grid-cols-[1rem_1fr]',
-        '*:data-[slot=control]:col-start-1 *:data-[slot=control]:row-start-1 *:data-[slot=control]:mt-0.75 sm:*:data-[slot=control]:mt-1',
-        '*:data-[slot=label]:col-start-2 *:data-[slot=label]:row-start-1',
-        '*:data-[slot=description]:col-start-2 *:data-[slot=description]:row-start-2',
-        'has-data-[slot=description]:**:data-[slot=label]:font-medium'
-      )}
-    />
+    <FieldProvider disabled={disabled} invalid={invalid}>
+      <div
+        data-slot="field"
+        {...props}
+        className={cn(
+          className,
+          'grid grid-cols-[1.125rem_1fr] gap-x-4 gap-y-1 sm:grid-cols-[1rem_1fr]',
+          '*:data-[slot=control]:col-start-1 *:data-[slot=control]:row-start-1 *:data-[slot=control]:mt-0.75 sm:*:data-[slot=control]:mt-1',
+          '*:data-[slot=label]:col-start-2 *:data-[slot=label]:row-start-1',
+          '*:data-[slot=description]:col-start-2 *:data-[slot=description]:row-start-2',
+          'has-data-[slot=description]:**:data-[slot=label]:font-medium'
+        )}
+      />
+    </FieldProvider>
   )
 }
 
@@ -83,42 +109,131 @@ const colors = {
 
 type Color = keyof typeof colors
 
+export interface CheckboxProps {
+  color?: Color
+  isSelected?: boolean
+  defaultSelected?: boolean
+  onChange?: (isSelected: boolean) => void
+  isDisabled?: boolean
+  isIndeterminate?: boolean
+  className?: string
+  value?: string
+  children?: React.ReactNode
+}
+
 export function Checkbox({
   color = 'brand',
   className,
+  isSelected,
+  defaultSelected,
+  onChange,
+  isDisabled: customDisabled,
+  isIndeterminate,
+  value,
+  children,
   ...props
-}: {
-  color?: Color
-  className?: string
-} & Omit<Headless.CheckboxProps, 'as' | 'className'>) {
+}: CheckboxProps) {
+  const ref = useRef<HTMLInputElement>(null)
+  
+  // Access contexts
+  const groupState = useContext(CheckboxGroupContext)
+  const fieldContext = useFieldContext()
+
+  const isDisabled = customDisabled || groupState?.isDisabled || fieldContext?.disabled || false
+
+  let stateProps = {
+    isSelected,
+    defaultSelected,
+    onChange,
+    value,
+  }
+
+  // If inside group state
+  const isSelectedVal = groupState 
+    ? groupState.value.includes(value || '')
+    : isSelected
+
+  const onChangeVal = (checked: boolean) => {
+    if (groupState && value) {
+      if (checked) {
+        groupState.addValue(value)
+      } else {
+        groupState.removeValue(value)
+      }
+    } else {
+      onChange?.(checked)
+    }
+  }
+
+  const statelyState = useToggleState({
+    ...stateProps,
+    isSelected: isSelectedVal,
+    onChange: onChangeVal,
+  })
+
+  const ariaProps = {
+    ...props,
+    isSelected: isSelectedVal,
+    onChange: onChangeVal,
+    isDisabled,
+    isIndeterminate,
+    value,
+  }
+
+  const { inputProps } = useCheckbox(ariaProps, statelyState, ref)
+  const { focusProps, isFocusVisible } = useFocusRing()
+  const { hoverProps, isHovered } = useHover({ isDisabled })
+
+  const isChecked = statelyState.isSelected
+
   return (
-    <Headless.Checkbox
+    <label
       data-slot="control"
-      {...props}
-      className={cn(className, 'group inline-flex focus:outline-hidden')}
+      className={cn(className, 'group inline-flex items-center gap-3 cursor-pointer select-none')}
+      data-checked={isChecked ? '' : undefined}
+      data-disabled={isDisabled ? '' : undefined}
+      data-hover={isHovered ? '' : undefined}
+      data-focus={isFocusVisible ? '' : undefined}
+      {...hoverProps}
     >
-      <span className={cn([base, colors[color]])}>
+      <input
+        {...inputProps}
+        {...focusProps}
+        ref={ref}
+        className="sr-only"
+      />
+      <span
+        className={cn(base, colors[color])}
+        data-checked={isChecked ? '' : undefined}
+        data-disabled={isDisabled ? '' : undefined}
+        data-hover={isHovered ? '' : undefined}
+        data-focus={isFocusVisible ? '' : undefined}
+      >
         <svg
           className="size-4 stroke-(--checkbox-check) opacity-0 group-data-checked:opacity-100 sm:h-3.5 sm:w-3.5"
+          data-checked={isChecked ? '' : undefined}
           viewBox="0 0 14 14"
           fill="none"
+          style={{ opacity: isChecked || isIndeterminate ? 1 : 0 }}
         >
-          <path
-            className="opacity-100 group-data-indeterminate:opacity-0"
-            d="M3 8L6 11L11 3.5"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            className="opacity-0 group-data-indeterminate:opacity-100"
-            d="M3 7H11"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+          {isIndeterminate ? (
+            <path
+              d="M3 7H11"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          ) : (
+            <path
+              d="M3 8L6 11L11 3.5"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          )}
         </svg>
       </span>
-    </Headless.Checkbox>
+      {children}
+    </label>
   )
 }

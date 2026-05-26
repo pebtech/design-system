@@ -2,6 +2,8 @@ import * as Headless from '@headlessui/react'
 import { cn } from '../utils/cn'
 import type React from 'react'
 
+import { FieldProvider, useFieldContext } from '../utils/field-context'
+
 export function Fieldset({
   className,
   ...props
@@ -34,24 +36,51 @@ export function FieldGroup({ className, ...props }: React.ComponentPropsWithoutR
   return <div data-slot="control" {...props} className={cn(className, 'space-y-8')} />
 }
 
-export function Field({ className, ...props }: { className?: string } & Omit<Headless.FieldProps, 'as' | 'className'>) {
+export function Field({
+  className,
+  disabled,
+  invalid,
+  ...props
+}: {
+  className?: string
+  disabled?: boolean
+  invalid?: boolean
+} & Omit<Headless.FieldProps, 'as' | 'className'>) {
   return (
-    <Headless.Field
-      {...props}
-      className={cn(
-        className,
-        '[&>[data-slot=label]+[data-slot=control]]:mt-1', // space between label and input
-        '[&>[data-slot=label]+[data-slot=description]]:mt-1',
-        '[&>[data-slot=description]+[data-slot=control]]:mt-3',
-        '[&>[data-slot=control]+[data-slot=description]]:mt-3',
-        '[&>[data-slot=control]+[data-slot=error]]:mt-3',
-        '*:data-[slot=label]:font-medium'
-      )}
-    />
+    <FieldProvider disabled={disabled} invalid={invalid}>
+      <Headless.Field
+        disabled={disabled}
+        {...props}
+        className={cn(
+          className,
+          '[&>[data-slot=label]+[data-slot=control]]:mt-1', // space between label and input
+          '[&>[data-slot=label]+[data-slot=description]]:mt-1',
+          '[&>[data-slot=description]+[data-slot=control]]:mt-3',
+          '[&>[data-slot=control]+[data-slot=description]]:mt-3',
+          '[&>[data-slot=control]+[data-slot=error]]:mt-3',
+          '*:data-[slot=label]:font-medium'
+        )}
+      />
+    </FieldProvider>
   )
 }
 
 export function Label({ className, ...props }: { className?: string } & Omit<Headless.LabelProps, 'as' | 'className'>) {
+  const context = useFieldContext()
+  if (context) {
+    return (
+      <label
+        data-slot="label"
+        id={context.labelId}
+        data-disabled={context.disabled || undefined}
+        className={cn(
+          className,
+          'text-base/6 text-primary select-none data-disabled:opacity-50 sm:text-sm/6'
+        )}
+        {...(props as any)}
+      />
+    )
+  }
   return (
     <Headless.Label
       data-slot="label"
@@ -68,6 +97,18 @@ export function Description({
   className,
   ...props
 }: { className?: string } & Omit<Headless.DescriptionProps, 'as' | 'className'>) {
+  const context = useFieldContext()
+  if (context) {
+    return (
+      <p
+        data-slot="description"
+        id={context.descriptionId}
+        data-disabled={context.disabled || undefined}
+        className={cn(className, 'text-base/6 text-secondary data-disabled:opacity-50 sm:text-sm/6')}
+        {...(props as any)}
+      />
+    )
+  }
   return (
     <Headless.Description
       data-slot="description"
@@ -81,6 +122,19 @@ export function ErrorMessage({
   className,
   ...props
 }: { className?: string } & Omit<Headless.DescriptionProps, 'as' | 'className'>) {
+  const context = useFieldContext()
+  if (context) {
+    if (context.invalid === false) return null
+    return (
+      <p
+        data-slot="error"
+        id={context.errorId}
+        data-disabled={context.disabled || undefined}
+        className={cn(className, 'text-base/6 text-error data-disabled:opacity-50 sm:text-sm/6')}
+        {...(props as any)}
+      />
+    )
+  }
   return (
     <Headless.Description
       data-slot="error"
@@ -89,3 +143,4 @@ export function ErrorMessage({
     />
   )
 }
+

@@ -67,18 +67,21 @@ export function Badge({
   )
 }
 
-export const BadgeButton = forwardRef(function BadgeButton(
+export const BadgeButton = forwardRef<
+  HTMLElement,
+  BadgeProps & { className?: string; children: React.ReactNode } & (
+    | ({ href?: never } & Omit<Headless.ButtonProps, 'as' | 'className'>)
+    | ({ href: string } & Omit<React.ComponentPropsWithoutRef<typeof Link>, 'className'>)
+  )
+>(function BadgeButton(
   {
     color = 'zinc',
     size = 'sm',
     className,
     children,
     ...props
-  }: BadgeProps & { className?: string; children: React.ReactNode } & (
-    | ({ href?: never } & Omit<Headless.ButtonProps, 'as' | 'className'>)
-    | ({ href: string } & Omit<React.ComponentPropsWithoutRef<typeof Link>, 'className'>)
-  ),
-  ref: React.ForwardedRef<HTMLElement>
+  },
+  ref
 ) {
   const classes = cn(
     'group relative inline-flex rounded-md focus:not-data-focus:outline-hidden data-focus:outline-2 data-focus:outline-offset-2 data-focus:outline-blue-500',

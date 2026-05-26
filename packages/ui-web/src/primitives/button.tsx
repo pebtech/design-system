@@ -1,5 +1,5 @@
-import * as Headless from '@headlessui/react'
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useRef } from 'react'
+import { useButton, useFocusRing, useHover, useLink } from 'react-aria'
 import { Link } from '../typography/link'
 import { cn } from '../utils/cn'
 import { TouchTarget } from '../utils/touch-target'
@@ -218,14 +218,27 @@ type ButtonProps = {
   className?: string
   children: React.ReactNode
 } & (
-    | ({ href?: never } & Omit<Headless.ButtonProps, 'as' | 'className'>)
+    | ({ href?: never } & Omit<React.ComponentPropsWithoutRef<'button'>, 'className'>)
     | ({ href: string } & Omit<React.ComponentPropsWithoutRef<typeof Link>, 'className'>)
   )
 
 export const Button = forwardRef(function Button(
   { color, className, children, variants, preset, ...props }: ButtonProps,
-  ref: React.ForwardedRef<HTMLElement>
+  forwardedRef: React.ForwardedRef<HTMLElement>
 ) {
+  const localRef = useRef<HTMLElement>(null)
+
+  const setRef = React.useCallback((node: HTMLElement | null) => {
+    (localRef as any).current = node
+    if (forwardedRef) {
+      if (typeof forwardedRef === 'function') {
+        forwardedRef(node)
+      } else {
+        (forwardedRef as any).current = node
+      }
+    }
+  }, [forwardedRef])
+
   // Determine the final variants to use
   const baseVariants = preset ? buttonPresets[preset] : buttonPresets.default
 
@@ -235,23 +248,68 @@ export const Button = forwardRef(function Button(
     state: variants?.state || baseVariants.state,
   }
 
+  // Determine disabled state
+  const isDisabled = ('disabled' in props && props.disabled) || resolvedVariants.state === 'disabled'
+  const isLink = typeof props.href === 'string'
+
+  const linkResult = useLink({ ...(props as any), isDisabled }, localRef)
+  const buttonResult = useButton(
+    {
+      ...(props as any),
+      isDisabled,
+      elementType: 'button',
+    },
+    localRef as any
+  )
+
+  const buttonProps = isLink ? linkResult.linkProps : buttonResult.buttonProps
+  const isPressed = isLink ? (linkResult as any).isPressed || false : buttonResult.isPressed
+
+  const { focusProps, isFocusVisible } = useFocusRing()
+  const { hoverProps, isHovered } = useHover({ isDisabled })
+
   const classes = cn(
     styles.base,
     sizeVariants[resolvedVariants.size],
-    stateVariants[('disabled' in props && props.disabled) ? 'disabled' : resolvedVariants.state],
+    stateVariants[isDisabled ? 'disabled' : resolvedVariants.state],
     styles.iconSizes[resolvedVariants.size],
     styles.variants[resolvedVariants.variant],
     color && styles.colors[color],
     className
   )
 
-  return typeof props.href === 'string' ? (
-    <Link {...props} className={classes} ref={ref as React.ForwardedRef<HTMLAnchorElement>}>
+  const customStates = {
+    'data-active': isPressed ? '' : undefined,
+    'data-hover': isHovered ? '' : undefined,
+    'data-focus': isFocusVisible ? '' : undefined,
+    'data-disabled': isDisabled ? '' : undefined,
+  }
+
+  return isLink ? (
+    <Link
+      {...(props as any)}
+      {...buttonProps}
+      {...focusProps}
+      {...hoverProps}
+      {...customStates}
+      className={classes}
+      ref={setRef as React.ForwardedRef<HTMLAnchorElement>}
+    >
       <TouchTarget>{children}</TouchTarget>
     </Link>
   ) : (
-    <Headless.Button {...props} className={classes} ref={ref}>
+    <button
+      {...(props as any)}
+      {...buttonProps}
+      {...focusProps}
+      {...hoverProps}
+      {...customStates}
+      className={classes}
+      ref={setRef as React.ForwardedRef<HTMLButtonElement>}
+    >
       <TouchTarget>{children}</TouchTarget>
-    </Headless.Button>
+    </button>
   )
 })
+
+

@@ -40,7 +40,6 @@
     }
   ],
   "peerDependencies": {
-    "@headlessui/react": "^2.2.0",
     "date-fns": "^4.0.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
@@ -48,14 +47,16 @@
   },
   "dependencies": {
     "@eniolayo/tokens": "workspace:*",
+    "@headlessui/react": "^2.2.10",
     "clsx": "^2.1.1",
+    "react-aria": "^3.48.0",
+    "react-stately": "^3.46.0",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
-    "@headlessui/react": "^2.2.9",
     "@types/react": "^19.2.15",
-    "date-fns": "^4.1.0",
     "@types/react-dom": "^19.2.3",
+    "date-fns": "^4.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tsup": "^8.5.0",
