@@ -1,5 +1,5 @@
 {
-  "name": "@peb/ui-native",
+  "name": "@eniolayo/ui-native",
   "version": "0.0.1",
   "description": "React Native UI components for the PEB design system (Phase 2 — gated on NativeWind v5 stable)",
   "main": "./dist/index.js",
@@ -34,7 +34,7 @@
     "react-native": ">=0.76.0"
   },
   "dependencies": {
-    "@peb/tokens": "workspace:*",
+    "@eniolayo/tokens": "workspace:*",
     "clsx": "^2.1.1"
   },
   "devDependencies": {

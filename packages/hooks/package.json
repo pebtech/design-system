@@ -1,5 +1,5 @@
 {
-  "name": "@peb/hooks",
+  "name": "@eniolayo/hooks",
   "version": "0.0.1",
   "description": "Shared React hooks for the PEB design system",
   "main": "./dist/index.js",

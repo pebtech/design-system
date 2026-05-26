@@ -1,6 +1,6 @@
 # All package.json and exports changes require design system team review
-packages/*/package.json  @peb/design-system-team
-packages/*/src/index.ts  @peb/design-system-team
+packages/*/package.json  @eniolayo/design-system-team
+packages/*/src/index.ts  @eniolayo/design-system-team
 
 # Changeset files require review to prevent accidental version bumps
-.changeset/*.md          @peb/design-system-team
+.changeset/*.md          @eniolayo/design-system-team

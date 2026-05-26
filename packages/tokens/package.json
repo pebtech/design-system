@@ -1,5 +1,5 @@
 {
-  "name": "@peb/tokens",
+  "name": "@eniolayo/tokens",
   "version": "0.0.1",
   "description": "Design tokens for the PEB design system",
   "main": "./dist/index.js",

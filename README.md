@@ -1,16 +1,16 @@
 # PEB Design System
 
-A shared, versioned component library for PEB product applications. Distributed via GitHub Packages as `@peb/*` scoped npm packages.
+A shared, versioned component library for PEB product applications. Distributed via GitHub Packages as `@eniolayo/*` scoped npm packages.
 
 ## Packages
 
 | Package | Description | Size (gzip) |
 |---------|-------------|-------------|
-| [`@peb/tokens`](packages/tokens/) | Design tokens — colors, typography, spacing, semantic light/dark themes, brand utilities | 2.2 KB |
-| [`@peb/ui-web`](packages/ui-web/) | React web components — 43 components built on Headless UI + Tailwind CSS 4 | 23.6 KB |
-| [`@peb/ui-native`](packages/ui-native/) | React Native components — theme provider + cn utility (Phase 2, gated on NativeWind v5 stable) | 375 B |
-| [`@peb/hooks`](packages/hooks/) | Shared React hooks — useDebounce, useLocalStorage, useMediaQuery, useClickOutside, useIntersectionObserver | 1.0 KB |
-| [`@peb/icons`](packages/icons/) | SVG icon library — outline + solid variants, tree-shakeable, Heroicons-style API | 196 B |
+| [`@eniolayo/tokens`](packages/tokens/) | Design tokens — colors, typography, spacing, semantic light/dark themes, brand utilities | 2.2 KB |
+| [`@eniolayo/ui-web`](packages/ui-web/) | React web components — 43 components built on Headless UI + Tailwind CSS 4 | 23.6 KB |
+| [`@eniolayo/ui-native`](packages/ui-native/) | React Native components — theme provider + cn utility (Phase 2, gated on NativeWind v5 stable) | 375 B |
+| [`@eniolayo/hooks`](packages/hooks/) | Shared React hooks — useDebounce, useLocalStorage, useMediaQuery, useClickOutside, useIntersectionObserver | 1.0 KB |
+| [`@eniolayo/icons`](packages/icons/) | SVG icon library — outline + solid variants, tree-shakeable, Heroicons-style API | 196 B |
 
 ## Quick Start
 
@@ -33,7 +33,7 @@ pnpm install
 pnpm -r run build
 ```
 
-Build ordering is automatic — pnpm resolves `workspace:*` dependencies topologically. `@peb/tokens` builds first since `ui-web` and `ui-native` depend on it.
+Build ordering is automatic — pnpm resolves `workspace:*` dependencies topologically. `@eniolayo/tokens` builds first since `ui-web` and `ui-native` depend on it.
 
 ### Test
 
@@ -73,9 +73,9 @@ design-system/
 
 ### Token Flow
 
-1. **TypeScript objects** in `@peb/tokens/src/` define all color, typography, and spacing values
+1. **TypeScript objects** in `@eniolayo/tokens/src/` define all color, typography, and spacing values
 2. **`generate-css.mjs`** postbuild script produces `dist/css/tokens.css` with `@theme`, `:root`, and `.dark` blocks
-3. **`@peb/ui-web`** exports this CSS at `@peb/ui-web/styles` for consumers to import
+3. **`@eniolayo/ui-web`** exports this CSS at `@eniolayo/ui-web/styles` for consumers to import
 4. **Components** use Tailwind utility classes that resolve against the token CSS custom properties
 
 ### Component Conventions
@@ -91,19 +91,19 @@ design-system/
 
 ## Package Details
 
-### @peb/tokens
+### @eniolayo/tokens
 
 Design tokens extracted from the production apps. Provides:
 
 - **Semantic tokens**: 90+ CSS custom properties for text, background, border, hover, focus, and input colors — both light and dark mode
 - **Brand utilities**: `getColorShades()`, `hexToHSL()`, `hslToHex()` — pure functions for runtime brand color generation
-- **CSS output**: `@peb/tokens/css` exports a ready-to-use CSS file with `@theme` block and `:root`/`.dark` variable definitions
+- **CSS output**: `@eniolayo/tokens/css` exports a ready-to-use CSS file with `@theme` block and `:root`/`.dark` variable definitions
 
 ```ts
-import { lightTokens, darkTokens, getColorShades } from '@peb/tokens'
+import { lightTokens, darkTokens, getColorShades } from '@eniolayo/tokens'
 ```
 
-### @peb/ui-web
+### @eniolayo/ui-web
 
 43 React components organized by category:
 
@@ -130,7 +130,7 @@ The package does not depend on Next.js. Two provider patterns handle framework i
 **LinkProvider** — wraps your framework's link component (e.g., `next/link`) so Button, Badge, and other components render framework-optimized links:
 
 ```tsx
-import { LinkProvider } from '@peb/ui-web'
+import { LinkProvider } from '@eniolayo/ui-web'
 import NextLink from 'next/link'
 
 <LinkProvider component={NextLink}>
@@ -141,7 +141,7 @@ import NextLink from 'next/link'
 **BrandProvider** — applies brand colors at runtime via CSS custom properties on `:root`:
 
 ```tsx
-import { BrandProvider } from '@peb/ui-web'
+import { BrandProvider } from '@eniolayo/ui-web'
 
 <BrandProvider brandColor="#3b82f6">
   <App />
@@ -158,7 +158,7 @@ tailwindcss ^4.0
 date-fns ^4.0
 ```
 
-### @peb/hooks
+### @eniolayo/hooks
 
 Generic utility hooks with zero runtime dependencies:
 
@@ -170,13 +170,13 @@ Generic utility hooks with zero runtime dependencies:
 | `useClickOutside(ref, callback)` | Fires callback on clicks outside ref element |
 | `useIntersectionObserver(options?)` | Returns `{ ref, isIntersecting }` |
 
-### @peb/icons
+### @eniolayo/icons
 
-Self-managed SVG icon library. Drop `.svg` files in `svgs/outline/` or `svgs/solid/`, run `pnpm --filter @peb/icons run build`, and get typed React components.
+Self-managed SVG icon library. Drop `.svg` files in `svgs/outline/` or `svgs/solid/`, run `pnpm --filter @eniolayo/icons run build`, and get typed React components.
 
 ```tsx
-import { ArrowLeft } from '@peb/icons/outline'
-import { Check } from '@peb/icons/solid'
+import { ArrowLeft } from '@eniolayo/icons/outline'
+import { Check } from '@eniolayo/icons/solid'
 
 <ArrowLeft size={20} color="currentColor" strokeWidth={1.5} />
 <Check size={16} />
@@ -184,11 +184,11 @@ import { Check } from '@peb/icons/solid'
 
 **Icon props**: `size`, `color`, `strokeWidth`, `className`, `title` (accessibility), plus all SVG attributes via spread.
 
-### @peb/ui-native
+### @eniolayo/ui-native
 
 Phase 2 — gated on NativeWind v5 reaching stable. Currently provides:
 
-- `ThemeProvider` / `useTheme` — token-aware theme context using `@peb/tokens`
+- `ThemeProvider` / `useTheme` — token-aware theme context using `@eniolayo/tokens`
 - `cn()` utility — clsx wrapper for class composition
 
 ---
@@ -200,14 +200,14 @@ Phase 2 — gated on NativeWind v5 reaching stable. Currently provides:
 Add to your project's `.npmrc`:
 
 ```ini
-@peb:registry=https://npm.pkg.github.com
+@eniolayo:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
 ```
 
 ### 2. Install packages
 
 ```bash
-pnpm add @peb/tokens @peb/ui-web @peb/hooks @peb/icons
+pnpm add @eniolayo/tokens @eniolayo/ui-web @eniolayo/hooks @eniolayo/icons
 ```
 
 ### 3. Import styles
@@ -216,17 +216,17 @@ In your CSS entry point (e.g., `src/styles/tailwind.css`):
 
 ```css
 @import "tailwindcss";
-@import "@peb/ui-web/styles";
-@source "../node_modules/@peb/ui-web/dist";
+@import "@eniolayo/ui-web/styles";
+@source "../node_modules/@eniolayo/ui-web/dist";
 @custom-variant dark (&:where(.dark, .dark *));
 ```
 
-**`@source` is mandatory** — Tailwind CSS 4 excludes `node_modules` from automatic class detection. Without this directive, Tailwind classes used inside `@peb/ui-web` components won't appear in the output CSS.
+**`@source` is mandatory** — Tailwind CSS 4 excludes `node_modules` from automatic class detection. Without this directive, Tailwind classes used inside `@eniolayo/ui-web` components won't appear in the output CSS.
 
 ### 4. Set up providers
 
 ```tsx
-import { LinkProvider, BrandProvider } from '@peb/ui-web'
+import { LinkProvider, BrandProvider } from '@eniolayo/ui-web'
 import NextLink from 'next/link'
 
 export default function RootLayout({ children }) {
@@ -243,9 +243,9 @@ export default function RootLayout({ children }) {
 ### 5. Use components
 
 ```tsx
-import { Button, Badge, Input, Heading, Text } from '@peb/ui-web'
-import { ArrowLeft } from '@peb/icons/outline'
-import { useDebounce } from '@peb/hooks'
+import { Button, Badge, Input, Heading, Text } from '@eniolayo/ui-web'
+import { ArrowLeft } from '@eniolayo/icons/outline'
+import { useDebounce } from '@eniolayo/hooks'
 ```
 
 ---
@@ -263,8 +263,8 @@ import { useDebounce } from '@peb/hooks'
 ### Adding a new icon
 
 1. Add the `.svg` file to `packages/icons/svgs/outline/` and/or `packages/icons/svgs/solid/`
-2. Run `pnpm --filter @peb/icons run build` — the generate script creates typed React components automatically
-3. Icons are auto-exported from `@peb/icons/outline` and `@peb/icons/solid`
+2. Run `pnpm --filter @eniolayo/icons run build` — the generate script creates typed React components automatically
+3. Icons are auto-exported from `@eniolayo/icons/outline` and `@eniolayo/icons/solid`
 
 ### Versioning
 
@@ -276,7 +276,7 @@ pnpm version-packages   # Apply changesets to bump versions + update changelogs
 pnpm release            # Build + publish all changed packages
 ```
 
-Each package is independently versioned. A breaking change in `@peb/tokens` cascades as at least a minor bump to dependent packages (`updateInternalDependencies: "minor"`).
+Each package is independently versioned. A breaking change in `@eniolayo/tokens` cascades as at least a minor bump to dependent packages (`updateInternalDependencies: "minor"`).
 
 ### Deprecation Policy
 

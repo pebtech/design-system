@@ -113,7 +113,7 @@ importers:
 
   packages/ui-native:
     dependencies:
-      '@peb/tokens':
+      '@eniolayo/tokens':
         specifier: workspace:*
         version: link:../tokens
       clsx:
@@ -144,7 +144,7 @@ importers:
 
   packages/ui-web:
     dependencies:
-      '@peb/tokens':
+      '@eniolayo/tokens':
         specifier: workspace:*
         version: link:../tokens
       clsx:

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react'
-import { lightTokens, darkTokens, type ThemeMode } from '@peb/tokens'
+import { lightTokens, darkTokens, type ThemeMode } from '@eniolayo/tokens'
 
 type ThemeContextValue = {
   theme: ThemeMode
