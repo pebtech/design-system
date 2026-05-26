@@ -1,0 +1,28 @@
+node_modules/
+dist/
+.turbo/
+*.tsbuildinfo
+
+# Storybook
+storybook-static/
+
+# Generated icons
+packages/icons/src/generated/
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Lock files (keep pnpm-lock.yaml)
+package-lock.json
+yarn.lock

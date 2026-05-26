@@ -1,0 +1,5 @@
+export { default as ArrowLeftOutline } from './generated/outline/arrow-left'
+export { default as CheckOutline } from './generated/outline/check'
+export { default as ChevronDownOutline } from './generated/outline/chevron-down'
+export { default as CloseOutline } from './generated/outline/close'
+export { default as SearchOutline } from './generated/outline/search'
