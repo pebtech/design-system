@@ -24,7 +24,7 @@
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "lint": "echo 'no lint configured'",
+    "lint": "eslint src/",
     "test": "echo 'no tests yet'",
     "size": "echo 'no size check yet'"
   },

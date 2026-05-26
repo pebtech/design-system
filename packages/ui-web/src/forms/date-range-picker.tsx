@@ -212,8 +212,8 @@ export function DateRangePicker({
                                                     'h-8 w-full rounded-lg text-sm transition-colors',
                                                     !isSameMonth(day, currentMonth) && 'text-zinc-300 dark:text-zinc-600',
                                                     isSameMonth(day, currentMonth) && 'text-zinc-900 dark:text-white',
-                                                    (isSelected || isEndDate) && 'bg-indigo-600 !text-white',
-                                                    isInRange && !isSelected && !isEndDate && 'bg-indigo-100 dark:bg-indigo-900/30',
+                                                    (isSelected || isEndDate) && 'bg-brandBg !text-white',
+                                                    isInRange && !isSelected && !isEndDate && 'bg-brandBg/50 dark:bg-brandBg/20',
                                                     !isSelected && !isEndDate && !isInRange && 'hover:bg-zinc-100 dark:hover:bg-zinc-700'
                                                 )}
                                             >

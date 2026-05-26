@@ -186,7 +186,7 @@ export function DatePicker({
                                                     'h-8 w-full rounded-lg text-sm transition-colors',
                                                     !isSameMonth(day, currentMonth) && 'text-zinc-300 dark:text-zinc-600',
                                                     isSameMonth(day, currentMonth) && 'text-zinc-900 dark:text-white',
-                                                    isSelected && 'bg-indigo-600 !text-white',
+                                                    isSelected && 'bg-brandBg !text-white',
                                                     !isSelected && 'hover:bg-zinc-100 dark:hover:bg-zinc-700'
                                                 )}
                                             >

@@ -25,7 +25,7 @@ export function Progress({
     zinc: 'bg-zinc-600',
     cyan: 'bg-cyan-600',
     purple: 'bg-purple-600',
-    brand: 'bg-indigo-600',
+    brand: 'bg-brandBg',
   }
 
   return (
