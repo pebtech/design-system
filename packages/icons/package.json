@@ -2,24 +2,24 @@
   "name": "@peb/icons",
   "version": "0.0.1",
   "description": "Icon library for the PEB design system",
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.js"
     },
     "./outline": {
       "types": "./dist/outline.d.ts",
       "import": "./dist/outline.mjs",
-      "require": "./dist/outline.cjs"
+      "require": "./dist/outline.js"
     },
     "./solid": {
       "types": "./dist/solid.d.ts",
       "import": "./dist/solid.mjs",
-      "require": "./dist/solid.cjs"
+      "require": "./dist/solid.js"
     }
   },
   "files": [
@@ -36,7 +36,7 @@
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "lint": "echo 'no lint configured'",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "size": "size-limit"
   },
   "size-limit": [

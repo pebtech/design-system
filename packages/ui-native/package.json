@@ -2,14 +2,14 @@
   "name": "@peb/ui-native",
   "version": "0.0.1",
   "description": "React Native UI components for the PEB design system (Phase 2 — gated on NativeWind v5 stable)",
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.js"
     }
   },
   "files": [
