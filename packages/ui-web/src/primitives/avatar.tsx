@@ -1,6 +1,6 @@
 import * as Headless from '@headlessui/react'
 import clsx from 'clsx'
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useState } from 'react'
 import { TouchTarget } from '../utils/touch-target'
 import { Link } from '../typography/link'
 import { Text } from '../typography/text'
@@ -23,17 +23,20 @@ export function Avatar({
   initialsClassName,
   ...props
 }: AvatarProps & React.ComponentPropsWithoutRef<'span'>) {
+  const [imgError, setImgError] = useState(false)
+  const showImage = src && !imgError
+
   return (
     <span
       data-slot="avatar"
       {...props}
       className={clsx(
         className,
-        // Basic layout
         'relative inline-grid shrink-0 align-middle [--avatar-radius:20%] *:col-start-1 *:row-start-1',
         'bg-neutral-200',
-        // Border radius
-        square ? 'rounded-(--avatar-radius) *:rounded-(--avatar-radius)' : 'rounded-full *:rounded-full'
+        square
+          ? 'rounded-(--avatar-radius) *:rounded-(--avatar-radius)'
+          : 'rounded-full *:rounded-full'
       )}
     >
       {initials && (
@@ -41,17 +44,21 @@ export function Avatar({
           as="span"
           weight="semibold"
           size="sm"
-          className={clsx("flex size-full items-center justify-center uppercase select-none", initialsClassName)}
+          className={clsx(
+            'flex size-full items-center justify-center uppercase select-none',
+            initialsClassName
+          )}
           aria-hidden={alt ? undefined : 'true'}
         >
           {initials}
         </Text>
       )}
-      {src && (
+      {showImage && (
         <img
           className="size-full object-cover"
           src={src}
           alt={alt}
+          onError={() => setImgError(true)}
         />
       )}
     </span>
@@ -75,8 +82,8 @@ export const AvatarButton = forwardRef(function AvatarButton(
 ) {
   const classes = clsx(
     className,
-    square ? 'rounded-[20%]' : 'rounded-full',
-    'relative inline-grid focus:not-data-focus:outline-hidden data-focus:outline-2 data-focus:outline-offset-2 data-focus:outline-indigo-500'
+    square ? 'rounded-(--avatar-radius)' : 'rounded-full',
+    'relative inline-grid focus:not-data-focus:outline-hidden data-focus:outline-2 data-focus:outline-offset-2 data-focus:outline-brand'
   )
 
   return typeof props.href === 'string' ? (

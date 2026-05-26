@@ -37,12 +37,12 @@ export function AccordionSection({
 }: AccordionSectionProps) {
   return (
     <div className="overflow-hidden p-0 relative bg-surface rounded-xl border border-border">
-      <button
-        type="button"
-        onClick={onToggle}
-        className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-hover-primary cursor-pointer"
-      >
-        <div className="flex items-center gap-4">
+      <div className="flex w-full items-center justify-between p-4 transition-colors hover:bg-hover-primary">
+        <button
+          type="button"
+          onClick={onToggle}
+          className="flex flex-1 items-center gap-4 text-left cursor-pointer bg-transparent border-0 p-0"
+        >
           {icon && (
             <div
               className={cn(
@@ -53,22 +53,22 @@ export function AccordionSection({
               {icon}
             </div>
           )}
-          <div>
-            <Text color="primary" weight="semibold">
-              {title}
-            </Text>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          {action}
+          <Text color="primary" weight="semibold">
+            {title}
+          </Text>
           <ChevronDown
             className={cn(
-              'size-5 text-muted transition-transform duration-300',
+              'size-5 text-muted transition-transform duration-300 ml-auto',
               isOpen && 'rotate-180'
             )}
           />
-        </div>
-      </button>
+        </button>
+        {action && (
+          <div className="flex items-center gap-2 ml-2" onClick={(e) => e.stopPropagation()}>
+            {action}
+          </div>
+        )}
+      </div>
 
       <div
         className={cn(

@@ -205,7 +205,6 @@ export function Switch({
           'bg-white shadow-sm ring-1 ring-black/5',
           // Checked
           'group-data-checked:bg-(--switch) group-data-checked:shadow-(--switch-shadow) group-data-checked:ring-(--switch-ring)',
-          'group-data-checked:translate-x-4 sm:group-data-checked:translate-x-3',
           // Disabled
           'group-data-checked:group-data-disabled:bg-white group-data-checked:group-data-disabled:shadow-sm group-data-checked:group-data-disabled:ring-black/5'
         )}

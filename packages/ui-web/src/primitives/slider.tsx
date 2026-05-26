@@ -43,14 +43,14 @@ export function Slider({
         onChange={handleChange}
         className="absolute inset-0 h-full w-full cursor-pointer opacity-0 z-10"
       />
-      <div className="relative h-2 w-full grow overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
+      <div className="relative h-2 w-full grow overflow-hidden rounded-full bg-quaternaryBg">
         <div
-          className="absolute h-full bg-blue-600 dark:bg-blue-500 transition-all"
+          className="absolute h-full bg-brandBg"
           style={{ width: `${percentage}%` }}
         />
       </div>
       <div
-        className="absolute h-5 w-5 rounded-full border-2 border-blue-600 bg-white shadow-md transition-all dark:border-blue-500 dark:bg-zinc-950"
+        className="absolute h-5 w-5 rounded-full border-2 border-brand bg-surface shadow-md transition-colors dark:bg-canvas"
         style={{ left: `calc(${percentage}% - 10px)` }}
       />
     </div>
