@@ -8,6 +8,7 @@ const ROOT = join(__dirname, '..')
 const SOLAR_ASSETS = join(ROOT, 'assets', 'icons', 'solar')
 const SRC_DIR = join(ROOT, 'src')
 const OUT_DIR = join(SRC_DIR, 'solar')
+const STORIES_DIR = join(ROOT, 'stories')
 
 const VARIANTS = ['linear', 'outline', 'bold', 'broken', 'duotone']
 
@@ -81,7 +82,7 @@ async function processVariant(variant) {
 
   const webExports = []
   const nativeExports = []
-  const names = []
+  const catalog = []
 
   for (const file of files) {
     const content = await readFile(join(dir, file), 'utf-8')
@@ -96,7 +97,7 @@ async function processVariant(variant) {
     nativeExports.push(
       `export const ${componentName} = /*#__PURE__*/ createIcon('${viewBox}', 2, ${JSON.stringify(rawBody)}, '${componentName}')`,
     )
-    names.push(name)
+    catalog.push({ id: name, export: componentName })
   }
 
   const webFile = `import { createIcon } from '../icon'\n\n${webExports.join('\n')}\n`
@@ -105,7 +106,12 @@ async function processVariant(variant) {
   await writeFile(join(OUT_DIR, `${variant}.tsx`), webFile, 'utf-8')
   await writeFile(join(OUT_DIR, `${variant}.native.tsx`), nativeFile, 'utf-8')
 
-  return { variant, count: files.length, names }
+  return { variant, count: files.length, catalog }
+}
+
+async function writeSolarCatalog(catalog) {
+  await mkdir(STORIES_DIR, { recursive: true })
+  await writeFile(join(STORIES_DIR, 'solar-catalog.json'), JSON.stringify(catalog), 'utf-8')
 }
 
 async function writeStubs() {
@@ -114,6 +120,7 @@ async function writeStubs() {
   await writeFile(join(SRC_DIR, 'solar.ts'), stub, 'utf-8')
   await writeFile(join(SRC_DIR, 'solar.native.ts'), stub, 'utf-8')
   await writeFile(join(OUT_DIR, 'names.ts'), 'export type SolarIconName = never\nexport type SolarIconVariant = never\n', 'utf-8')
+  await writeSolarCatalog({})
 }
 
 async function main() {
@@ -148,10 +155,14 @@ async function main() {
   await writeFile(join(SRC_DIR, 'solar.ts'), topBarrelLines.join('\n') + '\n', 'utf-8')
   await writeFile(join(SRC_DIR, 'solar.native.ts'), topBarrelNativeLines.join('\n') + '\n', 'utf-8')
 
+  // Storybook / docs catalog — compact manifest for the icon explorer UI.
+  const catalogByVariant = Object.fromEntries(results.map((r) => [r.variant, r.catalog]))
+  await writeSolarCatalog(catalogByVariant)
+
   // Typed name unions — useful for any name-based API a consumer might build
   // on top of these icons (e.g. <DynamicSolar name="home-2" variant="linear" />).
-  const namesByVariant = Object.fromEntries(results.map((r) => [r.variant, r.names]))
-  const allNames = [...new Set(results.flatMap((r) => r.names))].sort()
+  const namesByVariant = Object.fromEntries(results.map((r) => [r.variant, r.catalog.map((c) => c.id)]))
+  const allNames = [...new Set(results.flatMap((r) => r.catalog.map((c) => c.id)))].sort()
   const typesContent =
     `export type SolarIconVariant = ${results.map((r) => `'${r.variant}'`).join(' | ')}\n\n` +
     `export type SolarIconName = ${allNames.map((n) => `'${n}'`).join(' | ')}\n\n` +

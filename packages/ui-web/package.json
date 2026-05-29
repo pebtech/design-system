@@ -58,6 +58,7 @@
     "tailwindcss": "^4.0.0"
   },
   "dependencies": {
+    "@fontsource-variable/inter": "^5.2.5",
     "@eniolayo/tokens": "workspace:*",
     "@headlessui/react": "^2.2.10",
     "clsx": "^2.1.1",

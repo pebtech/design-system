@@ -1,37 +1,69 @@
 import clsx from 'clsx'
 
-export function DescriptionList({ className, ...props }: React.ComponentPropsWithoutRef<'dl'>) {
+export type DescriptionListProps = React.ComponentPropsWithoutRef<'dl'> & {
+  /** `card` — bordered surface; `plain` — no outer chrome (dividers only). */
+  variant?: 'card' | 'plain'
+}
+
+export function DescriptionList({
+  className,
+  variant = 'card',
+  ...props
+}: DescriptionListProps) {
   return (
     <dl
       {...props}
       className={clsx(
         className,
-        'grid grid-cols-1 text-base/6 sm:grid-cols-[min(50%,--spacing(80))_auto] sm:text-sm/6'
+        variant === 'card' && 'overflow-hidden rounded-xl border border-border bg-surface',
       )}
     />
   )
 }
 
+/**
+ * Preferred API — one labelled row (valid HTML5: `div` groups `dt` + `dd` inside `dl`).
+ */
+export function DescriptionListItem({
+  className,
+  term,
+  children,
+  ...props
+}: React.ComponentPropsWithoutRef<'div'> & {
+  term: React.ReactNode
+  children: React.ReactNode
+}) {
+  return (
+    <div
+      {...props}
+      className={clsx(
+        className,
+        'grid grid-cols-1 gap-1 border-b border-border px-4 py-3.5 last:border-b-0',
+        'sm:grid-cols-[minmax(0,11rem)_1fr] sm:items-start sm:gap-x-8 sm:py-4',
+      )}
+    >
+      <DescriptionTerm className="pt-0 pb-0 sm:pt-0">{term}</DescriptionTerm>
+      <DescriptionDetails className="pt-0 pb-0 sm:pt-0">{children}</DescriptionDetails>
+    </div>
+  )
+}
+
+/** Label — use inside {@link DescriptionListItem} or after {@link DescriptionList} for custom layouts. */
 export function DescriptionTerm({ className, ...props }: React.ComponentPropsWithoutRef<'dt'>) {
   return (
     <dt
       {...props}
-      className={clsx(
-        className,
-        'col-start-1 border-t border-zinc-950/5 pt-3 text-zinc-500 first:border-none sm:border-t sm:border-zinc-950/5 sm:py-3 dark:border-white/5 dark:text-zinc-400 sm:dark:border-white/5'
-      )}
+      className={clsx(className, 'text-sm font-medium text-secondary')}
     />
   )
 }
 
+/** Value — use inside {@link DescriptionListItem} or after {@link DescriptionTerm}. */
 export function DescriptionDetails({ className, ...props }: React.ComponentPropsWithoutRef<'dd'>) {
   return (
     <dd
       {...props}
-      className={clsx(
-        className,
-        'pt-1 pb-3 text-zinc-950 sm:border-t sm:border-zinc-950/5 sm:py-3 sm:[:nth-of-type(2)]:border-none dark:text-white dark:sm:border-white/5'
-      )}
+      className={clsx(className, 'text-sm text-primary')}
     />
   )
 }

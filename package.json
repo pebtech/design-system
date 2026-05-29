@@ -36,6 +36,7 @@
     }
   },
   "devDependencies": {
+    "@eniolayo/icons": "workspace:*",
     "@changesets/cli": "^2.29.0",
     "@eslint/js": "^10.0.1",
     "@size-limit/preset-small-lib": "^11.2.0",

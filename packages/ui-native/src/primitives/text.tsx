@@ -83,6 +83,7 @@ export function Text({
       className={cn(className)}
       style={StyleSheet.flatten([
         {
+          fontFamily: 'Inter',
           fontSize: sizeStyle.fontSize,
           lineHeight: sizeStyle.lineHeight,
           fontWeight: weights[weight] as any,

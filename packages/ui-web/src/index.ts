@@ -95,9 +95,20 @@ export {
 
 // Layout
 export { Card } from './layout/card'
-export { DescriptionList, DescriptionTerm, DescriptionDetails } from './layout/description-list'
+export {
+  DescriptionList,
+  DescriptionListItem,
+  DescriptionTerm,
+  DescriptionDetails,
+} from './layout/description-list'
+export type { DescriptionListProps } from './layout/description-list'
 export { PageCard } from './layout/page-card'
-export { PageBackButton } from './layout/page-back-button'
+export {
+  PageBackButton,
+  type PageBackButtonAppearance,
+  type PageBackButtonProps,
+  type PageBackButtonSize,
+} from './layout/page-back-button'
 export { PageTopWrapper } from './layout/page-top-wrapper'
 
 // Data Display
@@ -115,7 +126,20 @@ export { ChipSelector } from './forms/chip-selector'
 export { FormField } from './forms/form-field'
 
 // Navigation
-export { Pagination, TablePagination } from './navigation/pagination'
+export {
+  Pagination,
+  PaginationGap,
+  PaginationList,
+  PaginationNext,
+  PaginationPage,
+  PaginationPages,
+  PaginationPrevious,
+  PaginationSimple,
+  TablePagination,
+  getPaginationRange,
+  type PaginationAppearance,
+  type PaginationRangeItem,
+} from './navigation/pagination'
 export { Breadcrumb } from './navigation/breadcrumb'
 export { WizardStepper } from './navigation/wizard-stepper'
 

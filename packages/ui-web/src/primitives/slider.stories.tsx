@@ -60,12 +60,28 @@ export const SmallStep: Story = {
   },
 }
 
+export const Playground: Story = {
+  render: () => {
+    const [value, setValue] = useState([50])
+    return (
+      <div className="w-full space-y-2">
+        <div className="flex justify-between text-sm text-secondary">
+          <span>0</span>
+          <span className="font-medium text-primary tabular-nums">{value[0]}</span>
+          <span>100</span>
+        </div>
+        <Slider value={value} min={0} max={100} step={1} onValueChange={setValue} />
+      </div>
+    )
+  },
+}
+
 export const Interactive: Story = {
   render: () => {
     const [value, setValue] = useState([50])
     return (
-      <div style={{ width: '320px' }}>
-        <div style={{ marginBottom: '8px', fontSize: '14px' }}>Value: {value[0]}</div>
+      <div className="w-full space-y-2">
+        <p className="text-sm text-secondary">Drag the thumb: {value[0]}</p>
         <Slider value={value} min={0} max={100} step={1} onValueChange={setValue} />
       </div>
     )
@@ -76,8 +92,8 @@ export const WithLabels: Story = {
   render: () => {
     const [value, setValue] = useState([50])
     return (
-      <div style={{ width: '320px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '12px', color: '#666' }}>
+      <div className="w-full space-y-2">
+        <div className="flex justify-between text-xs text-secondary">
           <span>0</span>
           <span>{value[0]}</span>
           <span>100</span>

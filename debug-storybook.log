@@ -1,0 +1,30 @@
+[22:16:27.026] [INFO] storybook v10.4.1
+[22:16:29.618] [DEBUG] Getting package.json info for /Users/user/Documents/github/design-guide/design-system/package.json...
+[22:16:29.620] [WARN] You are currently using Storybook 10.4.1 but you have packages which are incompatible with it:
+
+- axe-storybook-testing@8.2.0 which depends on ^7.0.0 || ^8.0.0
+ Repo: https://github.com/ahuth/axe-storybook-testing
+
+Please consider updating your packages or contacting the maintainers for compatibility details.
+
+For more details on compatibility guidance, see:
+https://github.com/storybookjs/storybook/issues/32836
+[22:16:29.976] [INFO] Starting...
+[22:16:30.017] [WARN] No story files found for the specified pattern: packages/ui-web/src/**/*.mdx
+[22:16:30.318] [DEBUG] Starting preview..
+[22:16:30.346] [DEBUG] Using tsconfig paths for react-docgen
+[22:16:30.382] [WARN] 🚨 Error: Unknown node type ArrowFunctionExpression
+[22:16:30.383] [ERROR] Failed to build the preview
+[22:16:30.388] [ERROR] [38;2;241;97;97mError: Unknown node type ArrowFunctionExpression[39m
+    at parseValue (file://./node_modules/.pnpm/storybook@10.4.1_@emnapi+core@1.9.2_@emnapi+runtime@1.9.2_@testing-library+dom@10.4.1_@_5caa0471dbf2beebb0f0d231a71a4432/node_modules/storybook/dist/_node-chunks/chunk-RYS45SZ5.js:1190:9)
+    at file://./node_modules/.pnpm/storybook@10.4.1_@emnapi+core@1.9.2_@emnapi+runtime@1.9.2_@testing-library+dom@10.4.1_@_5caa0471dbf2beebb0f0d231a71a4432/node_modules/storybook/dist/_node-chunks/chunk-RYS45SZ5.js:1185:93
+    at Array.reduce (<anonymous>)
+    at parseValue (file://./node_modules/.pnpm/storybook@10.4.1_@emnapi+core@1.9.2_@emnapi+runtime@1.9.2_@testing-library+dom@10.4.1_@_5caa0471dbf2beebb0f0d231a71a4432/node_modules/storybook/dist/_node-chunks/chunk-RYS45SZ5.js:1185:28)
+    at getStorySortParameter (file://./node_modules/.pnpm/storybook@10.4.1_@emnapi+core@1.9.2_@emnapi+runtime@1.9.2_@testing-library+dom@10.4.1_@_5caa0471dbf2beebb0f0d231a71a4432/node_modules/storybook/dist/_node-chunks/chunk-RYS45SZ5.js:1262:109)
+    at _StoryIndexGenerator.getIndexAndStats (file://./node_modules/.pnpm/storybook@10.4.1_@emnapi+core@1.9.2_@emnapi+runtime@1.9.2_@testing-library+dom@10.4.1_@_5caa0471dbf2beebb0f0d231a71a4432/node_modules/storybook/dist/core-server/index.js:16848:24)
+    at async _StoryIndexGenerator.getIndex (file://./node_modules/.pnpm/storybook@10.4.1_@emnapi+core@1.9.2_@emnapi+runtime@1.9.2_@testing-library+dom@10.4.1_@_5caa0471dbf2beebb0f0d231a71a4432/node_modules/storybook/dist/core-server/index.js:16824:13)
+    at async BasicMinimalPluginContext.config (file://./node_modules/.pnpm/@storybook+builder-vite@10.4.1_esbuild@0.27.7_rollup@4.60.4_storybook@10.4.1_@emnapi+co_1aa49620bd29a4c916e9afb64ae1ef70/node_modules/@storybook/builder-vite/dist/_node-chunks/chunk-3IGMU7YO.js:184:19)
+    at async runConfigHook (file://./node_modules/.pnpm/vite@7.3.3_jiti@2.7.0_lightningcss@1.32.0/node_modules/vite/dist/node/chunks/config.js:35963:15)
+    at async resolveConfig (file://./node_modules/.pnpm/vite@7.3.3_jiti@2.7.0_lightningcss@1.32.0/node_modules/vite/dist/node/chunks/config.js:35465:13)
+[22:16:30.390] [WARN] Broken build, fix the error above.
+You may need to refresh the browser.

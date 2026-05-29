@@ -1,0 +1,2 @@
+/* Inter — load before tailwind.css so font-sans resolves correctly. */
+@import '@fontsource-variable/inter';

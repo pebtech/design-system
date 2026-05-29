@@ -43,10 +43,11 @@ export function Toggle({
       ref={ref}
       className={cn(
         'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors',
-        'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2',
-        'disabled:pointer-events-none disabled:opacity-50 h-9 px-3 border border-zinc-200 bg-transparent text-zinc-900 hover:bg-zinc-100 hover:text-zinc-900',
-        'dark:border-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-800 dark:hover:text-zinc-100',
-        state.isSelected && 'bg-zinc-900 text-white hover:bg-zinc-900/90 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90',
+        'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2',
+        'disabled:pointer-events-none disabled:opacity-50 h-9 px-3',
+        state.isSelected
+          ? 'border-transparent bg-brandBg text-white hover:bg-brandBg/80'
+          : 'border border-border bg-transparent text-primary hover:bg-secondary/80',
         className
       )}
     >

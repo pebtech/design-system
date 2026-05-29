@@ -62,7 +62,6 @@ export const WithSections: Story = {
               <DropdownLabel>Paste</DropdownLabel>
             </DropdownItem>
           </DropdownSection>
-          <DropdownDivider />
           <DropdownSection>
             <DropdownHeading>View</DropdownHeading>
             <DropdownItem onClick={() => {}}>

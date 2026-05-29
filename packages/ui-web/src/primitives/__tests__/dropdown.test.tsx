@@ -137,6 +137,29 @@ describe('Dropdown', () => {
     expect(trigger).toHaveAttribute('aria-expanded', 'true')
   })
 
+  it('closes menu when clicking outside', async () => {
+    const user = userEvent.setup()
+    render(
+      <div>
+        <button type="button">Outside</button>
+        <Dropdown>
+          <DropdownButton as="button">Menu</DropdownButton>
+          <DropdownMenu>
+            <DropdownItem onClick={() => {}}>
+              <DropdownLabel>Edit</DropdownLabel>
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </div>,
+    )
+
+    await user.click(screen.getByRole('button', { name: /menu/i }))
+    expect(screen.getByRole('menu')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /outside/i }))
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+  })
+
   it('handles disabled items', async () => {
     const onClick = vi.fn()
     const user = userEvent.setup()

@@ -2,8 +2,8 @@ import React, {
   cloneElement,
   isValidElement,
   useCallback,
-  useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
 } from 'react'
@@ -20,6 +20,46 @@ export interface TooltipProps {
   maxWidth?: number | string
   placement?: 'top' | 'right' | 'bottom' | 'left'
   style?: React.CSSProperties
+}
+
+type TooltipPosition = {
+  top: number
+  left: number
+  transform: string
+}
+
+function computeTooltipPosition(
+  node: HTMLElement,
+  placement: NonNullable<TooltipProps['placement']>,
+): TooltipPosition {
+  const rect = node.getBoundingClientRect()
+
+  if (placement === 'top') {
+    return {
+      top: rect.top - 8,
+      left: rect.left + rect.width / 2,
+      transform: 'translate(-50%, -100%)',
+    }
+  }
+  if (placement === 'bottom') {
+    return {
+      top: rect.bottom + 8,
+      left: rect.left + rect.width / 2,
+      transform: 'translate(-50%, 0)',
+    }
+  }
+  if (placement === 'left') {
+    return {
+      top: rect.top + rect.height / 2,
+      left: rect.left - 8,
+      transform: 'translate(-100%, -50%)',
+    }
+  }
+  return {
+    top: rect.top + rect.height / 2,
+    left: rect.right + 8,
+    transform: 'translateY(-50%)',
+  }
 }
 
 interface TriggerChildProps {
@@ -61,51 +101,38 @@ export function Tooltip({
   const { tooltipProps: ariaTooltipProps } = useTooltip(tooltipProps, state)
   const tooltipId = useId()
 
-  const [position, setPosition] = useState<{
-    top: number
-    left: number
-    transform: string
-  }>({ top: 0, left: 0, transform: '' })
+  // `null` until measured — never mount the portal at (0, 0) on first open.
+  const [position, setPosition] = useState<TooltipPosition | null>(null)
 
-  const updatePosition = useCallback(() => {
+  const measurePosition = useCallback(() => {
     const node = triggerRef.current
-    if (!node) return
-    const rect = node.getBoundingClientRect()
-    let top: number, left: number, transform: string
-
-    if (placement === 'top') {
-      top = rect.top - 8
-      left = rect.left + rect.width / 2
-      transform = 'translate(-50%, -100%)'
-    } else if (placement === 'bottom') {
-      top = rect.bottom + 8
-      left = rect.left + rect.width / 2
-      transform = 'translate(-50%, 0)'
-    } else if (placement === 'left') {
-      top = rect.top + rect.height / 2
-      left = rect.left - 8
-      transform = 'translate(-100%, -50%)'
-    } else {
-      top = rect.top + rect.height / 2
-      left = rect.right + 8
-      transform = 'translateY(-50%)'
-    }
-
-    setPosition({ top, left, transform })
+    if (!node) return null
+    return computeTooltipPosition(node, placement)
   }, [placement])
 
   const isVisible = state.isOpen && !!text
 
-  useEffect(() => {
-    if (!isVisible) return
-    updatePosition()
-    window.addEventListener('scroll', updatePosition, true)
-    window.addEventListener('resize', updatePosition)
-    return () => {
-      window.removeEventListener('scroll', updatePosition, true)
-      window.removeEventListener('resize', updatePosition)
+  useLayoutEffect(() => {
+    if (!isVisible) {
+      setPosition(null)
+      return
     }
-  }, [isVisible, updatePosition])
+
+    const next = measurePosition()
+    if (next) setPosition(next)
+
+    const onUpdate = () => {
+      const measured = measurePosition()
+      if (measured) setPosition(measured)
+    }
+
+    window.addEventListener('scroll', onUpdate, true)
+    window.addEventListener('resize', onUpdate)
+    return () => {
+      window.removeEventListener('scroll', onUpdate, true)
+      window.removeEventListener('resize', onUpdate)
+    }
+  }, [isVisible, measurePosition])
 
   const open = useCallback(() => {
     if (text) state.open(true)
@@ -183,6 +210,7 @@ export function Tooltip({
     <>
       {trigger}
       {isVisible &&
+        position &&
         typeof document !== 'undefined' &&
         createPortal(
           <div

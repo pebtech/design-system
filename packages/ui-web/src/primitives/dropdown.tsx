@@ -9,6 +9,7 @@ import { useMenuTriggerState } from 'react-stately'
 import {
   useMenuTrigger,
   usePopover,
+  useInteractOutside,
   Overlay,
   DismissButton,
   FocusScope,
@@ -142,11 +143,28 @@ export function DropdownMenu({
     state
   )
 
+  useInteractOutside({
+    ref: popoverRef,
+    isDisabled: !state.isOpen,
+    onInteractOutside: (e) => {
+      const target = e.target as Node
+      if (triggerRef.current?.contains(target)) return
+      state.close()
+    },
+  })
+
   if (!state.isOpen) return null
 
   return (
     <Overlay>
-      <div {...underlayProps} className="fixed inset-0" />
+      <div
+        {...underlayProps}
+        className="fixed inset-0 z-40"
+        onPointerDown={(e) => {
+          underlayProps.onPointerDown?.(e)
+          state.close()
+        }}
+      />
       <FocusScope restoreFocus>
         <div
           ref={popoverRef}
@@ -263,16 +281,14 @@ function DropdownMenuContent({
       onKeyDown={handleKeyDown}
       className={cn(
         className,
-        'isolate w-max rounded-xl p-1',
+        'isolate max-h-80 min-w-44 w-max overflow-y-auto rounded-xl p-1',
         'outline outline-transparent focus:outline-hidden',
-        'bg-surface/70 backdrop-blur-xl',
-        'shadow-xl ring-1 ring-border/50',
-        'supports-[grid-template-columns:subgrid]:grid supports-[grid-template-columns:subgrid]:grid-cols-[auto_1fr_1.5rem_0.5rem_auto]',
+        'bg-surface shadow-xl ring-1 ring-border/50',
         'animate-in fade-in slide-in-from-top-1 duration-100'
       )}
       {...props}
     >
-      <div className="col-span-full max-h-80 overflow-y-auto p-1">{children}</div>
+      {children}
     </div>
   )
 }
@@ -306,7 +322,7 @@ export const DropdownItem = forwardRef(function DropdownItem(
     'hover:bg-hover-primary',
     disabled && 'opacity-50 cursor-default',
     'forced-color-adjust-none',
-    '*:data-[slot=icon]:col-start-1 *:data-[slot=icon]:row-start-1 *:data-[slot=icon]:mr-2.5 *:data-[slot=icon]:-ml-0.5 *:data-[slot=icon]:size-5 sm:*:data-[slot=icon]:mr-2 sm:*:data-[slot=icon]:size-4',
+    '*:data-[slot=icon]:mr-2 *:data-[slot=icon]:size-4 *:data-[slot=icon]:shrink-0 sm:*:data-[slot=icon]:mr-1.5 sm:*:data-[slot=icon]:size-3.5',
     '*:data-[slot=icon]:text-muted focus:*:data-[slot=icon]:text-primary dark:*:data-[slot=icon]:text-muted dark:focus:*:data-[slot=icon]:text-white',
     '*:data-[slot=avatar]:mr-2.5 *:data-[slot=avatar]:-ml-1 *:data-[slot=avatar]:size-6 sm:*:data-[slot=avatar]:mr-2 sm:*:data-[slot=avatar]:size-5'
   )
@@ -363,7 +379,12 @@ export const DropdownItem = forwardRef(function DropdownItem(
 
 // ─── DropdownHeader ───────────────────────────────────────────
 export function DropdownHeader({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
-  return <div {...props} className={cn(className, 'col-span-5 px-3.5 pt-2.5 pb-1 sm:px-3')} />
+  return (
+    <div
+      {...props}
+      className={cn(className, 'px-2.5 pb-1 pt-2 text-sm font-medium text-primary sm:px-2')}
+    />
+  )
 }
 
 // ─── DropdownSection ──────────────────────────────────────────
@@ -377,7 +398,8 @@ export function DropdownSection({
       {...props}
       className={cn(
         className,
-        'col-span-full supports-[grid-template-columns:subgrid]:grid supports-[grid-template-columns:subgrid]:grid-cols-[auto_1fr_1.5rem_0.5rem_auto]'
+        'flex flex-col gap-0.5 py-0.5',
+        '[&+&]:mt-1 [&+&]:border-t [&+&]:border-border [&+&]:pt-1.5',
       )}
     />
   )
@@ -394,7 +416,7 @@ export function DropdownHeading({
       {...props}
       className={cn(
         className,
-        'col-span-full grid grid-cols-[1fr_auto] gap-x-12 px-3.5 pt-2 pb-1 text-sm/5 font-medium text-muted sm:px-3 sm:text-xs/5'
+        'px-2.5 pb-1 pt-1.5 text-xs font-semibold uppercase tracking-wide text-tertiary sm:px-2',
       )}
     />
   )
@@ -409,17 +431,16 @@ export function DropdownDivider({
     <div
       role="separator"
       {...props}
-      className={cn(
-        className,
-        'col-span-full mx-3.5 my-1 h-px border-0 bg-border sm:mx-3'
-      )}
+      className={cn(className, 'my-1 h-px bg-border')}
     />
   )
 }
 
 // ─── DropdownLabel ────────────────────────────────────────────
 export function DropdownLabel({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
-  return <div {...props} data-slot="label" className={cn(className, 'col-start-2 row-start-1')} />
+  return (
+    <div {...props} data-slot="label" className={cn(className, 'min-w-0 flex-1 truncate')} />
+  )
 }
 
 // ─── DropdownDescription ──────────────────────────────────────
@@ -433,7 +454,7 @@ export function DropdownDescription({
       {...props}
       className={cn(
         className,
-        'col-span-2 col-start-2 row-start-2 text-sm/5 text-muted group-focus:text-primary sm:text-xs/5'
+        'mt-0.5 text-xs/4 text-muted group-focus:text-secondary',
       )}
     />
   )
@@ -448,7 +469,7 @@ export function DropdownShortcut({
   return (
     <kbd
       {...props}
-      className={cn(className, 'col-start-5 row-start-1 flex justify-self-end')}
+      className={cn(className, 'ml-auto flex shrink-0 justify-end')}
     >
       {(Array.isArray(keys) ? keys : keys.split('')).map((char, index) => (
         <kbd

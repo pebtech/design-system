@@ -24,6 +24,9 @@ const meta = {
   title: 'Data Display/DataTable',
   component: DataTable<SampleRow>,
   tags: ['autodocs'],
+  parameters: {
+    canvas: 'wide',
+  },
 } satisfies Meta<typeof DataTable<SampleRow>>
 
 export default meta

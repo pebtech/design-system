@@ -5,6 +5,9 @@ const meta = {
   title: 'Primitives/Table',
   component: Table,
   tags: ['autodocs'],
+  parameters: {
+    canvas: 'wide',
+  },
 } satisfies Meta<typeof Table>
 
 export default meta
