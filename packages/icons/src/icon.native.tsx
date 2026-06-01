@@ -19,8 +19,9 @@ export type IconMode = 0 | 1 | 2
  * Pulled into a single chunk by tsup `splitting: true` — paid once per
  * consumer bundle regardless of how many icons they import.
  */
+// SvgXml is a function component (no ref); keep forwardRef for API parity with web.
 const SvgIconNative = React.forwardRef<
-  React.ComponentRef<typeof SvgXml>,
+  null,
   Omit<IconProps, 'mode'> & { viewBox: string; iconMode: IconMode; body: string }
 >(function SvgIconNative(
   {
@@ -32,9 +33,8 @@ const SvgIconNative = React.forwardRef<
     strokeWidth = 1.5,
     className: _className,
     title: _title,
-    ...rest
   },
-  ref,
+  _ref,
 ) {
   const xml = React.useMemo(() => {
     if (iconMode === 1) {
@@ -48,12 +48,10 @@ const SvgIconNative = React.forwardRef<
 
   return (
     <SvgXml
-      ref={ref}
       xml={xml}
       width={size}
       height={size}
       color={iconMode === 2 ? color : undefined}
-      {...rest}
     />
   )
 })
@@ -69,7 +67,7 @@ export function createIcon(
   body: string,
   displayName: string,
 ) {
-  const Icon = React.forwardRef<React.ComponentRef<typeof SvgXml>, IconProps>(
+  const Icon = React.forwardRef<null, IconProps>(
     function Icon(props, ref) {
       return (
         <SvgIconNative

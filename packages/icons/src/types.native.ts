@@ -1,8 +1,3 @@
-import type { ComponentProps } from 'react'
-import type { SvgXml } from 'react-native-svg'
-
-type SvgXmlProps = ComponentProps<typeof SvgXml>
-
 /**
  * Cross-platform icon props (React Native flavor).
  *
@@ -12,6 +7,10 @@ type SvgXmlProps = ComponentProps<typeof SvgXml>
  *
  * `className` is accepted but no-op unless the consumer wires a className
  * transformer such as NativeWind. `title` is also a no-op on native.
+ *
+ * Intentionally does not extend `SvgXml` props: when `react-native` is
+ * installed, `ComponentProps<typeof SvgXml>` includes View layout props that
+ * are not valid on `SvgXml` and break the declaration build.
  */
 export type IconProps = {
   size?: number | string
@@ -19,4 +18,4 @@ export type IconProps = {
   strokeWidth?: number
   className?: string
   title?: string
-} & Omit<SvgXmlProps, 'xml' | 'width' | 'height' | 'color'>
+}

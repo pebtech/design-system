@@ -18,7 +18,7 @@ const sizeStyles: Record<PageBackButtonSize, string> = {
   md: 'gap-2 text-sm/6 [&_[data-slot=icon]]:size-4',
 }
 
-const appearanceStyles: Record<PageBackButtonAppearance, string> = {
+const appearanceStyles: Record<PageBackButtonAppearance, string[]> = {
   text: [
     'text-secondary',
     'hover:text-primary',
