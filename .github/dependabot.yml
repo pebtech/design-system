@@ -10,3 +10,10 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
+    # Wait until releases are at least 7 days old before version-update PRs.
+    # Does not apply to Dependabot security alerts (those can still open immediately).
+    cooldown:
+      default-days: 7
+      semver-major-days: 7
+      semver-minor-days: 7
+      semver-patch-days: 7

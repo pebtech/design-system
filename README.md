@@ -455,7 +455,7 @@ Each package is independently versioned. A breaking change in `@pebtech/tokens` 
 - `pnpm.onlyBuiltDependencies` allow-list in `package.json`
 - `pnpm.peerDependencyRules.allowedVersions` for React 19 compatibility
 - `pnpm.overrides` pins `serialize-javascript >=7.0.3` and `uuid >=11.1.1` to dodge known transitive CVEs
-- Dependabot configured for weekly GitHub Actions SHA bumps + npm dependency updates
+- Dependabot configured for weekly GitHub Actions SHA bumps + npm dependency updates (npm version updates delayed 7 days via `cooldown` in `dependabot.yml`)
 - No lifecycle scripts in published packages
 - `CODEOWNERS` gates reviews on package.json and barrel export changes
 
