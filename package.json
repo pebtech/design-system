@@ -52,7 +52,7 @@
     "axe-storybook-testing": "^8.2.0",
     "eslint": "^10.4.0",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "jsdom": "^26.1.0",
+    "jsdom": "^29.1.1",
     "playwright": "^1.52.0",
     "size-limit": "^11.2.0",
     "storybook": "^10.2.10",
