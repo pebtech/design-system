@@ -1,5 +1,5 @@
 {
-  "name": "@eniolayo/hooks",
+  "name": "@pebtech/hooks",
   "version": "0.0.1",
   "description": "Shared React hooks for the PEB design system",
   "main": "./dist/index.js",
@@ -16,8 +16,14 @@
     "dist"
   ],
   "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pebtech/design-system.git",
+    "directory": "packages/hooks"
+  },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
   },
   "scripts": {
     "build": "tsup",

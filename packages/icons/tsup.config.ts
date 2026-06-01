@@ -10,7 +10,7 @@ import { defineConfig } from 'tsup'
  * regardless of how many icons they import.
  *
  * Subpath exports in package.json's `exports` map allow direct deep imports
- * (`@eniolayo/icons/outline/arrow-left`) for guaranteed-minimal bundles.
+ * (`@pebtech/icons/outline/arrow-left`) for guaranteed-minimal bundles.
  *
  * Solar entries (`src/solar.ts`, `src/solar/*.tsx`) are emitted on the same
  * pass — when `assets/icons/solar/` is empty those globs match nothing and

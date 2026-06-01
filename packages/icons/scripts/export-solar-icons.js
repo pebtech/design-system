@@ -15,7 +15,7 @@
  *   - other/     (anything that doesn't match — empty in practice)
  *
  * Usage:
- *   pnpm --filter @eniolayo/icons run export:solar-icons
+ *   pnpm --filter @pebtech/icons run export:solar-icons
  *   # or
  *   node packages/icons/scripts/export-solar-icons.js
  */

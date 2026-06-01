@@ -1,5 +1,5 @@
 {
-  "name": "@eniolayo/ui-web",
+  "name": "@pebtech/ui-web",
   "version": "0.0.1",
   "description": "Web UI components for the PEB design system",
   "main": "./dist/index.js",
@@ -20,8 +20,14 @@
   "sideEffects": [
     "*.css"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pebtech/design-system.git",
+    "directory": "packages/ui-web"
+  },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
   },
   "scripts": {
     "build": "tsup",
@@ -32,7 +38,7 @@
     "test": "vitest run",
     "size": "size-limit"
   },
-  "//size-limit-note": "react/react-dom/@headlessui/react/react-aria/react-stately/date-fns/tailwindcss are peer deps and are ignored here. The limit covers ui-web's own component code plus its bundled runtime deps (clsx, tailwind-merge, @eniolayo/tokens).",
+  "//size-limit-note": "react/react-dom/@headlessui/react/react-aria/react-stately/date-fns/tailwindcss are peer deps and are ignored here. The limit covers ui-web's own component code plus its bundled runtime deps (clsx, tailwind-merge, @pebtech/tokens).",
   "size-limit": [
     {
       "path": "dist/index.mjs",
@@ -59,7 +65,7 @@
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.5",
-    "@eniolayo/tokens": "workspace:*",
+    "@pebtech/tokens": "workspace:*",
     "@headlessui/react": "^2.2.10",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.4.0",

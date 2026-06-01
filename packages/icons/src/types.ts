@@ -6,7 +6,7 @@ import type { SVGProps } from 'react'
  * On the web build this extends `SVGProps<SVGSVGElement>` so consumers can
  * pass any DOM event handler or ARIA attribute.
  *
- * On the React Native build (`@eniolayo/icons/outline` resolved via the
+ * On the React Native build (`@pebtech/icons/outline` resolved via the
  * `react-native` export condition) the shape is narrower — see
  * `types.native.ts`.
  */

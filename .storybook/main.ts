@@ -29,13 +29,13 @@ const config: StorybookConfig = {
         ...config.resolve?.alias,
         '@ds-storybook': path.resolve(__dirname),
         // Prefer pre-built dist so Storybook never compiles 7k-line Solar source modules.
-        '@eniolayo/icons/outline': path.join(iconsDist, 'outline.mjs'),
-        '@eniolayo/icons/solid': path.join(iconsDist, 'solid.mjs'),
-        '@eniolayo/icons/solar/linear': path.join(iconsDist, 'solar/linear.mjs'),
-        '@eniolayo/icons/solar/outline': path.join(iconsDist, 'solar/outline.mjs'),
-        '@eniolayo/icons/solar/bold': path.join(iconsDist, 'solar/bold.mjs'),
-        '@eniolayo/icons/solar/broken': path.join(iconsDist, 'solar/broken.mjs'),
-        '@eniolayo/icons/solar/duotone': path.join(iconsDist, 'solar/duotone.mjs'),
+        '@pebtech/icons/outline': path.join(iconsDist, 'outline.mjs'),
+        '@pebtech/icons/solid': path.join(iconsDist, 'solid.mjs'),
+        '@pebtech/icons/solar/linear': path.join(iconsDist, 'solar/linear.mjs'),
+        '@pebtech/icons/solar/outline': path.join(iconsDist, 'solar/outline.mjs'),
+        '@pebtech/icons/solar/bold': path.join(iconsDist, 'solar/bold.mjs'),
+        '@pebtech/icons/solar/broken': path.join(iconsDist, 'solar/broken.mjs'),
+        '@pebtech/icons/solar/duotone': path.join(iconsDist, 'solar/duotone.mjs'),
       },
     }
     // Allow IconExplorer to glob Solar SVG assets outside the story file tree.

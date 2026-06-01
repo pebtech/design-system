@@ -1,6 +1,6 @@
 /**
  * Edit semantic token values in this file. Run
- * `pnpm --filter @eniolayo/tokens run build` to regenerate
+ * `pnpm --filter @pebtech/tokens run build` to regenerate
  * `packages/tokens/dist/css/tokens.css` AND the consumed copy at
  * `packages/ui-web/src/styles/tailwind.css`. Do not hand-edit the generated
  * CSS files — they are overwritten on every build.

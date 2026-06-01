@@ -44,7 +44,7 @@ export default tseslint.config(
           message:
             'Dynamic imports (import()) break Metro/webpack tree-shaking in the icons package. ' +
             'Use static named imports from variant barrels instead, e.g. ' +
-            "`import { Home2Linear } from '@eniolayo/icons/solar/linear'`.",
+            "`import { Home2Linear } from '@pebtech/icons/solar/linear'`.",
         },
       ],
     },

@@ -148,7 +148,7 @@ async function main() {
   }
 
   // Top-level barrels — re-export every variant module under its variant
-  // suffix so consumers can do `import { Home2Linear } from '@eniolayo/icons/solar'`
+  // suffix so consumers can do `import { Home2Linear } from '@pebtech/icons/solar'`
   // and IDE autocomplete shows the full catalog.
   const topBarrelLines = results.map((r) => `export * from './solar/${r.variant}'`)
   const topBarrelNativeLines = results.map((r) => `export * from './solar/${r.variant}.native'`)
@@ -178,7 +178,7 @@ async function main() {
   const breakdown = results.map((r) => `${r.variant}=${r.count}`).join(', ')
   console.log(`[solar] Generated ${total} icons across ${results.length} variants (${breakdown}).`)
   console.log(
-    `[solar] Import via: \`import { ... } from '@eniolayo/icons/solar'\` or \`'@eniolayo/icons/solar/<variant>'\`.`,
+    `[solar] Import via: \`import { ... } from '@pebtech/icons/solar'\` or \`'@pebtech/icons/solar/<variant>'\`.`,
   )
 }
 

@@ -1,5 +1,5 @@
 {
-  "name": "@eniolayo/tokens",
+  "name": "@pebtech/tokens",
   "version": "0.0.1",
   "description": "Design tokens for the PEB design system",
   "main": "./dist/index.js",
@@ -17,8 +17,14 @@
     "dist"
   ],
   "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pebtech/design-system.git",
+    "directory": "packages/tokens"
+  },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
   },
   "scripts": {
     "build": "tsup && node scripts/generate-css.mjs && node scripts/check-parity.mjs",

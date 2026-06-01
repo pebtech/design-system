@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import * as exports from '../index'
 
-describe('@eniolayo/ui-native exports', () => {
+describe('@pebtech/ui-native exports', () => {
   it('exports the documented public API', () => {
     const expected = [
       'cn',

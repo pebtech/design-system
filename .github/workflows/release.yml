@@ -26,6 +26,12 @@ jobs:
           node-version: 22
           cache: pnpm
           registry-url: "https://npm.pkg.github.com"
+          scope: "@pebtech"
+
+      - name: Configure GitHub Packages auth
+        run: echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> "$HOME/.npmrc"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

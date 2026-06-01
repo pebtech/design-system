@@ -1,7 +1,7 @@
 /**
  * Cross-platform icon props (React Native flavor).
  *
- * Resolved by Metro when consumers import `@eniolayo/icons/outline` (or
+ * Resolved by Metro when consumers import `@pebtech/icons/outline` (or
  * `/solid`) inside Expo / React Native, via the `react-native` export
  * condition in the package manifest.
  *

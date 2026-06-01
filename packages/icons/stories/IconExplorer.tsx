@@ -6,14 +6,14 @@ import {
   ChevronDownOutline,
   CloseOutline,
   SearchOutline,
-} from '@eniolayo/icons/outline'
+} from '@pebtech/icons/outline'
 import {
   ArrowLeftSolid,
   CheckSolid,
   ChevronDownSolid,
   CloseSolid,
   SearchSolid,
-} from '@eniolayo/icons/solid'
+} from '@pebtech/icons/solid'
 import solarCatalog from './solar-catalog.json'
 
 type IconComponent = React.ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>>
@@ -141,7 +141,7 @@ export function IconExplorer() {
             const key = solarSvgKey(solarVariant, entry.id)
             const loader = solarSvgLoaders[key]
             if (!loader) {
-              throw new Error(`Missing SVG asset: ${key}. Run pnpm --filter @eniolayo/icons run export:solar-icons`)
+              throw new Error(`Missing SVG asset: ${key}. Run pnpm --filter @pebtech/icons run export:solar-icons`)
             }
             const svg = await loader()
             return [entry.export, svg] as const
@@ -304,8 +304,8 @@ export function IconExplorer() {
       {catalogEmpty && (
         <p className="text-sm text-amber-600 dark:text-amber-400">
           Solar catalog is empty. Run{' '}
-          <code className="rounded bg-tertiary px-1">pnpm --filter @eniolayo/icons run export:solar-icons</code>{' '}
-          then <code className="rounded bg-tertiary px-1">pnpm --filter @eniolayo/icons run generate:solar</code>.
+          <code className="rounded bg-tertiary px-1">pnpm --filter @pebtech/icons run export:solar-icons</code>{' '}
+          then <code className="rounded bg-tertiary px-1">pnpm --filter @pebtech/icons run generate:solar</code>.
         </p>
       )}
 
@@ -321,7 +321,7 @@ export function IconExplorer() {
         {isSolar
           ? solarPageEntries.map((entry) => {
               const svg = solarSvgs[entry.export]
-              const importPath = `@eniolayo/icons/solar/${solarVariant}`
+              const importPath = `@pebtech/icons/solar/${solarVariant}`
               return (
                 <li key={entry.export}>
                   <button
@@ -345,7 +345,7 @@ export function IconExplorer() {
             })
           : curatedSlice.map(({ export: exportName, Icon }) => {
               const importPath =
-                collection === 'curated-solid' ? '@eniolayo/icons/solid' : '@eniolayo/icons/outline'
+                collection === 'curated-solid' ? '@pebtech/icons/solid' : '@pebtech/icons/outline'
               return (
                 <li key={exportName}>
                   <button

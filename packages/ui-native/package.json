@@ -1,5 +1,5 @@
 {
-  "name": "@eniolayo/ui-native",
+  "name": "@pebtech/ui-native",
   "version": "0.0.1",
   "description": "React Native UI components for the PEB design system (Phase 2 — gated on NativeWind v5 stable)",
   "main": "./dist/index.js",
@@ -16,8 +16,14 @@
     "dist"
   ],
   "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pebtech/design-system.git",
+    "directory": "packages/ui-native"
+  },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
   },
   "scripts": {
     "build": "tsup",
@@ -34,7 +40,7 @@
     "react-native": ">=0.76.0"
   },
   "dependencies": {
-    "@eniolayo/tokens": "workspace:*",
+    "@pebtech/tokens": "workspace:*",
     "@react-native-aria/switch": "^0.2.4",
     "clsx": "^2.1.1",
     "react-native-aria": "^0.2.3",

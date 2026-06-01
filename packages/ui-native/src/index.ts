@@ -1,6 +1,6 @@
 export { cn } from './utils/cn'
 export { ThemeProvider, useTheme } from './providers/theme-provider'
-export type { ThemeMode } from '@eniolayo/tokens'
+export type { ThemeMode } from '@pebtech/tokens'
 export { Switch, SwitchField, SwitchLabel, SwitchDescription } from './primitives/switch'
 export { Button, ButtonText, ButtonIcon } from './primitives/button'
 export { AspectRatio } from './primitives/aspect-ratio'

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { getColorShades } from '@eniolayo/tokens'
+import { getColorShades } from '@pebtech/tokens'
 
 export function BrandProvider({
   brandColor,

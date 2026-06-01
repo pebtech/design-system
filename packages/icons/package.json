@@ -1,5 +1,5 @@
 {
-  "name": "@eniolayo/icons",
+  "name": "@pebtech/icons",
   "version": "0.0.1",
   "description": "Icon library for the PEB design system — works in React Web and React Native (Expo)",
   "main": "./dist/index.js",
@@ -127,8 +127,14 @@
     "dist"
   ],
   "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pebtech/design-system.git",
+    "directory": "packages/icons"
+  },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
   },
   "scripts": {
     "generate": "node scripts/generate-icons.mjs",
