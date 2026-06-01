@@ -13,6 +13,7 @@ Shared, versioned libraries for PEB product apps. Published to GitHub Packages a
 | `@pebtech/icons` | SVG icons (web + React Native) | [README](packages/icons/README.md) |
 | `@pebtech/hooks` | Shared React hooks | [README](packages/hooks/README.md) |
 | `@pebtech/ui-native` | React Native primitives (preview) | [README](packages/ui-native/README.md) |
+| `@pebtech/native-storybook` | Expo app for native component stories (not published) | [README](packages/native-storybook/README.md) |
 
 ---
 
@@ -106,7 +107,8 @@ pnpm -r run build
 | `pnpm -r run test` | Unit tests (Vitest) |
 | `pnpm -r run typecheck` | TypeScript |
 | `pnpm -r run lint` | ESLint |
-| `pnpm storybook` | Component docs at http://localhost:6006 |
+| `pnpm storybook` | Web component docs at http://localhost:6006 (`ui-web` + icons) |
+| `pnpm storybook:native` | Native Storybook via Expo (`ui-native`) — see [native-storybook README](packages/native-storybook/README.md) |
 | `pnpm changeset` | Record a version bump |
 | `pnpm release` | Build + publish (CI does this on `main`) |
 
@@ -116,7 +118,7 @@ pnpm -r run build
 
 1. Add under `packages/ui-web/src/`
 2. Export from `packages/ui-web/src/index.ts`
-3. Add `.stories.tsx` and `__tests__/*.test.tsx`
+3. Add `.stories.tsx` and `__tests__/*.test.tsx` (web: `ui-web`; native: `ui-native` + run via `pnpm storybook:native`)
 4. `pnpm -r run build && pnpm -r run test`
 
 ### Adding an icon
@@ -137,6 +139,7 @@ packages/
   tokens/     Source of truth → dist/css/tokens.css
   ui-web/     React + Tailwind 4 components
   ui-native/  React Native (preview)
+  native-storybook/  Expo host for ui-native Storybook
   hooks/      Framework-agnostic hooks
   icons/      svgr pipeline (web + native)
 ```

@@ -11,6 +11,7 @@
     "clean": "pnpm -r run clean",
     "size": "pnpm -r run size",
     "storybook": "storybook dev -p 6006",
+    "storybook:native": "pnpm --filter @pebtech/native-storybook start",
     "build-storybook": "storybook build",
     "axe-storybook": "axe-storybook --build-dir=storybook-static",
     "changeset": "changeset",

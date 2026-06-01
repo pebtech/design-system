@@ -1,0 +1,11 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@pebtech/ui-native": ["../ui-native/src/index.ts"],
+      "@pebtech/tokens": ["../tokens/src/index.ts"]
+    }
+  },
+  "include": [".rnstorybook/**/*", "App.tsx", "../ui-native/src/**/*.stories.tsx"]
+}

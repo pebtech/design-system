@@ -1,0 +1,42 @@
+{
+  "name": "@pebtech/native-storybook",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Expo host for @pebtech/ui-native Storybook",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "sb-rn-get-stories",
+    "start": "expo start",
+    "ios": "expo start --ios",
+    "android": "expo start --android",
+    "storybook-generate": "sb-rn-get-stories"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.26.0",
+    "@gorhom/bottom-sheet": "^5.1.2",
+    "@pebtech/tokens": "workspace:*",
+    "@pebtech/ui-native": "workspace:*",
+    "@react-native-async-storage/async-storage": "^2.1.2",
+    "@react-native-community/datetimepicker": "^8.3.0",
+    "@react-native-community/slider": "^4.5.6",
+    "@storybook/addon-ondevice-actions": "^10.2.10",
+    "@storybook/addon-ondevice-controls": "^10.2.10",
+    "@storybook/react-native": "^10.2.10",
+    "expo": "~52.0.46",
+    "expo-status-bar": "~2.0.1",
+    "react": "18.3.1",
+    "react-native": "0.76.9",
+    "react-native-gesture-handler": "~2.24.0",
+    "react-native-reanimated": "~3.17.4",
+    "react-native-safe-area-context": "~5.4.0",
+    "react-native-svg": "~15.11.2",
+    "storybook": "^10.2.10"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/plugin-transform-class-static-block": "^7.26.0",
+    "@types/react": "~18.3.12",
+    "babel-preset-expo": "~12.0.12",
+    "typescript": "^5.8.3"
+  }
+}

@@ -49,6 +49,19 @@ import { ArrowLeftOutline } from '@pebtech/icons/outline'
 
 Metro resolves the native build automatically.
 
+## Storybook (native)
+
+Component stories run in a dedicated Expo app (not the web Storybook at port 6006).
+
+```bash
+# From repo root — builds tokens if needed, then starts Expo
+pnpm storybook:native
+```
+
+Press `i` / `a` for iOS / Android, or use Expo Go. Stories live in `src/**/*.stories.tsx`.
+
+See [packages/native-storybook/README.md](../native-storybook/README.md).
+
 ## Developing this package
 
 ```bash

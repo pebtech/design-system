@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "PEB Native Storybook",
+    "slug": "peb-native-storybook",
+    "version": "1.0.0",
+    "orientation": "default",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.pebtech.native-storybook"
+    },
+    "android": {
+      "package": "com.pebtech.nativestorybook"
+    }
+  }
+}
