@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import React, { createContext, useContext } from 'react'
 import type { ComponentPropsWithoutRef } from 'react'
 import { Button } from '../primitives/button'
+import { Link } from '../typography/link'
 import { Text } from '../typography/text'
 import { Dropdown, DropdownButton, DropdownItem, DropdownMenu } from '../primitives/dropdown'
 
@@ -115,12 +116,16 @@ export function Pagination({
   )
 }
 
-interface PaginationButtonProps extends Omit<ComponentPropsWithoutRef<'button'>, 'color'> {
-  href?: string
+type PaginationButtonProps = {
   disabled?: boolean
   /** Hide label text; keep icons (compact toolbars). */
   iconOnly?: boolean
-}
+  className?: string
+  children?: React.ReactNode
+} & (
+  | ({ href: string } & Omit<ComponentPropsWithoutRef<typeof Link>, 'href' | 'className' | 'children' | 'color'>)
+  | ({ href?: never } & Omit<ComponentPropsWithoutRef<'button'>, 'className' | 'children' | 'color' | 'type'>)
+)
 
 export function PaginationPrevious({
   href = undefined,
@@ -131,32 +136,49 @@ export function PaginationPrevious({
   ...props
 }: PaginationButtonProps) {
   const appearance = usePaginationAppearance()
-  const isLink = href && !disabled
   const { variant, size } = controlVariants[appearance]
   const showLabel = !iconOnly && appearance !== 'compact'
+  const controlClassName = clsx(
+    appearance === 'minimal' && 'px-2 text-secondary data-hover:text-primary',
+    iconOnly && 'px-2!',
+  )
+  const controlChildren = (
+    <>
+      <svg className="stroke-current" data-slot="icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path
+          d="M2.75 8H13.25M2.75 8L5.25 5.5M2.75 8L5.25 10.5"
+          strokeWidth={1.5}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+      {showLabel ? children : <span className="sr-only">{children}</span>}
+    </>
+  )
 
   return (
     <span className={clsx(className, appearance === 'minimal' ? '' : 'grow basis-0')}>
-      <Button
-        {...(props as React.ComponentProps<typeof Button>)}
-        {...(isLink ? { href } : { disabled })}
-        variants={{ variant, size }}
-        aria-label="Previous page"
-        className={clsx(
-          appearance === 'minimal' && 'px-2 text-secondary data-hover:text-primary',
-          iconOnly && 'px-2!',
-        )}
-      >
-        <svg className="stroke-current" data-slot="icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path
-            d="M2.75 8H13.25M2.75 8L5.25 5.5M2.75 8L5.25 10.5"
-            strokeWidth={1.5}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        {showLabel ? children : <span className="sr-only">{children}</span>}
-      </Button>
+      {typeof href === 'string' && !disabled ? (
+        <Button
+          href={href}
+          variants={{ variant, size }}
+          aria-label="Previous page"
+          className={controlClassName}
+          {...(props as Omit<ComponentPropsWithoutRef<typeof Link>, 'href' | 'className' | 'children' | 'color'>)}
+        >
+          {controlChildren}
+        </Button>
+      ) : (
+        <Button
+          disabled={disabled}
+          variants={{ variant, size }}
+          aria-label="Previous page"
+          className={controlClassName}
+          {...(props as Omit<ComponentPropsWithoutRef<'button'>, 'className' | 'children' | 'color' | 'type'>)}
+        >
+          {controlChildren}
+        </Button>
+      )}
     </span>
   )
 }
@@ -170,9 +192,25 @@ export function PaginationNext({
   ...props
 }: PaginationButtonProps) {
   const appearance = usePaginationAppearance()
-  const isLink = href && !disabled
   const { variant, size } = controlVariants[appearance]
   const showLabel = !iconOnly && appearance !== 'compact'
+  const controlClassName = clsx(
+    appearance === 'minimal' && 'px-2 text-secondary data-hover:text-primary',
+    iconOnly && 'px-2!',
+  )
+  const controlChildren = (
+    <>
+      {showLabel ? children : <span className="sr-only">{children}</span>}
+      <svg className="stroke-current" data-slot="icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path
+          d="M13.25 8L2.75 8M13.25 8L10.75 10.5M13.25 8L10.75 5.5"
+          strokeWidth={1.5}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </>
+  )
 
   return (
     <span
@@ -181,26 +219,27 @@ export function PaginationNext({
         appearance === 'minimal' ? '' : 'flex grow basis-0 justify-end',
       )}
     >
-      <Button
-        {...(props as React.ComponentProps<typeof Button>)}
-        {...(isLink ? { href } : { disabled })}
-        variants={{ variant, size }}
-        aria-label="Next page"
-        className={clsx(
-          appearance === 'minimal' && 'px-2 text-secondary data-hover:text-primary',
-          iconOnly && 'px-2!',
-        )}
-      >
-        {showLabel ? children : <span className="sr-only">{children}</span>}
-        <svg className="stroke-current" data-slot="icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path
-            d="M13.25 8L2.75 8M13.25 8L10.75 10.5M13.25 8L10.75 5.5"
-            strokeWidth={1.5}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </Button>
+      {typeof href === 'string' && !disabled ? (
+        <Button
+          href={href}
+          variants={{ variant, size }}
+          aria-label="Next page"
+          className={controlClassName}
+          {...(props as Omit<ComponentPropsWithoutRef<typeof Link>, 'href' | 'className' | 'children' | 'color'>)}
+        >
+          {controlChildren}
+        </Button>
+      ) : (
+        <Button
+          disabled={disabled}
+          variants={{ variant, size }}
+          aria-label="Next page"
+          className={controlClassName}
+          {...(props as Omit<ComponentPropsWithoutRef<'button'>, 'className' | 'children' | 'color' | 'type'>)}
+        >
+          {controlChildren}
+        </Button>
+      )}
     </span>
   )
 }
@@ -219,20 +258,32 @@ export function PaginationPage({
   ...props
 }: PaginationButtonProps & { current?: boolean }) {
   const appearance = usePaginationAppearance()
-  const isLink = href && !disabled
   const { variant, size } = controlVariants[appearance]
   const pageVariant = appearance === 'outline' && !current ? 'outline' : variant
+  const pageClassName = clsx(pageBaseStyles[appearance], className, current && pageCurrentStyles[appearance])
+  const pageChildren = <span className={appearance === 'minimal' ? '' : '-mx-0.5'}>{children}</span>
 
-  return (
+  return typeof href === 'string' && !disabled ? (
     <Button
-      {...(props as React.ComponentProps<typeof Button>)}
-      {...(isLink ? { href } : { disabled })}
+      href={href}
       variants={{ variant: pageVariant, size }}
       aria-label={`Page ${children}`}
       aria-current={current ? 'page' : undefined}
-      className={clsx(pageBaseStyles[appearance], className, current && pageCurrentStyles[appearance])}
+      className={pageClassName}
+      {...(props as Omit<ComponentPropsWithoutRef<typeof Link>, 'href' | 'className' | 'children' | 'color'>)}
     >
-      <span className={appearance === 'minimal' ? '' : '-mx-0.5'}>{children}</span>
+      {pageChildren}
+    </Button>
+  ) : (
+    <Button
+      disabled={disabled}
+      variants={{ variant: pageVariant, size }}
+      aria-label={`Page ${children}`}
+      aria-current={current ? 'page' : undefined}
+      className={pageClassName}
+      {...(props as Omit<ComponentPropsWithoutRef<'button'>, 'className' | 'children' | 'color' | 'type'>)}
+    >
+      {pageChildren}
     </Button>
   )
 }
