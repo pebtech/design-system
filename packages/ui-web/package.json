@@ -74,7 +74,7 @@
     "react-dom": "^19.0.0",
     "react-stately": "^3.46.0",
     "tsup": "^8.5.0",
-    "typescript": "^5.8.3"
+    "typescript": "^6.0.3"
   },
   "license": "UNLICENSED"
 }
