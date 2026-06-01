@@ -1,58 +1,72 @@
 # @pebtech/ui-native
 
-React Native UI components for the design system. **Phase 2 — gated on NativeWind v5 reaching stable.**
+React Native UI primitives for the PEB design system. **Preview / Phase 2** — gated on NativeWind v5 stable.
 
-## Current Status
+## Install
 
-Provides:
-- `ThemeProvider` / `useTheme` — token-aware theme context using `@pebtech/tokens`
-- `cn()` utility — clsx wrapper for conditional class composition
-
-## Architecture Constraints
-
-### Tailwind v4 vs NativeWind v5
-
-The web package (`@pebtech/ui-web`) uses Tailwind CSS v4 which is Rust-compiled, CSS-first, and relies on CSS custom properties (`var(--text-primary)`, `@theme` blocks). React Native has no DOM and no native CSS custom properties.
-
-NativeWind v5 (preview) attempts to bridge this by mapping Tailwind classes to React Native styles, but it is built on the Tailwind v3 architecture. Until NativeWind v5 fully supports Tailwind v4's `@theme` syntax, **you cannot share styling configs directly between web and native**.
-
-**What IS shared**: Token *values* via `@pebtech/tokens` (TypeScript objects). The `generate-css.mjs` script compiles these to CSS for web; native consumes them as JS objects via `useTheme()`.
-
-**What is NOT shared**: The styling mechanism. Web uses utility classes resolved by Tailwind's CSS engine. Native uses either NativeWind class mapping or direct `StyleSheet.create()` with token values.
-
-### Token Consumption Patterns
-
-**Web** (className-driven):
-```tsx
-<div className="bg-surface text-primary rounded-xl" />
+```ini
+@pebtech:registry=https://npm.pkg.github.com
 ```
 
-**Native with NativeWind** (when v5 is stable):
-```tsx
-<View className="bg-surface text-primary rounded-xl" />
+```bash
+pnpm add @pebtech/ui-native @pebtech/tokens
+pnpm add react react-native nativewind react-stately
 ```
 
-**Native without NativeWind** (current fallback):
+Peers: `react` `^18 || ^19`, `react-native` `>=0.76`, `nativewind` `>=5.0.0-preview.1`.
+
+## Usage
+
 ```tsx
-const { tokens } = useTheme()
-<View style={{ backgroundColor: tokens.bg.surface, borderRadius: 12 }} />
+import { ThemeProvider, useTheme, Button, Input } from '@pebtech/ui-native'
+
+export function App() {
+  return (
+    <ThemeProvider mode="light">
+      <Screen />
+    </ThemeProvider>
+  )
+}
+
+function Screen() {
+  const { tokens } = useTheme()
+  return (
+    <>
+      <Button onPress={() => {}}>Continue</Button>
+      <Input placeholder="Email" />
+    </>
+  )
+}
 ```
 
-The goal is option 2 (NativeWind className parity). Option 3 is the interim fallback.
+Styling uses token values via `useTheme()` or NativeWind `className` when v5 is stable.
 
-### Headless UI is Web-Only
+## With @pebtech/icons
 
-`@pebtech/ui-web` relies on `@headlessui/react` for accessible state management (focus trapping, ARIA roles, keyboard navigation) in Combobox, Listbox, Dialog, Drawer, Dropdown, etc.
+```tsx
+import { ArrowLeftOutline } from '@pebtech/icons/outline'
+```
 
-Headless UI does not support React Native. For native equivalents, the team will need:
-- **`react-native-aria`** (Adobe's accessibility primitives for RN), or
-- **Custom state machines** per component
+Metro resolves the native build automatically.
 
-The web and native component APIs should be aligned (same prop names, same variant options) even though the internals differ. This is an intentional design trade-off — attempting to unify the runtime would add cross-platform complexity that outweighs the benefit.
+## Developing this package
 
-## When to Populate
+```bash
+pnpm --filter @pebtech/ui-native run build
+```
 
-Begin populating this package when:
-1. NativeWind v5 reaches stable release with Tailwind v4 support
-2. A mobile product actively needs shared components
-3. `react-native-aria` (or equivalent) is evaluated for accessible state management
+See [repository README](../../README.md#monorepo-development).
+
+---
+
+## Architecture notes
+
+### Tailwind v4 (web) vs NativeWind v5 (native)
+
+Web (`@pebtech/ui-web`) uses Tailwind CSS 4 and CSS custom properties. React Native has no DOM — native consumes **token JS objects** from `@pebtech/tokens` via `ThemeProvider`, not shared Tailwind config files.
+
+**Shared:** token values. **Not shared (yet):** utility-class styling until NativeWind v5 supports Tailwind v4 `@theme`.
+
+### Headless UI is web-only
+
+`@pebtech/ui-web` uses Headless UI / React Aria for accessibility. Native uses `react-native-aria` and custom primitives instead.

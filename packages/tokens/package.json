@@ -14,7 +14,8 @@
     "./css": "./dist/css/tokens.css"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "sideEffects": false,
   "repository": {
