@@ -6,9 +6,10 @@
   "main": "index.js",
   "scripts": {
     "prestart": "sb-rn-get-stories",
-    "start": "expo start",
-    "ios": "expo start --ios",
-    "android": "expo start --android",
+    "start": "expo start --dev-client",
+    "run:ios": "expo run:ios",
+    "run:android": "expo run:android",
+    "prebuild": "expo prebuild",
     "storybook-generate": "sb-rn-get-stories"
   },
   "dependencies": {
@@ -23,6 +24,7 @@
     "@storybook/addon-ondevice-controls": "^10.2.10",
     "@storybook/react-native": "^10.2.10",
     "expo": "~52.0.46",
+    "expo-dev-client": "~5.0.20",
     "expo-status-bar": "~2.0.1",
     "react": "18.3.1",
     "react-native": "0.76.9",

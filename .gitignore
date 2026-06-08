@@ -6,6 +6,8 @@ dist/
 # Storybook
 storybook-static/
 packages/native-storybook/.expo/
+packages/native-storybook/ios/
+packages/native-storybook/android/
 packages/native-storybook/.rnstorybook/storybook.requires.ts
 
 # Generated icons

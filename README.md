@@ -108,7 +108,9 @@ pnpm -r run build
 | `pnpm -r run typecheck` | TypeScript |
 | `pnpm -r run lint` | ESLint |
 | `pnpm storybook` | Web component docs at http://localhost:6006 (`ui-web` + icons) |
-| `pnpm storybook:native` | Native Storybook via Expo (`ui-native`) — see [native-storybook README](packages/native-storybook/README.md) |
+| `pnpm storybook:native` | Native Storybook dev server (`ui-native`) — see [native-storybook README](packages/native-storybook/README.md) |
+| `pnpm storybook:native:ios` | Build/install iOS development client for native Storybook |
+| `pnpm storybook:native:android` | Build/install Android development client for native Storybook |
 | `pnpm changeset` | Record a version bump |
 | `pnpm release` | Build + publish (CI does this on `main`) |
 

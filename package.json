@@ -12,6 +12,8 @@
     "size": "pnpm -r run size",
     "storybook": "storybook dev -p 6006",
     "storybook:native": "pnpm --filter @pebtech/native-storybook start",
+    "storybook:native:ios": "pnpm --filter @pebtech/native-storybook run run:ios",
+    "storybook:native:android": "pnpm --filter @pebtech/native-storybook run run:android",
     "build-storybook": "storybook build",
     "axe-storybook": "axe-storybook --build-dir=storybook-static",
     "changeset": "changeset",
@@ -33,7 +35,11 @@
     ],
     "overrides": {
       "serialize-javascript": ">=7.0.3",
-      "uuid": ">=11.1.1"
+      "uuid": ">=11.1.1",
+      "tar": ">=7.5.11",
+      "@expo/cli>tar": "^6.2.1",
+      "@expo/plist>@xmldom/xmldom": "~0.8.10",
+      "@xmldom/xmldom": ">=0.8.13"
     }
   },
   "devDependencies": {
