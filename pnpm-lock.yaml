@@ -124,7 +124,7 @@ importers:
         specifier: ^19.0.0
         version: 19.2.6
       react-native-svg:
-        specifier: ^15.0.0
+        specifier: ^15.15.5
         version: 15.15.5(react-native@0.76.9(@babel/core@7.29.7)(@types/react@19.2.15)(react@19.2.6))(react@19.2.6)
       tsup:
         specifier: ^8.5.0
@@ -164,7 +164,7 @@ importers:
         version: 10.4.4(896f23854b0630ece4e7a35f3fab5fe6)
       '@storybook/react-native':
         specifier: ^10.2.10
-        version: 10.4.4(b405414b85425a85048318ab98c14b21)
+        version: 10.4.4(0effdd281fe3617d4e361115f232044f)
       expo:
         specifier: ~52.0.46
         version: 52.0.49(@babel/core@7.29.7)(react-native@0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1))(react@18.3.1)
@@ -187,8 +187,8 @@ importers:
         specifier: ~5.4.0
         version: 5.4.1(react-native@0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1))(react@18.3.1)
       react-native-svg:
-        specifier: ~15.11.2
-        version: 15.11.2(react-native@0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1))(react@18.3.1)
+        specifier: ~15.15.5
+        version: 15.15.5(react-native@0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1))(react@18.3.1)
       storybook:
         specifier: ^10.2.10
         version: 10.4.1(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@testing-library/dom@10.4.1)(@types/react@18.3.29)(prettier@2.8.8)(react-dom@19.2.6(react@18.3.1))(react@18.3.1)
@@ -1323,7 +1323,7 @@ packages:
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
-    engines: {'0': node >=0.10.0}
+    engines: {node: '>=0.10.0'}
 
   '@expo/cli@0.22.28':
     resolution: {integrity: sha512-lvt72KNitGuixYD2l3SZmRKVu2G4zJpmg5V7WfUBNpmUU5oODBw/6qmiJ6kSLAlfDozscUk+BBGknBBzxUrwrA==}
@@ -5494,12 +5494,6 @@ packages:
       react: '*'
       react-native: '*'
 
-  react-native-svg@15.11.2:
-    resolution: {integrity: sha512-+YfF72IbWQUKzCIydlijV1fLuBsQNGMT6Da2kFlo1sh+LE3BIm/2Q7AR1zAAR6L0BFLi1WaQPLfFUC9bNZpOmw==}
-    peerDependencies:
-      react: '*'
-      react-native: '*'
-
   react-native-svg@15.15.5:
     resolution: {integrity: sha512-L4go5jA+GWutdJ/JucuN20cjAbMg1HmMtAP+wZ+3JLCf6Jd0bhXQHxciRP/AQm/FlrIEZwkMcHNZP+FXAiic0w==}
     peerDependencies:
@@ -6371,9 +6365,6 @@ packages:
 
   walker@1.0.8:
     resolution: {integrity: sha512-ts/8E8l5b7kY0vlWLewOkDXMmPdLcVV4GmOQLyxuSswIJsweeFZtAsMF7k1Nszz+TYBQrlYRmzOnr398y1JemQ==}
-
-  warn-once@0.1.1:
-    resolution: {integrity: sha512-VkQZJbO8zVImzYFteBXvBOZEl1qL175WH8VmZcxF2fZAoudNhNDvHi+doCaAEdU2l2vtcIwa2zn0QK5+I1HQ3Q==}
 
   wcwidth@1.0.1:
     resolution: {integrity: sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg==}
@@ -9107,7 +9098,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@storybook/react-native-ui@10.4.4(bbf011aaef1211dfe9f0ae9b07e5628d)':
+  '@storybook/react-native-ui@10.4.4(66387a1962cadf14949672f67ddf45cf)':
     dependencies:
       '@gorhom/bottom-sheet': 5.2.14(@types/react@18.3.29)(react-native-gesture-handler@2.24.0(react-native@0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1))(react@18.3.1))(react-native-reanimated@3.17.5(@babel/core@7.29.7)(react-native@0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1))(react@18.3.1))(react-native@0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1))(react@18.3.1)
       '@gorhom/portal': 1.0.14(react-native@0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1))(react@18.3.1)
@@ -9121,7 +9112,7 @@ snapshots:
       react-native-gesture-handler: 2.24.0(react-native@0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1))(react@18.3.1)
       react-native-reanimated: 3.17.5(@babel/core@7.29.7)(react-native@0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1))(react@18.3.1)
       react-native-safe-area-context: 5.4.1(react-native@0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1))(react@18.3.1)
-      react-native-svg: 15.11.2(react-native@0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1))(react@18.3.1)
+      react-native-svg: 15.15.5(react-native@0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1))(react@18.3.1)
       storybook: 10.4.1(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@testing-library/dom@10.4.1)(@types/react@18.3.29)(prettier@2.8.8)(react-dom@19.2.6(react@18.3.1))(react@18.3.1)
     transitivePeerDependencies:
       - '@types/react'
@@ -9130,12 +9121,12 @@ snapshots:
       - supports-color
       - typescript
 
-  '@storybook/react-native@10.4.4(b405414b85425a85048318ab98c14b21)':
+  '@storybook/react-native@10.4.4(0effdd281fe3617d4e361115f232044f)':
     dependencies:
       '@storybook/mcp': 0.7.0(typescript@5.9.3)
       '@storybook/react': 10.4.1(@types/react-dom@19.2.3(@types/react@18.3.29))(@types/react@18.3.29)(react-dom@19.2.6(react@18.3.1))(react@18.3.1)(storybook@10.4.1(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@testing-library/dom@10.4.1)(@types/react@18.3.29)(prettier@2.8.8)(react-dom@19.2.6(react@18.3.1))(react@18.3.1))(typescript@5.9.3)
       '@storybook/react-native-theming': 10.4.4(react-native@0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1))(react@18.3.1)
-      '@storybook/react-native-ui': 10.4.4(bbf011aaef1211dfe9f0ae9b07e5628d)
+      '@storybook/react-native-ui': 10.4.4(66387a1962cadf14949672f67ddf45cf)
       '@storybook/react-native-ui-common': 10.4.4(@types/react-dom@19.2.3(@types/react@18.3.29))(@types/react@18.3.29)(react-dom@19.2.6(react@18.3.1))(react-native@0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1))(react@18.3.1)(storybook@10.4.1(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@testing-library/dom@10.4.1)(@types/react@18.3.29)(prettier@2.8.8)(react-dom@19.2.6(react@18.3.1))(react@18.3.1))(typescript@5.9.3)
       '@tmcp/adapter-valibot': 0.1.6(tmcp@1.19.4(typescript@5.9.3))(typescript@5.9.3)
       '@tmcp/transport-http': 0.8.6(tmcp@1.19.4(typescript@5.9.3))
@@ -12529,13 +12520,12 @@ snapshots:
       react: 18.3.1
       react-native: 0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1)
 
-  react-native-svg@15.11.2(react-native@0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1))(react@18.3.1):
+  react-native-svg@15.15.5(react-native@0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1))(react@18.3.1):
     dependencies:
       css-select: 5.2.2
       css-tree: 1.1.3
       react: 18.3.1
       react-native: 0.76.9(@babel/core@7.29.7)(@types/react@18.3.29)(react@18.3.1)
-      warn-once: 0.1.1
 
   react-native-svg@15.15.5(react-native@0.76.9(@babel/core@7.29.7)(@types/react@19.2.15)(react@19.2.6))(react@19.2.6):
     dependencies:
@@ -13533,8 +13523,6 @@ snapshots:
   walker@1.0.8:
     dependencies:
       makeerror: 1.0.12
-
-  warn-once@0.1.1: {}
 
   wcwidth@1.0.1:
     dependencies:
